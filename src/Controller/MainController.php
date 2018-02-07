@@ -43,4 +43,13 @@ class MainController extends Controller
 			'pagination' => $pagination
 		));
     }
+
+	/**
+     * @Route("/search", name="search", methods={"POST"})
+     */
+    public function search(Request $request)
+    {
+		$address = $request->request->get('address');
+		return $this->redirectToRoute('block', ['address' => $address]);
+    }
 }
