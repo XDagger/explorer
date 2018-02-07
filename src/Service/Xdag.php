@@ -14,7 +14,7 @@ class Xdag
 		$this->socket_file = $socket_file;
 
 		if(!$this->isReady()) {
-			//throw new \Exception('The node is not ready');
+			throw new \Exception('The node is not ready');
 		}
 	}
 
