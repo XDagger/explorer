@@ -1,7 +1,47 @@
 body {
   padding-top: 5rem;
 }
-.starter-template {
-  padding: 3rem 1.5rem;
-  text-align: center;
+
+.earning {
+  display: inline-block;
+  background: yellow;
+  text-transform: uppercase;
+  font-weight: bold;
+  border-radius: 8px;
+  color: black;
+  vertical-align: middle;
+  padding: 2px 6px 2px 6px;
+}
+
+.fee {
+  display: inline-block;
+  background: dimgrey;
+  text-transform: uppercase;
+  font-weight: bold;
+  border-radius: 8px;
+  color: white;
+  vertical-align: middle;
+  padding: 2px 6px 2px 6px;
+}
+
+.input {
+	display: inline-block;
+    background: green;
+    text-transform: uppercase;
+    font-weight: bold;
+    border-radius: 8px;
+    color: white;
+    vertical-align: middle;
+    padding: 2px 6px 2px 6px;
+}
+
+.output {
+	display: inline-block;
+    background: orange;
+    text-transform: uppercase;
+    font-weight: bold;
+    border-radius: 8px;
+    color: white;
+    vertical-align: middle;
+    padding: 2px 6px 2px 6px;
 }

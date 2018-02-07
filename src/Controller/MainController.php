@@ -25,15 +25,14 @@ class MainController extends Controller
 
 	/**
      * @Route(
-	 *     "/block/{block}",
-	 *     name="block",
-	 *     requirements={
- 	 *     }
-	 * )
+     *     "/block/{address}",
+     *     name="block",
+     *     requirements={"address"="[a-zA-Z0-9\/+]{32}"}
+     * )
      */
-    public function block($block, Xdag $xdag)
+    public function block($address, Xdag $xdag)
     {
-		$block = $xdag->getBlock($block);
+		$block = $xdag->getBlock($address);
 
 		return $this->render('block.html.twig', array(
 			'block' => $block

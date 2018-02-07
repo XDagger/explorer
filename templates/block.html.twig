@@ -50,8 +50,8 @@
       <tbody>
 	  	{% for element in block["details"] %}
         <tr>
-          <th scope="row">{{ element["direction"] }}</th>
-          <td>{{ element["transaction"] }}</td>
+          <td><span class="{{ element["direction"]|lower }}">{{ element["direction"] }}</span></td>
+          <td><a href="{{ path('block', {'address':element["transaction"]}) }}">{{ element["transaction"] }}</a></td>
           <td>{{ element["amount"] }}</td>
           <td>{{ element["time"] }}</td>
         </tr>
@@ -70,8 +70,8 @@
 		<tbody>
 		  {% for element in block["details"] %}
 		  <tr>
-			<th scope="row">{{ element["direction"] }}</th>
-			<td>{{ element["address"] }}</td>
+			<td><span class="{{ element["direction"]|lower }}">{{ element["direction"] }}</span></td>
+			<td><a href="{{ path('block', {'address':element["address"]}) }}">{{ element["address"] }}</a></td>
 			<td>{{ element["amount"] }}</td>
 		  </tr>
 		  {% endfor %}
