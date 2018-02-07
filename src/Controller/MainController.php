@@ -3,9 +3,10 @@ namespace App\Controller;
 
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use App\Service\Xdag;
 
-class MainController
+class MainController extends Controller
 {
     /**
      * @Route("/")
@@ -14,11 +15,11 @@ class MainController
     {
 		$stats = $xdag->getStats();
 
-        return new Response(
-			'Blocks' . $xdag->getBlocks($stats) .
-			'<br>Main blocks' . $xdag->getMainBlocks($stats) .
-			'<br>Supply' . $xdag->getSupply($stats) .
-			'<br>Network hashrate' . $xdag->getHashrate($stats)
-        );
+		return $this->render('index.html.twig', array(
+			'blocks' => $xdag->getBlocks($stats),
+			'main_blocks' => $xdag->getMainBlocks($stats),
+			'supply' => $xdag->getSupply($stats),
+			'hashrate' => $xdag->getHashrate($stats)
+		));
     }
 }

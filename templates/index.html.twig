@@ -1,0 +1,28 @@
+{% extends 'frontend.html.twig' %}
+
+{% block content %}
+<main role="main" class="container">
+<h1>Network information</h1>
+  <table class="table">
+    <tbody>
+      <tr>
+        <th scope="row">Blocks</th>
+        <td>{{blocks}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Main blocks</th>
+        <td>{{main_blocks}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Supply</th>
+        <td>{{supply}}</td>
+      </tr>
+      <tr>
+        <th scope="row">Network hashrate</th>
+        <td>{{hashrate}}</td>
+      </tr>
+    </tbody>
+  </table>
+</main>
+
+{% endblock %}
