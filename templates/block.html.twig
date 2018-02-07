@@ -1,0 +1,81 @@
+{% extends 'frontend.html.twig' %}
+
+{% block content %}
+<main role="main" class="container">
+  <table class="table">
+    <tbody>
+      <tr>
+        <th scope="row">Time</th>
+        <td>{{block["time"]}}</td>
+      </tr>
+	  <tr>
+        <th scope="row">Timestamp</th>
+        <td>{{block["timestamp"]}}</td>
+      </tr>
+	  <tr>
+        <th scope="row">Flags</th>
+        <td>{{block["flags"]}}</td>
+      </tr>
+	  <tr>
+        <th scope="row">File pos</th>
+        <td>{{block["file pos"]}}</td>
+      </tr>
+	  <tr>
+        <th scope="row">Hash</th>
+        <td>{{block["hash"]}}</td>
+      </tr>
+	  <tr>
+        <th scope="row">Difficulty</th>
+        <td>{{block["difficulty"]}}</td>
+      </tr>
+	  <tr>
+        <th scope="row">Balance</th>
+        <td>{{block["balance"]}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  {% if block["type"] == 'account' %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Direction</th>
+          <th scope="col">Transaction</th>
+          <th scope="col">Amount</th>
+          <th scope="col">Time</th>
+        </tr>
+      </thead>
+      <tbody>
+	  	{% for element in block["details"] %}
+        <tr>
+          <th scope="row">{{ element["direction"] }}</th>
+          <td>{{ element["transaction"] }}</td>
+          <td>{{ element["amount"] }}</td>
+          <td>{{ element["time"] }}</td>
+        </tr>
+		{% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+	  <table class="table">
+		<thead>
+		  <tr>
+			<th scope="col">Direction</th>
+			<th scope="col">Address</th>
+			<th scope="col">Amount</th>
+		  </tr>
+		</thead>
+		<tbody>
+		  {% for element in block["details"] %}
+		  <tr>
+			<th scope="row">{{ element["direction"] }}</th>
+			<td>{{ element["address"] }}</td>
+			<td>{{ element["amount"] }}</td>
+		  </tr>
+		  {% endfor %}
+		</tbody>
+	  </table>
+  {% endif %}
+</main>
+
+{% endblock %}

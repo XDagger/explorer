@@ -9,7 +9,7 @@ use App\Service\Xdag;
 class MainController extends Controller
 {
     /**
-     * @Route("/")
+     * @Route("/", name="index")
      */
     public function index(Xdag $xdag)
     {
@@ -20,6 +20,23 @@ class MainController extends Controller
 			'main_blocks' => $xdag->getMainBlocks($stats),
 			'supply' => $xdag->getSupply($stats),
 			'hashrate' => $xdag->getHashrate($stats)
+		));
+    }
+
+	/**
+     * @Route(
+	 *     "/block/{block}",
+	 *     name="block",
+	 *     requirements={
+ 	 *     }
+	 * )
+     */
+    public function block($block, Xdag $xdag)
+    {
+		$block = $xdag->getBlock($block);
+
+		return $this->render('block.html.twig', array(
+			'block' => $block
 		));
     }
 }
