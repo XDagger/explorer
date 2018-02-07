@@ -33,25 +33,32 @@
         <th scope="row">Balance</th>
         <td>{{block["balance"]}}</td>
       </tr>
+	  <tr>
+		<th scope="row">Type</th>
+		<td>{{block["type"]}}</td>
+	  </tr>
     </tbody>
   </table>
 
   <h1>Details</h1>
-  {% if block["type"] == 'account' %}
+  <div class="count">
+    Total: {{ pagination.getTotalItemCount }}
+  </div>
+  {% if block["type"] == 'address' %}
     <table class="table">
       <thead>
         <tr>
           <th scope="col">Direction</th>
           <th scope="col">Transaction</th>
-          <th scope="col">Amount</th>
-          <th scope="col">Time</th>
+          <th scope="col">{{ knp_pagination_sortable(pagination, 'Amount', '[amount]') }}</th>
+          <th scope="col">{{ knp_pagination_sortable(pagination, 'Time', '[time]') }}</th>
         </tr>
       </thead>
       <tbody>
-	  	{% for element in block["details"] %}
+	  	{% for element in pagination %}
         <tr>
           <td><span class="{{ element["direction"]|lower }}">{{ element["direction"] }}</span></td>
-          <td><a href="{{ path('block', {'address':element["transaction"]}) }}">{{ element["transaction"] }}</a></td>
+          <td><a href="{{ path('block', {'address':element["address"]}) }}">{{ element["address"] }}</a></td>
           <td>{{ element["amount"] }}</td>
           <td>{{ element["time"] }}</td>
         </tr>
@@ -64,11 +71,11 @@
 		  <tr>
 			<th scope="col">Direction</th>
 			<th scope="col">Address</th>
-			<th scope="col">Amount</th>
+          <th scope="col">{{ knp_pagination_sortable(pagination, 'Amount', '[amount]') }}</th>
 		  </tr>
 		</thead>
 		<tbody>
-		  {% for element in block["details"] %}
+		  {% for element in pagination %}
 		  <tr>
 			<td><span class="{{ element["direction"]|lower }}">{{ element["direction"] }}</span></td>
 			<td><a href="{{ path('block', {'address':element["address"]}) }}">{{ element["address"] }}</a></td>
@@ -78,6 +85,9 @@
 		</tbody>
 	  </table>
   {% endif %}
+  <div class="navigation">
+    {{ knp_pagination_render(pagination) }}
+  </div>
 </main>
 
 {% endblock %}

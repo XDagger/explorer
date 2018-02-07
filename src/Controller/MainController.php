@@ -4,6 +4,7 @@ namespace App\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use App\Service\Xdag;
 
 class MainController extends Controller
@@ -30,12 +31,16 @@ class MainController extends Controller
      *     requirements={"address"="[a-zA-Z0-9\/+]{32}"}
      * )
      */
-    public function block($address, Xdag $xdag)
+    public function block($address, Request $request, Xdag $xdag)
     {
 		$block = $xdag->getBlock($address);
 
+		$paginator = $this->get('knp_paginator');
+		$pagination = $paginator->paginate($block['details'], $request->query->getInt('page', 1), 50);
+
 		return $this->render('block.html.twig', array(
-			'block' => $block
+			'block' => $block,
+			'pagination' => $pagination
 		));
     }
 }

@@ -99,9 +99,9 @@ class Xdag
 						}
 					break;
 				case 2:
-					if(preg_match("/\s*(fee|input|output|earning): ([a-zA-Z0-9\/+]{32})\s*([0-9]*\.[0-9]*)/i", $line, $matches)) {
-							list(, $direction, $address, $amount) = $matches;
-							$block['details'][] = ['direction' => $direction, 'address' => $address, 'amount' => $amount];
+					if(preg_match("/\s*(fee|input|output|earning): ([a-zA-Z0-9\/+]{32})\s*([0-9]*\.[0-9]*)\s*(.*)/i", $line, $matches)) {
+							list(, $direction, $address, $amount, $time) = $matches;
+							$block['details'][] = ['direction' => $direction, 'address' => $address, 'amount' => $amount, 'time' => $time];
 					}
 					break;
 			}
