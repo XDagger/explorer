@@ -164,4 +164,14 @@ class Xdag
 		$arr = explode(' ', $stats['hour hashrate MHs']);
 		return array_pop($arr);
 	}
+
+	public function getDifficulty($stats = '')
+	{
+		if(!is_array($stats)) {
+			$stats = $this->getStats();
+		}
+
+		$arr = explode(' ', $stats['chain difficulty']);
+		return array_pop($arr);
+	}
 }

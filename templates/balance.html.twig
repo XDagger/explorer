@@ -1,0 +1,16 @@
+{% extends 'frontend.html.twig' %}
+
+{% block content %}
+<main role="main" class="container">
+<h1>Balance checker</h1>
+
+{% if balance != '' %}
+	Balance: {{ balance }}
+{% endif %}
+
+{{ form_start(form) }}
+{{ form_widget(form) }}
+{{ form_end(form) }}
+</main>
+
+{% endblock %}

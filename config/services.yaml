@@ -30,3 +30,7 @@ services:
     App\Service\Xdag:
         arguments:
             $socket_file: '%xdag_sock_file%'
+
+    App\Twig\:
+        resource: '../src/Twig'
+        tags: ['twig.extension']

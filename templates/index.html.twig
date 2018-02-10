@@ -7,19 +7,23 @@
     <tbody>
       <tr>
         <th scope="row">Blocks</th>
-        <td>{{blocks}}</td>
+        <td>{{ blocks | number_format }}</td>
       </tr>
       <tr>
         <th scope="row">Main blocks</th>
-        <td>{{main_blocks}}</td>
+        <td>{{ main_blocks | number_format}}</td>
       </tr>
       <tr>
         <th scope="row">Supply</th>
-        <td>{{supply}}</td>
+        <td>{{ supply | number_format }}</td>
       </tr>
       <tr>
         <th scope="row">Network hashrate</th>
-        <td>{{hashrate}}</td>
+        <td>{{ hashrate | format_hashrate }}</td>
+      </tr>
+	  <tr>
+        <th scope="row">Difficulty</th>
+        <td>{{ difficulty }}</td>
       </tr>
     </tbody>
   </table>
