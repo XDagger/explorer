@@ -82,26 +82,17 @@ class Xdag
 						}
 					break;
 				case 1:
-					if(preg_match("/block as address: details/i", $line)) {
-							if(!isset($block['type'])) {
-								$block['type'] = 'address';
-								$block['details'] = [];
+						if(preg_match("/block as address: details/i", $line)) {
 								$i++;
-							} else {
-								break 2;
-							}
 						} else if(preg_match("/\s*(fee|input|output|earning): ([a-zA-Z0-9\/+]{32})\s*([0-9]*\.[0-9]*)/i", $line, $matches)) {
 							list(, $direction, $address, $amount) = $matches;
-							$block['details'][] = ['direction' => $direction, 'address' => $address, 'amount' => $amount];
-							if(!isset($block['type']) && $amount > 0) {
-								$block['type'] = 'transaction';
-							}
+							$block['transaction'][] = ['direction' => $direction, 'address' => $address, 'amount' => $amount];
 						}
 					break;
 				case 2:
 					if(preg_match("/\s*(fee|input|output|earning): ([a-zA-Z0-9\/+]{32})\s*([0-9]*\.[0-9]*)\s*(.*)/i", $line, $matches)) {
 							list(, $direction, $address, $amount, $time) = $matches;
-							$block['details'][] = ['direction' => $direction, 'address' => $address, 'amount' => $amount, 'time' => $time];
+							$block['address'][] = ['direction' => $direction, 'address' => $address, 'amount' => $amount, 'time' => $time];
 					}
 					break;
 			}

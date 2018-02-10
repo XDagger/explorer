@@ -40,11 +40,22 @@ class MainController extends Controller
 		$block = $xdag->getBlock($address);
 
 		$paginator = $this->get('knp_paginator');
-		$pagination = $paginator->paginate($block['details'], $request->query->getInt('page', 1), 50);
+		$transaction_pagination = $paginator->paginate(
+			$block['transaction'], $request->query->getInt('tx_page', 1),
+			50,
+			array('pageParameterName' => 'tx_page', 'sortDirectionParameterName' => 'tx_sort')
+		);
+		$address_pagination = $paginator->paginate(
+			$block['address'],
+			$request->query->getInt('addr_page', 1),
+			50,
+			array('pageParameterName' => 'addr_page', 'sortDirectionParameterName' => 'addr_sort')
+		);
 
 		return $this->render('block.html.twig', array(
 			'block' => $block,
-			'pagination' => $pagination
+			'transaction_pagination' => $transaction_pagination,
+			'address_pagination' => $address_pagination
 		));
     }
 
