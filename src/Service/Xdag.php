@@ -68,6 +68,8 @@ class Xdag
 		$block = [];
 
 		$i = 0;
+		$block['address'] = [];
+		$blockp['transaction'] = [];
 		foreach($lines as $line) {
 			switch($i) {
 				case 0:
