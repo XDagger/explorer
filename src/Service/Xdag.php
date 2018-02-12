@@ -28,7 +28,7 @@ class Xdag
 		return preg_match("/Normal operation./i", $this->command('state'));
 	}
 
-	protected function command($cmd)
+	public function command($cmd)
 	{
 		$socket = socket_create(AF_UNIX, SOCK_STREAM, 0);
 
@@ -40,13 +40,31 @@ class Xdag
 		socket_send($socket, $command, strlen($command), 0);
 
 		$output = '';
-		while($buffer = @socket_read($socket, 2048)) {
-			$output .= $buffer;
+		while($buffer = @socket_read($socket, 512)) {
+				$output .= $buffer;
 		}
 
 		socket_close($socket);
 
 		return $output;
+	}
+
+	public function commandStream($cmd)
+	{
+		$socket = socket_create(AF_UNIX, SOCK_STREAM, 0);
+
+		if (!$socket || !socket_connect($socket, $this->socket_file)) {
+			throw new \Exception('Error establishing a connection with the socket');
+		}
+
+		$command = "$cmd\0";
+		socket_send($socket, $command, strlen($command), 0);
+
+		while($line = @socket_read($socket, 512, PHP_NORMAL_READ)) {
+			yield $line;
+		}
+
+		socket_close($socket);
 	}
 
 	public function getBalance($address)
