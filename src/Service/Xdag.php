@@ -49,6 +49,7 @@ class Xdag
 		return $output;
 	}
 
+	// For huge outputs, to avoid out of memory errors
 	public function commandStream($cmd)
 	{
 		$socket = socket_create(AF_UNIX, SOCK_STREAM, 0);
@@ -82,41 +83,54 @@ class Xdag
 			throw new \Exception('Invalid address');
 		}
 
-		$lines = explode("\n", $this->command("block $address"));
+		$generator = $this->commandStream("block $address");
 		$block = [];
 
-		$i = 0;
-		$block['address'] = [];
-		$blockp['transaction'] = [];
-		foreach($lines as $line) {
-			switch($i) {
-				case 0:
-						if(preg_match("/Block is not found/i", $line)) {
-							throw new \Exception('Block not found');
-						} else if(preg_match("/Block as transaction: details/i", $line)) {
-							$i++;
-						} else if(preg_match("/\s*(.*): ([^\s]*)(\s*([0-9]*\.[0-9]*))?/i", $line, $matches)) {
-							list($key, $value) = [$matches[1], $matches[2]];
-							if($key == 'balance') $value = $matches[4];
-							$block[$key] = $value;
-						}
-					break;
-				case 1:
-						if(preg_match("/block as address: details/i", $line)) {
-								$i++;
-						} else if(preg_match("/\s*(fee|input|output|earning): ([a-zA-Z0-9\/+]{32})\s*([0-9]*\.[0-9]*)/i", $line, $matches)) {
-							list(, $direction, $address, $amount) = $matches;
-							$block['transaction'][] = ['direction' => $direction, 'address' => $address, 'amount' => $amount];
-						}
-					break;
-				case 2:
-					if(preg_match("/\s*(fee|input|output|earning): ([a-zA-Z0-9\/+]{32})\s*([0-9]*\.[0-9]*)\s*(.*)/i", $line, $matches)) {
-							list(, $direction, $address, $amount, $time) = $matches;
-							$block['address'][] = ['direction' => $direction, 'address' => $address, 'amount' => $amount, 'time' => $time];
-					}
-					break;
+		while(true) {
+			$line = $generator->current();
+			$generator->next();
+
+			if(preg_match("/Block is not found/i", $line)) {
+				throw new \Exception('Block not found');
+			} else if(preg_match("/Block as transaction: details/i", $line)) {
+				// Jump to block as transaction parser
+				break;
+			} else if(preg_match("/\s*(.*): ([^\s]*)(\s*([0-9]*\.[0-9]*))?/i", $line, $matches)) {
+				list($key, $value) = [$matches[1], $matches[2]];
+				if($key == 'balance') $value = $matches[4];
+				$block[$key] = $value;
 			}
 		}
+
+		$block['transaction'] = [];
+		while(true) {
+			$line = $generator->current();
+			$generator->next();
+
+			if(preg_match("/block as address: details/i", $line)) {
+					// Jump to block as address parser
+					break;
+			} else if(preg_match("/\s*(fee|input|output|earning): ([a-zA-Z0-9\/+]{32})\s*([0-9]*\.[0-9]*)/i", $line, $matches)) {
+				list(, $direction, $address, $amount) = $matches;
+				$block['transaction'][] = ['direction' => $direction, 'address' => $address, 'amount' => $amount];
+			}
+		}
+
+		$block['address'] = [];
+		while(true) {
+			if(!$generator->valid()) {
+				break;
+			}
+
+			$line = $generator->current();
+			$generator->next();
+
+			if(preg_match("/\s*(fee|input|output|earning): ([a-zA-Z0-9\/+]{32})\s*([0-9]*\.[0-9]*)\s*(.*)/i", $line, $matches)) {
+					list(, $direction, $address, $amount, $time) = $matches;
+					$block['address'][] = ['direction' => $direction, 'address' => $address, 'amount' => $amount, 'time' => $time];
+			}
+		}
+
 		return $block;
 	}
 
