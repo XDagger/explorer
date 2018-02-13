@@ -2,9 +2,9 @@
 namespace App\Controller;
 
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
 use App\Service\Xdag;
 
 class ApiController extends Controller
@@ -102,5 +102,17 @@ class ApiController extends Controller
 		});
 
 		return $response;
+    }
+
+	/**
+     * @Route(
+     *     "/api/balance/{address}",
+     *     name="api_balance",
+     *     requirements={"address"="[a-zA-Z0-9\/+]{32}"}
+     * )
+     */
+    public function balance($address, Xdag $xdag)
+    {
+		return new Response($xdag->getBalance($address));
     }
 }
