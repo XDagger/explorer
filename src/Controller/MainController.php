@@ -69,7 +69,7 @@ class MainController extends Controller
     }
 
 	/**
-     * @Route("/misc/balance", name="balance")
+     * @Route("/balance", name="balance")
      */
     public function balance(Request $request, Xdag $xdag)
     {
@@ -93,7 +93,7 @@ class MainController extends Controller
     }
 
 	/**
-     * @Route("/mic/mining", name="mining")
+     * @Route("/mining", name="mining")
      */
     public function mining(Request $request, Xdag $xdag)
     {
@@ -120,7 +120,7 @@ class MainController extends Controller
     }
 
 	/**
-     * @Route("/mic/profit", name="profit")
+     * @Route("/profit", name="profit")
      */
     public function profit(Request $request, Xdag $xdag)
     {
