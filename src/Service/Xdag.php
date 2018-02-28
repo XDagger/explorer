@@ -186,7 +186,7 @@ class Xdag
 			$stats = $this->getStats();
 		}
 
-		$arr = explode(' ', $stats['hour hashrate MHs']);
+		$arr = explode(' ', $stats['4 hr hashrate MHs']);
 		return array_pop($arr);
 	}
 
