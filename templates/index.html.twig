@@ -21,12 +21,24 @@
         <th scope="row">Network hashrate</th>
         <td>{{ hashrate | format_hashrate }}</td>
       </tr>
-	  <tr>
+      <tr>
         <th scope="row">Difficulty</th>
         <td>{{ difficulty }}</td>
       </tr>
     </tbody>
   </table>
+
+  <h1>Last blocks</h1>
+    <table class="table">
+      <tbody>
+        {% for block in lastblocks %}
+          <tr>
+            <td><a href="{{ path('block', {'address':block}) }}">{{ block }}</a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </main>
 </main>
 
 {% endblock %}

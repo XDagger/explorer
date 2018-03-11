@@ -19,12 +19,15 @@ class MainController extends Controller
     {
 		$stats = $xdag->getStats();
 
+		$lastblocks = $xdag->getLastBlocks(25);
+
 		return $this->render('index.html.twig', array(
 			'blocks' => $xdag->getBlocks($stats),
 			'main_blocks' => $xdag->getMainBlocks($stats),
 			'supply' => $xdag->getSupply($stats),
 			'hashrate' => $xdag->getHashrate($stats),
-			'difficulty' => $xdag->getDifficulty($stats)
+			'difficulty' => $xdag->getDifficulty($stats),
+			'lastblocks' => $lastblocks
 		));
     }
 

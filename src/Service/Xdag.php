@@ -199,4 +199,10 @@ class Xdag
 		$arr = explode(' ', $stats['chain difficulty']);
 		return array_pop($arr);
 	}
+
+	public function getLastBlocks($number = 100)
+	{
+		$command = $this->command("lastblocks $number");
+		return explode("\n", $command);
+	}
 }
