@@ -1,9 +1,12 @@
 <?php
 namespace App\Service;
 
+use Symfony\Component\Cache\Simple\FilesystemCache;
+
 class Xdag
 {
 	protected $socket_file;
+	protected $cache;
 
 	public function __construct($socket_file) {
 		if(!extension_loaded('sockets'))
@@ -12,6 +15,8 @@ class Xdag
 		}
 
 		$this->socket_file = $socket_file;
+
+		$this->cache = new FilesystemCache();
 
 		if(!$this->isReady()) {
 			throw new \Exception('The node is not ready');
@@ -74,7 +79,15 @@ class Xdag
 			throw new \Exception('Invalid address');
 		}
 
-		return explode(' ', $this->command("balance $address"))[1];
+		$command = "balance $address";
+
+		if(!$this->cache->has($command)) {
+			$this->cache->set($command, $this->command($command), 60);
+		}
+
+		$output = $this->cache->get($command);
+
+		return explode(' ', $output)[1];
 	}
 
 	public function getBlock($address)
@@ -136,9 +149,16 @@ class Xdag
 
 	public function getStats()
 	{
+		$command = "stats";
+
+		if(!$this->cache->has($command)) {
+			$this->cache->set($command, $this->command($command), 300);
+		}
+
+		$output = $this->cache->get($command);
+
 		$stats = [];
-		$command = $this->command("stats");
-		$lines = explode("\n", $command);
+		$lines = explode("\n", $output);
 
 		foreach($lines as $line) {
 			if(preg_match("/\s*(.*): (.*)/i", $line, $matches)) {
@@ -202,7 +222,14 @@ class Xdag
 
 	public function getLastBlocks($number = 100)
 	{
-		$command = $this->command("lastblocks $number");
-		return explode("\n", $command);
+		$command = "lastblocks $number";
+
+		if(!$this->cache->has($command)) {
+			$this->cache->set($command, $this->command($command), 60);
+		}
+
+		$output = $this->cache->get($command);
+
+		return explode("\n", $output);
 	}
 }
