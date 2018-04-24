@@ -17,6 +17,9 @@ class MainController extends Controller
      */
     public function index(Xdag $xdag)
     {
+	if (!$xdag->isReady())
+		return $this->notReady();
+
 		$stats = $xdag->getStats();
 
 		$lastblocks = $xdag->getLastBlocks(25);
@@ -40,6 +43,9 @@ class MainController extends Controller
      */
     public function block($address, Request $request, Xdag $xdag)
     {
+	if (!$xdag->isReady())
+                return $this->notReady();
+
 		$block = $xdag->getBlock($address);
 
 		$paginator = $this->get('knp_paginator');
@@ -76,6 +82,9 @@ class MainController extends Controller
      */
     public function balance(Request $request, Xdag $xdag)
     {
+	if (!$xdag->isReady())
+                return $this->notReady();
+
 		$balance = '';
 
 		$form = $this->createFormBuilder()
@@ -100,6 +109,9 @@ class MainController extends Controller
      */
     public function mining(Request $request, Xdag $xdag)
     {
+	if (!$xdag->isReady())
+                return $this->notReady();
+
 		$coins = '';
 
 		$form = $this->createFormBuilder()
@@ -127,6 +139,8 @@ class MainController extends Controller
      */
     public function profit(Request $request, Xdag $xdag)
     {
+	if (!$xdag->isReady())
+                return $this->notReady();
 		$coins = '';
 
 		$form = $this->createFormBuilder()
@@ -146,5 +160,10 @@ class MainController extends Controller
 		return $this->render('profit.html.twig', array(
 			'form' => $form->createView()
 		));
+    }
+
+    protected function notReady()
+    {
+        return $this->render('not-ready.html.twig');
     }
 }

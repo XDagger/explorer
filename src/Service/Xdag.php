@@ -8,19 +8,16 @@ class Xdag
 	protected $socket_file;
 	protected $cache;
 
-	public function __construct($socket_file) {
+	public function __construct($socket_file) 
+        {
 		if(!extension_loaded('sockets'))
 		{
-			throw new \Exception('Sockets etension not loaded');
+			throw new \Exception('Sockets extension not loaded');
 		}
 
 		$this->socket_file = $socket_file;
 
 		$this->cache = new FilesystemCache();
-
-		if(!$this->isReady()) {
-			throw new \Exception('The node is not ready');
-		}
 	}
 
 	public static function isAddress($address)
