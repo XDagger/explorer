@@ -8,7 +8,7 @@ class Xdag
 	protected $socket_file;
 	protected $cache;
 
-	public function __construct($socket_file) 
+	public function __construct($socket_file)
         {
 		if(!extension_loaded('sockets'))
 		{
@@ -224,7 +224,7 @@ class Xdag
 
 	public function getLastBlocks($number = 100)
 	{
-		$command = "lastblocks " . min(1, intval($number));
+		$command = "lastblocks " . max(1, intval($number));
 
 		if(!$this->cache->has($command)) {
 			$this->cache->set($command, $this->command($command), 60);
