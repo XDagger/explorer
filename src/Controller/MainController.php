@@ -36,17 +36,17 @@ class MainController extends Controller
 
 	/**
      * @Route(
-     *     "/block/{address}",
+     *     "/block/{input}",
      *     name="block",
-     *     requirements={"address"="[a-zA-Z0-9\/+]{32}"}
+     *     requirements={"input"="([a-zA-Z0-9\/+]{32}|[a-f0-9]{64})"}
      * )
      */
-    public function block($address, Request $request, Xdag $xdag)
+    public function block($input, Request $request, Xdag $xdag)
     {
 	if (!$xdag->isReady())
                 return $this->notReady();
 
-		$block = $xdag->getBlock($address);
+		$block = $xdag->getBlock($input);
 
 		$paginator = $this->get('knp_paginator');
 		$transaction_pagination = $paginator->paginate(
@@ -74,7 +74,7 @@ class MainController extends Controller
     public function search(Request $request)
     {
 		$address = $request->request->get('address');
-		return $this->redirectToRoute('block', ['address' => $address]);
+		return $this->redirectToRoute('block', ['input' => $address]);
     }
 
 	/**

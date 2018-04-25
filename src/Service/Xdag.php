@@ -25,6 +25,11 @@ class Xdag
 		return preg_match("/^[a-zA-Z0-9\/+]{32}$/", $address);
 	}
 
+	public static function isBlockHash($hash)
+        {
+                return preg_match("/^[a-f0-9]{64}$/", $hash);
+        }
+
 	public function isReady()
 	{
 		return preg_match("/Normal operation./i", $this->command('state'));
@@ -87,13 +92,13 @@ class Xdag
 		return explode(' ', $output)[1];
 	}
 
-	public function getBlock($address)
+	public function getBlock($input)
 	{
-		if (!self::isAddress($address)) {
-			throw new \Exception('Invalid address');
+		if (!self::isAddress($input) || !self::isBlockHash($input)) {
+			throw new \Exception('Invalid address or block hash');
 		}
 
-		$generator = $this->commandStream("block $address");
+		$generator = $this->commandStream("block $input");
 		$block = [];
 
 		while(true) {
@@ -219,7 +224,7 @@ class Xdag
 
 	public function getLastBlocks($number = 100)
 	{
-		$command = "lastblocks $number";
+		$command = "lastblocks " . min(1, intval($number));
 
 		if(!$this->cache->has($command)) {
 			$this->cache->set($command, $this->command($command), 60);
