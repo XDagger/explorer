@@ -112,7 +112,7 @@ class Xdag
 				break;
 			} else if(preg_match("/\s*(.*): (.*)/i", $line, $matches)) {
 				list($key, $value) = [$matches[1], $matches[2]];
-				if($key == 'balance') {
+				if ($key == 'balance') {
                                     $block['balance_address'] = current($balance = explode(' ', $matches[2]));
                                     $value = end($balance);
                                 }

@@ -11,12 +11,12 @@ class ApiController extends Controller
 {
 	/**
      * @Route(
-     *     "/api/block/{address}",
+     *     "/api/block/{input}",
      *     name="api_block",
-     *     requirements={"address"="[a-zA-Z0-9\/+]{32}"}
+     *     requirements={"input"="([a-zA-Z0-9\/+]{32}|[a-f0-9]{64})"}
      * )
      */
-    public function block($address, Xdag $xdag)
+    public function block($input, Xdag $xdag)
     {
 	if (!$xdag->isReady())
                 return new Response('Block explorer is currently syncing.');
@@ -27,11 +27,15 @@ class ApiController extends Controller
 		$response = new StreamedResponse();
 		$response->headers->set('Content-Type', 'application/json');
 
-		$response->setCallback(function () use ($address, $xdag) {
-			$generator = $xdag->commandStream("block $address");
+		$response->setCallback(function () use ($input, $xdag) {
+			if (!$xdag->isAddress($input) && !$xdag->isBlockHash($input)) {
+                       		throw new \Exception('Invalid address or block hash');
+                	}
+
+			$generator = $xdag->commandStream("block $input");
 
 			echo "{";
-			echo "\"block\": \"$address\",";
+			echo "\"block\":\"$input\",";
 
 			while(true) {
 				$line = $generator->current();
@@ -42,14 +46,18 @@ class ApiController extends Controller
 				} else if(preg_match("/Block as transaction: details/i", $line)) {
 					// Jump to block as transaction
 					break;
-				} else if(preg_match("/\s*(.*): ([^\s]*)(\s*([0-9]*\.[0-9]*))?/i", $line, $matches)) {
+				} else if(preg_match("/\s*(.*): (.*)/ii", $line, $matches)) {
 					list($key, $value) = [str_replace(' ', '_', $matches[1]), $matches[2]];
-					if($key == 'balance') $value = $matches[4];
-					echo "\"$key\": \"$value\",";
+					if ($key == 'balance') {
+						echo "\"balance_address\":\"" . current($balance = explode(' ', $matches[2])) . "\",";
+						$value = end($balance);
+					}
+
+					echo "\"$key\":\"$value\",";
 				}
 			}
 
-			echo "\"block_as_transaction\": [";
+			echo "\"block_as_transaction\":[";
 
 			$first = true;
 			while(true) {
@@ -66,15 +74,15 @@ class ApiController extends Controller
 					}
 					$first = false;
 					echo "{";
-					echo "\"direction\": \"$direction\",";
-					echo "\"address\": \"$address\",";
-					echo "\"amount\": \"$amount\"";
+					echo "\"direction\":\"$direction\",";
+					echo "\"address\":\"$address\",";
+					echo "\"amount\":\"$amount\"";
 					echo "}";
 				}
 			}
 
 			echo "],";
-			echo "\"block_as_address\": [";
+			echo "\"block_as_address\":[";
 
 			$first = true;
 			while(true) {
@@ -92,10 +100,10 @@ class ApiController extends Controller
 						}
 						$first = false;
 						echo "{";
-						echo "\"direction\": \"$direction\",";
-						echo "\"address\": \"$address\",";
-						echo "\"amount\": \"$amount\",";
-						echo "\"time\": \"$time\"";
+						echo "\"direction\":\"$direction\",";
+						echo "\"address\":\"$address\",";
+						echo "\"amount\":\"$amount\",";
+						echo "\"time\":\"$time\"";
 						echo "}";
 				}
 			}
