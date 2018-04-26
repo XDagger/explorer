@@ -9,7 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use App\Service\Xdag;
+use App\Service\{Xdag, XdagBlockNotFoundException};
 
 class MainController extends Controller
 {
@@ -35,7 +35,13 @@ class MainController extends Controller
 		));
     }
 
-	/**
+    protected function blockNotFound()
+    {
+        return $this->render('block-not-found.html.twig');
+    }
+
+
+    /**
      * @Route(
      *     "/block/{input}",
      *     name="block",
@@ -47,7 +53,11 @@ class MainController extends Controller
 	if (!$xdag->isReady())
                 return $this->notReady();
 
-		$block = $xdag->getBlock($input);
+		try {
+			$block = $xdag->getBlock($input);
+		} catch (XdagBlockNotFoundException $ex) {
+			return $this->blockNotFound();
+		}
 
 		$paginator = $this->get('knp_paginator');
 		$transaction_pagination = $paginator->paginate(

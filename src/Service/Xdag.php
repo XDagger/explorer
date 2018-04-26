@@ -106,7 +106,7 @@ class Xdag
 			$generator->next();
 
 			if(preg_match("/Block is not found/i", $line)) {
-				throw new \Exception('Block not found');
+				throw new XdagBlockNotFoundException;
 			} else if(preg_match("/Block as transaction: details/i", $line)) {
 				// Jump to block as transaction parser
 				break;
@@ -238,3 +238,5 @@ class Xdag
 		return explode("\n", $output);
 	}
 }
+
+class XdagBlockNotFoundException extends \Exception {}
