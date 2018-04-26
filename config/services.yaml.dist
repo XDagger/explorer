@@ -2,7 +2,7 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: 'en'
-    xdag_sock_file: '/home/cheto/cheatcoin/cheatcoin/unix_sock.dat'
+    xdag_sock_file: '/home/pool/xdag1/client/unix_sock.dat'
 
 services:
     # default configuration for services in *this* file

@@ -46,14 +46,14 @@
 	  <tr>
 		<th scope="col">Direction</th>
 		<th scope="col">Address</th>
-  		<th scope="col">{{ knp_pagination_sortable(transaction_pagination, 'Amount', '[amount]') }}</th>
+		<th scope="col">{{ knp_pagination_sortable(transaction_pagination, 'Amount', '[amount]') }}</th>
 	  </tr>
 	</thead>
 	<tbody>
 	  {% for element in transaction_pagination %}
 	  <tr>
 		<td><span class="{{ element["direction"]|lower }}">{{ element["direction"] }}</span></td>
-		<td><a href="{{ path('block', {'address':element["address"]}) }}">{{ element["address"] }}</a></td>
+		<td><a href="{{ path('block', {'input':element["address"]}) }}">{{ element["address"] }}</a></td>
 		<td>{{ element["amount"] }}</td>
 	  </tr>
 	  {% endfor %}
@@ -77,15 +77,15 @@
         </tr>
       </thead>
     <tbody>
-  	{% for element in address_pagination %}
+	{% for element in address_pagination %}
         <tr>
           <td><span class="{{ element["direction"]|lower }}">{{ element["direction"] }}</span></td>
-          <td><a href="{{ path('block', {'address':element["address"]}) }}">{{ element["address"] }}</a></td>
+          <td><a href="{{ path('block', {'input':element["address"]}) }}">{{ element["address"] }}</a></td>
           <td>{{ element["amount"] }}</td>
           <td>{{ element["time"] }}</td>
         </tr>
 	{% endfor %}
-  	</tbody>
+    </tbody>
   </table>
 
   <div class="navigation">

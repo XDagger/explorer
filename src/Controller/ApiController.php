@@ -18,6 +18,9 @@ class ApiController extends Controller
      */
     public function block($address, Xdag $xdag)
     {
+	if (!$xdag->isReady())
+                return new Response('Block explorer is currently syncing.');
+
 		// The output is streamed directly to avoid out of memory errors
 		// that is why i "hardcode" the json directly instead of
 		// put everything into an array and then use json_encode
@@ -113,6 +116,9 @@ class ApiController extends Controller
      */
     public function balance($address, Xdag $xdag)
     {
+	if (!$xdag->isReady())
+                return new Response('Block explorer is currently syncing.');
+
 		return new Response($xdag->getBalance($address));
     }
 }

@@ -8,25 +8,27 @@ class Xdag
 	protected $socket_file;
 	protected $cache;
 
-	public function __construct($socket_file) {
+	public function __construct($socket_file)
+        {
 		if(!extension_loaded('sockets'))
 		{
-			throw new \Exception('Sockets etension not loaded');
+			throw new \Exception('Sockets extension not loaded');
 		}
 
 		$this->socket_file = $socket_file;
 
 		$this->cache = new FilesystemCache();
-
-		if(!$this->isReady()) {
-			throw new \Exception('The node is not ready');
-		}
 	}
 
 	public static function isAddress($address)
 	{
 		return preg_match("/^[a-zA-Z0-9\/+]{32}$/", $address);
 	}
+
+	public static function isBlockHash($hash)
+        {
+                return preg_match("/^[a-f0-9]{64}$/", $hash);
+        }
 
 	public function isReady()
 	{
@@ -90,13 +92,13 @@ class Xdag
 		return explode(' ', $output)[1];
 	}
 
-	public function getBlock($address)
+	public function getBlock($input)
 	{
-		if (!self::isAddress($address)) {
-			throw new \Exception('Invalid address');
+		if (!self::isAddress($input) && !self::isBlockHash($input)) {
+			throw new \Exception('Invalid address or block hash');
 		}
 
-		$generator = $this->commandStream("block $address");
+		$generator = $this->commandStream("block $input");
 		$block = [];
 
 		while(true) {
@@ -222,7 +224,7 @@ class Xdag
 
 	public function getLastBlocks($number = 100)
 	{
-		$command = "lastblocks $number";
+		$command = "lastblocks " . max(1, intval($number));
 
 		if(!$this->cache->has($command)) {
 			$this->cache->set($command, $this->command($command), 60);
