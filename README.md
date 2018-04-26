@@ -7,4 +7,6 @@ To install:
 - `cp config/services.yaml.dist config/services.yaml`. Set your socket path. 
 - `composer install`
 
+If you're using nginx, make sure to set `merge_slashes off;` in `server` block to allow raw URLs to be passed to the block explorer.
+
 All should be done! :)
