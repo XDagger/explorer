@@ -4,13 +4,14 @@
 <main role="main" class="container">
 <h1>Mining calculator</h1>
 
-{% if coins != '' %}
-	Estimated coins per day: {{ coins }}
-{% endif %}
-
 {{ form_start(form) }}
 {{ form_widget(form) }}
 {{ form_end(form) }}
+
+{% if coins != '' %}
+        <p>Estimated coins per day: {{ coins }} XDAG</p>
+{% endif %}
+
 </main>
 
 {% endblock %}

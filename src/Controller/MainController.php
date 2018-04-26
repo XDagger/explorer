@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use App\Service\Xdag;
@@ -115,16 +116,16 @@ class MainController extends Controller
 		$coins = '';
 
 		$form = $this->createFormBuilder()
-			->add('hashrate', TextType::class)
-			->add('send', SubmitType::class)
+			->add('hashrate', NumberType::class, ['label' => 'Your Hashrate (Gh/s)', 'scale' => 2])
+			->add('send', SubmitType::class, ['label' => 'Estimate'])
 			->getForm();
 
 		$form->handleRequest($request);
 
 		if($form->isSubmitted() && $form->isValid()) {
 			$total_hashrate = $xdag->getHashrate();
-			$coins_day = (3600*24)/64*1024;
-			$user_hashrate = $form->getData()['hashrate'];
+			$coins_day = (3600*24)/64*1024; // max total coins mined per day on the network
+			$user_hashrate = abs($form->getData()['hashrate'] * 1024);
 			$coins = $user_hashrate*$coins_day/$total_hashrate;
 		}
 
