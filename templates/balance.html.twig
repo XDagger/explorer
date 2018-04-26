@@ -4,13 +4,28 @@
 <main role="main" class="container">
 <h1>Balance checker</h1>
 
-{% if balance != '' %}
-	Balance: {{ balance }}
-{% endif %}
-
 {{ form_start(form) }}
 {{ form_widget(form) }}
 {{ form_end(form) }}
+
+{% if balance != '' %}
+        <p>Wallet balance: {{ balance }} XDAG</p>
+{% endif %}
 </main>
 
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+
+	<script type="text/javascript">
+		$('main form').submit(function() {
+			var address = $('input[type=text]', this).val();
+
+			if (! /^[0-9a-zA-Z/+]{32}$/.test(address)) {
+				alert('Incorrect wallet address.')
+				return false;
+			}
+		});
+	</script>
 {% endblock %}

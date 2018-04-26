@@ -89,8 +89,8 @@ class MainController extends Controller
 		$balance = '';
 
 		$form = $this->createFormBuilder()
-			->add('address', TextType::class)
-			->add('send', SubmitType::class)
+			->add('address', TextType::class, ['label' => 'Wallet address'])
+			->add('send', SubmitType::class, ['label' => 'Get balance'])
 			->getForm();
 
 		$form->handleRequest($request);
