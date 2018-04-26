@@ -110,9 +110,12 @@ class Xdag
 			} else if(preg_match("/Block as transaction: details/i", $line)) {
 				// Jump to block as transaction parser
 				break;
-			} else if(preg_match("/\s*(.*): ([^\s]*)(\s*([0-9]*\.[0-9]*))?/i", $line, $matches)) {
+			} else if(preg_match("/\s*(.*): (.*)/i", $line, $matches)) {
 				list($key, $value) = [$matches[1], $matches[2]];
-				if($key == 'balance') $value = $matches[4];
+				if($key == 'balance') {
+                                    $block['balance_address'] = current($balance = explode(' ', $matches[2]));
+                                    $value = end($balance);
+                                }
 				$block[$key] = $value;
 			}
 		}
