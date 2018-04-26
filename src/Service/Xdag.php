@@ -83,11 +83,11 @@ class Xdag
 
 		$command = "balance $address";
 
-		if(!$this->cache->has($command)) {
-			$this->cache->set($command, $this->command($command), 60);
+		if(!$this->cache->has(md5($command))) {
+			$this->cache->set(md5($command), $this->command($command), 60);
 		}
 
-		$output = $this->cache->get($command);
+		$output = $this->cache->get(md5($command));
 
 		return explode(' ', $output)[1];
 	}
@@ -156,11 +156,11 @@ class Xdag
 	{
 		$command = "stats";
 
-		if(!$this->cache->has($command)) {
-			$this->cache->set($command, $this->command($command), 300);
+		if(!$this->cache->has(md5($command))) {
+			$this->cache->set(md5($command), $this->command($command), 300);
 		}
 
-		$output = $this->cache->get($command);
+		$output = $this->cache->get(md5($command));
 
 		$stats = [];
 		$lines = explode("\n", $output);
@@ -229,11 +229,11 @@ class Xdag
 	{
 		$command = "lastblocks " . max(1, intval($number));
 
-		if(!$this->cache->has($command)) {
-			$this->cache->set($command, $this->command($command), 60);
+		if(!$this->cache->has(md5($command))) {
+			$this->cache->set(md5($command), $this->command($command), 60);
 		}
 
-		$output = $this->cache->get($command);
+		$output = $this->cache->get(md5($command));
 
 		return explode("\n", $output);
 	}
