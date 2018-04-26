@@ -94,7 +94,7 @@ class Xdag
 
 	public function getBlock($input)
 	{
-		if (!self::isAddress($input) || !self::isBlockHash($input)) {
+		if (!self::isAddress($input) && !self::isBlockHash($input)) {
 			throw new \Exception('Invalid address or block hash');
 		}
 
