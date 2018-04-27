@@ -7,7 +7,7 @@
     <tbody>
       <tr>
         <th scope="row">Time</th>
-        <td>{{block["time"]}}</td>
+        <td>{{block["time"]}} UTC</td>
       </tr>
 	  <tr>
         <th scope="row">Timestamp</th>
@@ -82,7 +82,7 @@
           <td><span class="{{ element["direction"]|lower }}">{{ element["direction"] }}</span></td>
           <td><a href="{{ path('block', {'input':element["address"]}) }}">{{ element["address"] }}</a></td>
           <td>{{ element["amount"] }}</td>
-          <td>{{ element["time"] }}</td>
+          <td>{{ element["time"] }} UTC</td>
         </tr>
 	{% endfor %}
     </tbody>
