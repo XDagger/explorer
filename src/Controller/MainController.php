@@ -135,7 +135,7 @@ class MainController extends Controller
 		if($form->isSubmitted() && $form->isValid()) {
 			$total_hashrate = $xdag->getHashrate();
 			$coins_day = (3600*24)/64*1024; // max total coins mined per day on the network
-			$user_hashrate = abs($form->getData()['hashrate'] * 1024);
+			$user_hashrate = abs($form->getData()['hashrate'] * 1024 * 1024 * 1024); // convert to h/s
 			$coins = $user_hashrate*$coins_day/$total_hashrate;
 		}
 
