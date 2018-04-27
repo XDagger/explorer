@@ -212,7 +212,7 @@ class Xdag
 		}
 
 		$arr = explode(' ', $stats['4 hr hashrate MHs']);
-		return array_pop($arr);
+		return array_pop($arr) * 1024 * 1024;
 	}
 
 	public function getDifficulty($stats = '')
