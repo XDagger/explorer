@@ -9,14 +9,11 @@ class Xdag
 	protected $cache;
 
 	public function __construct($socket_file)
-        {
+	{
 		if(!extension_loaded('sockets'))
-		{
 			throw new \Exception('Sockets extension not loaded');
-		}
 
 		$this->socket_file = $socket_file;
-
 		$this->cache = new FilesystemCache();
 	}
 
@@ -26,22 +23,23 @@ class Xdag
 	}
 
 	public static function isBlockHash($hash)
-        {
-                return preg_match("/^[a-f0-9]{64}$/", $hash);
-        }
+	{
+		return preg_match("/^[a-f0-9]{64}$/", $hash);
+	}
 
 	public function isReady()
 	{
-		return preg_match("/Normal operation./i", $this->command('state'));
+		$state = $this->command('state');
+
+		return stripos($state, 'normal operation') !== false || stripos($state, 'transfer to complete') !== false;
 	}
 
 	public function command($cmd)
 	{
 		$socket = socket_create(AF_UNIX, SOCK_STREAM, 0);
 
-		if (!$socket || !socket_connect($socket, $this->socket_file)) {
+		if (!$socket || !socket_connect($socket, $this->socket_file))
 			throw new \Exception('Error establishing a connection with the socket');
-		}
 
 		$command = "$cmd\0";
 		socket_send($socket, $command, strlen($command), 0);
@@ -61,9 +59,8 @@ class Xdag
 	{
 		$socket = socket_create(AF_UNIX, SOCK_STREAM, 0);
 
-		if (!$socket || !socket_connect($socket, $this->socket_file)) {
+		if (!$socket || !socket_connect($socket, $this->socket_file))
 			throw new \Exception('Error establishing a connection with the socket');
-		}
 
 		$command = "$cmd\0";
 		socket_send($socket, $command, strlen($command), 0);
@@ -77,9 +74,8 @@ class Xdag
 
 	public function getBalance($address)
 	{
-		if (!self::isAddress($address)) {
+		if (!self::isAddress($address))
 			throw new \Exception('Invalid address');
-		}
 
 		$command = "balance $address";
 
@@ -94,9 +90,8 @@ class Xdag
 
 	public function getBlock($input)
 	{
-		if (!self::isAddress($input) && !self::isBlockHash($input)) {
+		if (!self::isAddress($input) && !self::isBlockHash($input))
 			throw new \Exception('Invalid address or block hash');
-		}
 
 		$generator = $this->commandStream("block $input");
 		$block = [];
@@ -113,9 +108,9 @@ class Xdag
 			} else if(preg_match("/\s*(.*): (.*)/i", $line, $matches)) {
 				list($key, $value) = [$matches[1], $matches[2]];
 				if ($key == 'balance') {
-                                    $block['balance_address'] = current($balance = explode(' ', $matches[2]));
-                                    $value = end($balance);
-                                }
+					$block['balance_address'] = current($balance = explode(' ', $matches[2]));
+					$value = end($balance);
+				}
 				$block[$key] = $value;
 			}
 		}
