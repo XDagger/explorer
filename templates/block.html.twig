@@ -27,7 +27,7 @@
       </tr>
 	  <tr>
         <th scope="row">Hash</th>
-        <td><a href="{{ path('block', {'input':block["hash"]}) }}">{{ block["hash"] }}</a></td>
+        <td><a href="{{ path('block', {'input':block["hash"]}) }}" rel="nofollow">{{ block["hash"] }}</a></td>
       </tr>
 	  <tr>
         <th scope="row">Difficulty</th>
@@ -35,7 +35,7 @@
       </tr>
 	  <tr>
         <th scope="row">Balance</th>
-        <td>{{block["balance"]}} (<a href="{{ path('block', {'input':block["balance_address"]}) }}">{{ block["balance_address"] }}</a>)</td>
+        <td>{{block["balance"]}} (<a href="{{ path('block', {'input':block["balance_address"]}) }}" rel="nofollow">{{ block["balance_address"] }}</a>)</td>
       </tr>
     </tbody>
   </table>
@@ -57,7 +57,7 @@
 	  {% for element in transaction_pagination %}
 	  <tr>
 		<td><span class="{{ element["direction"]|lower }}">{{ element["direction"] }}</span></td>
-		<td><a href="{{ path('block', {'input':element["address"]}) }}">{{ element["address"] }}</a></td>
+		<td><a href="{{ path('block', {'input':element["address"]}) }}" rel="nofollow">{{ element["address"] }}</a></td>
 		<td>{{ element["amount"] }}</td>
 	  </tr>
 	  {% endfor %}
@@ -84,7 +84,7 @@
 	{% for element in address_pagination %}
         <tr>
           <td><span class="{{ element["direction"]|lower }}">{{ element["direction"] }}</span></td>
-          <td><a href="{{ path('block', {'input':element["address"]}) }}">{{ element["address"] }}</a></td>
+          <td><a href="{{ path('block', {'input':element["address"]}) }}" rel="nofollow">{{ element["address"] }}</a></td>
           <td>{{ element["amount"] }}</td>
           <td>{{ element["time"] }} UTC</td>
         </tr>
