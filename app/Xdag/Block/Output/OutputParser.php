@@ -146,7 +146,6 @@ class OutputParser
 
 						if (isset($earnings_graph[$date_index])) {
 							$earnings_graph[$date_index] = bcadd($earnings_graph[$date_index], $address['amount']);
-							$balances_graph[$date_index] = $total_balance;
 
 							while (isset($balances_graph[$date_index])) {
 								$balances_graph[$date_index] = $total_balance;
