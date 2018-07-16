@@ -134,7 +134,11 @@ class OutputParser
 
 						if (isset($spendings_graph[$date_index])) {
 							$spendings_graph[$date_index] = bcadd($spendings_graph[$date_index], $address['amount']);
-							$balances_graph[$date_index] = $total_balance;
+
+							while (isset($balances_graph[$date_index])) {
+								$balances_graph[$date_index] = $total_balance;
+								$date_index++;
+							}
 						}
 					} else {
 						$total_earnings = bcadd($total_earnings, $address['amount']);
@@ -143,6 +147,11 @@ class OutputParser
 						if (isset($earnings_graph[$date_index])) {
 							$earnings_graph[$date_index] = bcadd($earnings_graph[$date_index], $address['amount']);
 							$balances_graph[$date_index] = $total_balance;
+
+							while (isset($balances_graph[$date_index])) {
+								$balances_graph[$date_index] = $total_balance;
+								$date_index++;
+							}
 						}
 					}
 
