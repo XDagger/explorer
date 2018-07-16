@@ -4,8 +4,6 @@ namespace App\Xdag\Block\Output;
 class OutputStream
 {
 	protected $block_started = false;
-	protected $transaction_number;
-	protected $address_number;
 
 	public function stream($message, $data)
 	{
