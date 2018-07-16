@@ -100,6 +100,9 @@ class Xdag implements XdagInterface
 
 		$block = $parser->getBlockFromOutput($this->commandStream('block ' . $input), $this->versionGreaterThan('0.2.4'));
 
+		if (!$block)
+			return $block;
+
 		$cache = new Cache;
 		if (Validator::isBlockHash($input)) {
 			$cmd = 'block ' . $block->getProperties()->get('balance_address');
