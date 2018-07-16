@@ -12,7 +12,7 @@ This software provides a detailed view on the xdag network presented in a nice, 
 - block listing filters, and pagination
 - block listing summaries (earnings / inputs, spendings / outputs on each page)
 - switching of block as address and block as transaction panels based on block kind
-- extensive caching for best performance, blocks are cached for 3 minutes, balances and other commands are cacheda for 1 minute
+- extensive caching for best performance, blocks are cached for 3 minutes, balances and other commands are cached for 1 minute
 - ability to handle very large blocks, data is never fully loaded into memory
 - rich and documented API
 - text mode for older / mobile browsers
