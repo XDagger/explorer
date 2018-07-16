@@ -1,0 +1,75 @@
+.form-group {
+    @apply .mb-4;
+
+    .form-label {
+        @apply .block .uppercase .leading-normal .text-sm .font-bold .mb-2;
+    }
+
+    .form-input {
+        @apply .shadow .appearance-none .border .rounded .w-full .py-3 .px-4 .text-grey-darker .leading-tight;
+        outline: none;
+
+        &.has-error {
+            @apply .border-red;
+        }
+    }
+
+    .form-checkbox {
+        @apply .shadow .appearance-none .border .rounded .w-6 .h-6 .leading-tight;
+        outline: none;
+    }
+
+    .error-text {
+        @apply .mt-2 .text-red .font-medium .text-sm;
+    }
+}
+
+.button {
+    @apply .font-medium .rounded .tracking-wide .text-center .cursor-pointer;
+
+    outline: none;
+
+    &:not(.small) {
+        @apply .py-3 .px-6;
+    }
+
+    &.small {
+        @apply .py-2 .px-4 .text-sm;
+    }
+
+    &:hover {
+        outline: none;
+    }
+
+    &:focus {
+        outline: none;
+    }
+
+    &.primary {
+        @apply .text-white .bg-blue;
+
+        &:hover {
+            @apply .bg-blue-dark;
+        }
+    }
+
+    &.secondary {
+        @apply .text-black .bg-grey-lighter;
+
+        &:hover {
+            @apply .bg-grey-light;
+        }
+    }
+
+    &.link {
+        @apply .text-blue-dark .bg-transparent;
+
+        &:hover {
+            @apply .bg-transparent .text-blue;
+        }
+    }
+
+    &.disabled {
+        @apply .opacity-50 .cursor-not-allowed;
+    }
+}

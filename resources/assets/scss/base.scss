@@ -1,0 +1,8 @@
+a {
+    @apply .no-underline .text-blue-dark .font-medium;
+    transition: all .2s linear;
+}
+
+a:hover {
+    @apply .no-underline .text-blue;
+}

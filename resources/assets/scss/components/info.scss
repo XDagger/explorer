@@ -1,0 +1,7 @@
+.info-label {
+    @apply .block .uppercase .leading-normal .text-sm .font-bold;
+}
+
+.info-value {
+    @apply .block .leading-normal .font-medium .opacity-75;
+}

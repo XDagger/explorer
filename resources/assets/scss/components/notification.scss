@@ -1,0 +1,19 @@
+.notification {
+    @apply .p-4 .rounded .flex .items-center;
+
+    &.error {
+        @apply .bg-red .text-white;
+    }
+
+    &.warning {
+        @apply .bg-yellow .text-black;
+    }
+
+    &.info {
+        @apply .bg-blue .text-white;
+    }
+
+    &.success {
+        @apply .bg-green .text-white;
+    }
+}

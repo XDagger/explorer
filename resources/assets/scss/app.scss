@@ -1,0 +1,14 @@
+@import "tailwind/preflight";
+@import "base";
+
+@import "tailwind/components";
+@import "components/box";
+@import "components/info";
+@import "components/form";
+@import "components/calendar";
+@import "components/notification";
+
+@import "pages/api-docs";
+
+@import "tailwind/utilities";
+@import "utilities";

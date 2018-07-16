@@ -1,0 +1,29 @@
+.api-docs {
+    h1 {
+        @apply .text-black .text-xl .font-bold .-mb-8;
+    }
+
+    h2 {
+        @apply .text-grey-darkest .text-lg .font-bold .mb-2 .mt-16 .bg-blue-lightest .border-l-4 .border-blue .px-4 .py-2;
+    }
+
+    h3 {
+        @apply .text-grey-darkest .text-base .font-bold .mb-4 .mt-8;
+    }
+
+    p {
+        @apply .text-sm .text-grey-darkest .py-4 .leading-loose;
+
+        code {
+            @apply .bg-blue-lightest .px-3 .py-1 .rounded .text-black;
+        }
+    }
+
+    pre {
+        @apply .p-4 .bg-grey-lightest;
+
+        code {
+            @apply .bg-grey-lightest .text-black .text-sm;
+        }
+    }
+}
