@@ -128,6 +128,8 @@ class OutputParser
 						$balance_base = $total_balance;
 					}
 
+					$operator = $flipped ? 'subDays' : 'addDays';
+
 					if (in_array($address['direction'], ['output', 'fee'])) {
 						$total_spendings = bcadd($total_spendings, $address['amount']);
 						$total_balance = bcsub($total_balance, $address['amount']);
@@ -137,7 +139,9 @@ class OutputParser
 
 							while (isset($balances_graph[$date_index])) {
 								$balances_graph[$date_index] = $total_balance;
-								$date_index += ($flipped ? -1 : 1);
+
+								$date->$operator(1);
+								$date_index = $date->format('Y-m-d');
 							}
 						}
 					} else {
@@ -149,7 +153,9 @@ class OutputParser
 
 							while (isset($balances_graph[$date_index])) {
 								$balances_graph[$date_index] = $total_balance;
-								$date_index += ($flipped ? -1 : 1);
+
+								$date->$operator(1);
+								$date_index = $date->format('Y-m-d');
 							}
 						}
 					}
