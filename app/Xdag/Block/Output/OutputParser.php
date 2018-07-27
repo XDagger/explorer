@@ -186,6 +186,17 @@ class OutputParser
 			$balance_base = $total_balance;
 		}
 
+
+		// fix up balances graph for 0.2.5+ flipped block command output
+		if ($flipped) {
+			$sum = array_sum($balances_graph);
+			$add = $total_balance - $balances_graph;
+
+			foreach ($balances_graph as $date => $balance) {
+				$balances_graph[$date] += $add;
+			}
+		}
+
 		$block = new Block([
 			'properties' => $properties,
 			'transactions' => $transactions,
