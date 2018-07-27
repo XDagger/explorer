@@ -189,12 +189,15 @@ class OutputParser
 
 		// fix up balances graph for 0.2.5+ flipped block command output
 		if ($flipped) {
-			$sum = array_sum($balances_graph);
-			$add = $total_balance - $balances_graph;
+			$sum = '0';
 
-			foreach ($balances_graph as $date => $balance) {
-				$balances_graph[$date] += $add;
-			}
+			foreach ($balances_graph as $balance)
+				$sum = bcadd($sum, $balance);
+
+			$previous_balance = bcsub($total_balance, $sum);
+
+			foreach ($balances_graph as $date => $balance)
+				$balances_graph[$date] = bcadd($balances_graph[$date], $previous_balance);
 		}
 
 		$block = new Block([
