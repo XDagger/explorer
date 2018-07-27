@@ -137,7 +137,7 @@ class OutputParser
 
 							while (isset($balances_graph[$date_index])) {
 								$balances_graph[$date_index] = $total_balance;
-								$date_index++;
+								$date_index += ($flipped ? -1 : 1);
 							}
 						}
 					} else {
@@ -149,7 +149,7 @@ class OutputParser
 
 							while (isset($balances_graph[$date_index])) {
 								$balances_graph[$date_index] = $total_balance;
-								$date_index++;
+								$date_index += ($flipped ? -1 : 1);
 							}
 						}
 					}
