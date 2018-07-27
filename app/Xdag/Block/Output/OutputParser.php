@@ -186,18 +186,25 @@ class OutputParser
 			$balance_base = $total_balance;
 		}
 
-
 		// fix up balances graph for 0.2.5+ flipped block command output
 		if ($flipped) {
-			$previous_balance = $total_balance;
+			$balances_graph = array_reverse($balances_graph);
+			$previous = $diff = null;
 
 			foreach ($balances_graph as $date => $balance) {
-				$previous_balance = bcadd($previous_balance, $spendings_graph[$date]);
-				$previous_balance = bcsub($previous_balance, $earnings_graph[$date]);
+				if ($previous === null) {
+					$balances_graph[$date] = $total_balance;
+					$previous = $balance;
+					$diff = bcsub($total_balance, $balance);
+					continue;
+				}
+
+				$balances_graph[$date] = $diff;
+				$diff = bcadd($previous, bcsub($diff, $balance));
+				$previous = $balance;
 			}
 
-			foreach ($balances_graph as $date => $balance)
-				$balances_graph[$date] = bcadd($balances_graph[$date], $previous_balance);
+			$balances_graph = array_reverse($balances_graph);
 		}
 
 		$block = new Block([
