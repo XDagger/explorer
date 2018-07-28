@@ -60,7 +60,7 @@ class OutputParser
 
 		$last_day_boundary = now()->subDays(1);
 
-		foreach ($output as $line) {
+		foreach ($this->sortedOutput($output, $flipped) as $line) {
 			switch ($state) {
 				case 'properties':
 					if (!$this->parser->blockExists($line)) {
@@ -231,6 +231,22 @@ class OutputParser
 	public function setCallback(callable $callback)
 	{
 		$this->user_callback = $callback;
+	}
+
+	protected function sortedOutput($output, $flipped)
+	{
+		$earning = null;
+
+		foreach ($output as $line) {
+			if ($flipped && substr(trim($line), 0, 8) === 'earning:') {
+				$earning = $line;
+			} else {
+				yield $line;
+			}
+		}
+
+		if ($earning !== null)
+			yield $earning;
 	}
 
 	protected function shouldSaveTransaction($transaction_number)

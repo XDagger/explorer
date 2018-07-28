@@ -598,6 +598,7 @@ difficulty: 630f2898a810cecc2a958835ea9
 								 block as address: details
  direction	transaction								   amount		time
 -------------------------------------------------------------------------------------------
+   earning: QHul3aEvYN8KHkArCW7xOw1i5uLLGRzN		1024.000000000	2018-06-14 19:34:23.999
 	output: P3/4KceASRm2DY9uU6AMW+Hr48g9mCXA		  10.291589971	2018-05-26 19:49:21.254
 	output: NvfjiZMxBrtxjfp+sdZn1/EQTKQ0PDI4		   0.619787876	2018-05-26 19:49:21.252
 	output: OUj48O7cUfqFeYDOQJzw+LA/b+A9FmXi		   0.073340981	2018-05-26 19:49:21.250
@@ -1025,8 +1026,7 @@ difficulty: 630f2898a810cecc2a958835ea9
 	output: 2UpSicD5xv1NA/PTN04+d/QuWoH1MCYm		   2.044502267	2018-06-14 19:49:20.387
 	output: GcO1gv2BKKugmumKMiufQ0Ue3pI5Ogtm		   2.552766561	2018-06-14 19:49:20.384
 	output: QTTm45K/Reju1/3FIU/fD4D4gv+ojkbQ		   2.659098001	2018-06-14 19:49:20.381
-	output: RYvemDqKltkC4VaxkdgT2nu84RmGCQfE		   1.175313073	2018-06-14 19:49:20.378
-   earning: QHul3aEvYN8KHkArCW7xOw1i5uLLGRzN		1024.000000000	2018-06-14 19:34:23.999';
+	output: RYvemDqKltkC4VaxkdgT2nu84RmGCQfE		   1.175313073	2018-06-14 19:49:20.378';
 
 			return 'Block is not found';
 		}
