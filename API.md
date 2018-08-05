@@ -63,8 +63,18 @@ All API requests except `/api/status` check current daemon state. If the daemon 
             "in_out_packets": [10839877, 31606947],
             "in_out_dropped": [0, 3]
         }
-   ],
-   "date": "2018-06-21 10:18:47"
+    ],
+    "date": "2018-06-21 10:18:47"
+}
+```
+
+## GET /api/supply
+### Successful response
+**Response status code:** `200`
+
+```json
+{
+    "supply": 232990720
 }
 ```
 
