@@ -36,7 +36,7 @@ class Cache
 		$lock = $path . '/lock_' . md5($cmd);
 		$wait = $ttl * 60;
 
-		while ($wait && file_exists($lock)) {
+		while ($wait && @file_exists($lock)) {
 			sleep(1);
 			$wait--;
 		}
