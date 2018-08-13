@@ -34,8 +34,8 @@ class BlockController extends Controller
 
 	public function show($address_or_hash, ValueChangeCalculator $change)
 	{
-		if (strlen($address_or_hash) == 31)
-			$address_or_hash = $address_or_hash . '/';
+		if (strlen($address_or_hash) < 32)
+			$address_or_hash = str_pad($address_or_hash, 32, '/');
 
 		$transaction_paginator = new Paginator(20, 'transactions-page');
 		$address_paginator = new Paginator(20, 'addresses-page');

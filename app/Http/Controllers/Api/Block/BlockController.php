@@ -22,8 +22,8 @@ class BlockController extends Controller
 
 	public function show($address_or_hash)
 	{
-		if (strlen($address_or_hash) == 31)
-			$address_or_hash = $address_or_hash . '/';
+		if (strlen($address_or_hash) < 32)
+			$address_or_hash = str_pad($address_or_hash, 32, '/');
 
 		if (! Validator::isAddress($address_or_hash) && ! Validator::isBlockHash($address_or_hash)) {
 			return $this->response()->error('invalid_input', 'Incorrect address or block hash.', Response::HTTP_UNPROCESSABLE_ENTITY);
