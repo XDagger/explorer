@@ -8,7 +8,7 @@
 
 				<single-line-chart chart-name="Network Hashrate Th/s"
 					color="blue"
-					:class="'w-full h-32 md:h-48'"
+					:class="'w-full h-48'"
 					:labels='{!! $hashrate_chart['days'] !!}'
 					:chart-data='{!! $hashrate_chart['data'] !!}'>
 				</single-line-chart>
@@ -19,7 +19,7 @@
 
 				<single-bar-chart chart-name="New blocks"
 					color="indigo"
-					:class="'w-full h-32 md:h-48'"
+					:class="'w-full h-48'"
 					:labels='{!! $blocks_chart['hours'] !!}'
 					:chart-data='{!! $blocks_chart['data'] !!}'>
 				</single-bar-chart>
