@@ -7,10 +7,10 @@
 				<div class="text-grey-dark text-base font-normal mb-8">Last {{ \App\Modules\Network\Network::DAYS_LIMIT }} days</div>
 
 				<single-line-chart chart-name="Network Hashrate Th/s"
-								   color="blue"
-								   :height="100"
-								   :labels='{!! $hashrate_chart['days'] !!}'
-								   :chart-data='{!! $hashrate_chart['data'] !!}'>
+					color="blue"
+					:class="'w-full h-32 md:h-48'"
+					:labels='{!! $hashrate_chart['days'] !!}'
+					:chart-data='{!! $hashrate_chart['data'] !!}'>
 				</single-line-chart>
 
 
@@ -18,10 +18,10 @@
 				<div class="text-grey-dark text-base font-normal mb-8">Last hour</div>
 
 				<single-bar-chart chart-name="New blocks"
-								   color="indigo"
-								   :height="100"
-								   :labels='{!! $blocks_chart['hours'] !!}'
-								   :chart-data='{!! $blocks_chart['data'] !!}'>
+					color="indigo"
+					:class="'w-full h-32 md:h-48'"
+					:labels='{!! $blocks_chart['hours'] !!}'
+					:chart-data='{!! $blocks_chart['data'] !!}'>
 				</single-bar-chart>
 			</div>
 
