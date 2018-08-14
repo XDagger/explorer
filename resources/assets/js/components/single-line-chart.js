@@ -16,7 +16,7 @@ export default {
 					label: this.chartName,
 					lineTension: 0,
 					backgroundColor: chartColor,
-					backgroundColor: chartColor.replace(', 1)', ', .05)'),
+					backgroundColor: chartColor.replace(', 1)', ', .2)'),
 					radius: 0,
 					fill: 'origin',
 					data: this.chartData,
