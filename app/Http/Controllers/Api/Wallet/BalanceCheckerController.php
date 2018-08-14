@@ -12,9 +12,8 @@ class BalanceCheckerController extends Controller
 {
 	public function getBalance($address, XdagInterface $xdag)
 	{
-		if (strlen($address) == 31) {
-			$address = $address . '/';
-		}
+		if (strlen($address) < 32)
+			$address = str_pad($address, 32, '/');
 
 		if (! Validator::isAddress($address)) {
 			return $this->response()->error('invalid_input', 'Incorrect address.', Response::HTTP_UNPROCESSABLE_ENTITY);
