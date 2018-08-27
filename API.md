@@ -78,6 +78,22 @@ All API requests except `/api/status` check current daemon state. If the daemon 
 }
 ```
 
+## GET /api/supply/raw
+### Successful response
+**Response status code:** `200`
+
+```
+232990720
+```
+
+## GET /api/supply/raw/with-decimals
+### Successful response
+**Response status code:** `200`
+
+```
+232990720.000000000
+```
+
 ## GET /api/last-blocks
 
 ### Successful response
