@@ -86,15 +86,7 @@ All API requests except `/api/status` check current daemon state. If the daemon 
 232990720
 ```
 
-## GET /api/supply/raw/with-decimals
-### Successful response
-**Response status code:** `200`
-
-```
-232990720.000000000
-```
-
-## GET /api/supply/raw/coingecko1
+## GET /api/supply/coingecko/with-separators
 ### Successful response
 **Response status code:** `200`
 
@@ -102,7 +94,7 @@ All API requests except `/api/status` check current daemon state. If the daemon 
 232,990,720.000000000
 ```
 
-## GET /api/supply/raw/coingecko2
+## GET /api/supply/coingecko/without-separators
 ### Successful response
 **Response status code:** `200`
 
