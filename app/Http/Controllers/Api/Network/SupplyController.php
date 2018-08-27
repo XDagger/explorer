@@ -29,4 +29,18 @@ class SupplyController extends Controller
 
 		return response($log ? $log->supply . '.000000000' : '0.000000000', 200)->header('Content-Type', 'text/plain');
 	}
+
+	public function rawCoinGecko1()
+	{
+		$log = Network::latest()->first();
+
+		return response($log ? number_format($log->supply . '.000000000', 9, '.', ',') : '0.000000000', 200)->header('Content-Type', 'text/plain');
+	}
+
+	public function rawCoinGecko2()
+	{
+		$log = Network::latest()->first();
+
+		return response($log ? number_format($log->supply . '.000000000', 9, '', '') : '0.000000000', 200)->header('Content-Type', 'text/plain');
+	}
 }
