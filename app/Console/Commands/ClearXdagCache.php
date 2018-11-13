@@ -36,7 +36,7 @@ class ClearXdagCache extends Command
 			if ($file == '.' || $file == '..')
 				continue;
 
-			if (filetype($dir . '/' . $file) == 'file') {
+			if (@filetype($dir . '/' . $file) == 'file') {
 				$mtime = filemtime($dir . '/' . $file);
 				if ($mtime && $mtime <= time() - $ttl * 60)
 					unlink($dir . '/' . $file);
