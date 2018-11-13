@@ -174,11 +174,13 @@ class Xdag implements XdagInterface
 				$values = explode(' of ', $raw_value = strtolower(trim($matches[2])));
 
 				if (count($values) == 2) {
-					foreach ($values as $i => $value) {
-						if (preg_match('/^[0-9]+$/', $value)) {
-							$values[$i] = (int)$value;
-						} else if (is_numeric($value)) {
-							$values[$i] = (float)$value;
+					if ($key !== 'chain difficulty') {
+						foreach ($values as $i => $value) {
+							if (preg_match('/^[0-9]+$/', $value)) {
+								$values[$i] = (int) $value;
+							} else if (is_numeric($value)) {
+								$values[$i] = (float) $value;
+							}
 						}
 					}
 
