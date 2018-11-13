@@ -42,7 +42,7 @@ class Block
 
 	public function isTransactionBlock()
 	{
-		return !$this->isMainBlock() && $this->total_addresses_count == 0;
+		return !$this->isMainBlock() && $this->total_addresses_count == 0 && $this->total_transactions_count > 1; // "fee" transaction is always present
 	}
 
 	public function getProperties()

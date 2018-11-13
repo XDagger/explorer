@@ -11,7 +11,7 @@
 	<br>
 	<br>
 
-	<strong>Blocks</strong>
+	<strong>Hash</strong>
 	<a href="{{ route('block', ['address_or_hash' => $block->getProperties()->get('hash')]) }}" rel="nofollow">{{ $block->getProperties()->get('hash') }}</a>
 	<br>
 	<br>
