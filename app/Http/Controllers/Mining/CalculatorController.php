@@ -24,6 +24,9 @@ class CalculatorController extends Controller
 		$networkHashrate = $log ? $log->hashrate : 0;
 
 		$hashrateInHs = ((float) request('hashrate')) * Hashpower::GHS;
+
+		$networkHashrate += $hashrateInHs;
+
 		$result = number_format(round($hashrateInHs * self::MAX_COINS_PER_DAY_ON_NETWORK / $networkHashrate, 9), 9);
 
 		return view('mining-calculator.text-index', compact('result'));
