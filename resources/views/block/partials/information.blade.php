@@ -42,7 +42,7 @@
 				</div>
 
 				<div class="mb-4">
-					@if ($block->getProperties()->get('remark') !== '')
+					@if ((string) $block->getProperties()->get('remark') !== '')
 						<div class="flex flex-wrap justify-between items-start">
 							<div class="mb-4 md:mb-0 w-full md:w-1/2">
 								<strong class="info-label">Address</strong>

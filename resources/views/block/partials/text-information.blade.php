@@ -21,7 +21,7 @@
 	<br>
 	<br>
 
-	@if ($block->getProperties()->get('remark') !== '')
+	@if ((string) $block->getProperties()->get('remark') !== '')
 		<strong>Remark</strong>
 		<span>{{ $block->getProperties()->get('remark') }}</span>
 		<br>
