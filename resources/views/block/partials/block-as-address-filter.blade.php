@@ -180,17 +180,19 @@
 							<p class="error-text">{{ $addressFiltersValidation->firstError('directions') }}</p>
 						@endif
 
-						<div class="w-full">
-							<div class="form-group">
-								<label for="address" class="form-label">Remark</label>
+						@if ($showRemarkFilter)
+							<div class="w-full">
+								<div class="form-group">
+									<label for="address" class="form-label">Remark</label>
 
-								<input class="form-input {{ $addressFiltersValidation->errors()->has('remark') ? 'has-error' : '' }}" type="text" placeholder="Remark" name="remark" id="remark" value="{{ $addressFilters->remark }}">
+									<input class="form-input {{ $addressFiltersValidation->errors()->has('remark') ? 'has-error' : '' }}" type="text" placeholder="Remark" name="remark" id="remark" value="{{ $addressFilters->remark }}">
 
-								@if ($addressFiltersValidation->errors()->has('remark'))
-									<p class="error-text">{{ $addressFiltersValidation->firstError('remark') }}</p>
-								@endif
+									@if ($addressFiltersValidation->errors()->has('remark'))
+										<p class="error-text">{{ $addressFiltersValidation->firstError('remark') }}</p>
+									@endif
+								</div>
 							</div>
-						</div>
+						@endif
 					</div>
 				</div>
 

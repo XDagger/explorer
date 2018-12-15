@@ -62,6 +62,7 @@ class BlockController extends Controller
 			'block' => $block,
 			'addressFiltersValidation' => $address_filters_validation,
 			'addressFilters' => $address_filters,
+			'showRemarkFilter' => $this->xdag->versionGreaterThan('0.2.5'),
 			'addressPagination' => $address_paginator,
 			'transactionFiltersValidation' => $transaction_filters_validation,
 			'transactionFilters' => $transaction_filters,
