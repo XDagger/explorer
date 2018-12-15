@@ -16,6 +16,7 @@ class AddressFiltersBuilder
 		$filters->amountTo	 = array_get($amount, 'to');
 		$filters->dateFrom	 = array_get($date, 'from');
 		$filters->dateTo	 = array_get($date, 'to');
+		$filters->remark	 = array_get($data, 'remark');
 
 		return $filters;
 	}

@@ -43,6 +43,13 @@
 				<span class="block text-sm break-words">{{ implode(', ', $addressFilters->directions) }}</span>
 			</div>
 		@endif
+
+		@if ($addressFilters->hasUsedFilter('remark'))
+			<div class="w-full md:w-auto md:min-w-xs p-4 pt-0">
+				<strong class="block uppercase leading-normal text-sm">Remark</strong>
+				<span class="block text-sm break-words">{{ $addressFilters->remark }}</span>
+			</div>
+		@endif
 	</div>
 
 	<div class="text-right">

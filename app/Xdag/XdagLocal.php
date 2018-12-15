@@ -71,9 +71,29 @@ class XdagLocal extends Xdag implements XdagInterface
   3. 22.22.133.123:11111   118280 sec, 6187444224/16896978944 in/out bytes, 10839877/31606947 packets, 0/3 dropped';
 
 		if ($cmd[0] == 'block' && isset($cmd[1])) {
+			$block_remark = '';
+			$separator = '-------------------------------------------------------------------------------------------';
+			$address_header = ' direction  transaction                                amount       time';
+			$earning_1 = "\n   earning: QHul3aEvYN8KHkArCW7xOw1i5uLLGRzN		1024.000000000	2018-06-14 19:34:23.999";
+			$earning_2 = '';
+			$remark_1 = '';
+			$remark_2 = '';
+
+			if ($this->versionGreaterThan('0.2.5')) {
+				$block_remark = "\n    remark: test block remark";
+				$separator = '-----------------------------------------------------------------------------------------------------------------------------';
+				$address_header = ' direction  transaction                                amount       time                     remark                          ';
+				$earning_1 = '';
+				$earning_2 = "\n   earning: QHul3aEvYN8KHkArCW7xOw1i5uLLGRzN		1024.000000000	2018-06-14 19:34:23.999";
+				$remark_1 = '  test remark 1';
+				$remark_2 = '  test remark 2';
+			}
+
 			// large wallet block
-			if ($cmd[1] == 'WLYMhgmO01vA86yfdk7bEMX2lqzFxalj' || $cmd[1] == 'b458f488ad0ff62963a9c5c5ac96f6c510db4e769facf3c05bd38e09860cb658')
+			if ($cmd[1] == 'WLYMhgmO01vA86yfdk7bEMX2lqzFxalj' || $cmd[1] == 'b458f488ad0ff62963a9c5c5ac96f6c510db4e769facf3c05bd38e09860cb658') {
+				// > 0.2.5 simulation not supported on example large block
 				return file_get_contents(__DIR__ . '/ExampleData/largeblock.txt');
+			}
 
 			// tx block
 			if ($cmd[1] == 'IxTmxt1HDfEN4H/AkzoVlfCezXb5eK+G' || $cmd[1] == '1377bfff49a19d0086af78f976cd9ef095153a93c07fe00df10d47ddc6e61423')
@@ -82,13 +102,13 @@ class XdagLocal extends Xdag implements XdagInterface
      flags: 1c
      state: Accepted
   file pos: 3400
-      hash: 1377bfff49a19d0086af78f976cd9ef095153a93c07fe00df10d47ddc6e61423
+      hash: 1377bfff49a19d0086af78f976cd9ef095153a93c07fe00df10d47ddc6e61423' . $block_remark . '
 difficulty: 67afc768f709c3c51fe467dd6e3
    balance: IxTmxt1HDfEN4H/AkzoVlfCezXb5eK+G           0.000000000
--------------------------------------------------------------------------------------------
+' . $separator . '
                                block as transaction: details
  direction  address                                    amount
--------------------------------------------------------------------------------------------
+' . $separator . '
        fee: Pt9p+W1b1Ll1hnQnTvhnUVO1WBt/F05q           0.000000000
      input: esjB13qh5KTasesXNcNVEtxhtk7AK+7J          21.384352287
     output: jXUomq7J+E6ov4wWcfMIaqfl6C0wKbES           0.014877667
@@ -102,10 +122,10 @@ difficulty: 67afc768f709c3c51fe467dd6e3
     output: DLW9zsi4Xjgz+pIhA05AG+SIuZhD8nwL           0.691224573
     output: Bhx07eBKNaunnC3zdDJ7AaIJyZDFlMnM           0.814736369
     output: gIr0tcVxGMqI1Qvvertdwj0hVCN5tkTE           0.547397367
--------------------------------------------------------------------------------------------
+' . $separator . '
                                  block as address: details
- direction  transaction                                amount       time
--------------------------------------------------------------------------------------------';
+' . $address_header . '
+' . $separator;
 
 			// main block
 			if (!$this->versionGreaterThan('0.2.4') && ($cmd[1] == 'QHul3aEvYN8KHkArCW7xOw1i5uLLGRzN' || $cmd[1] == '0000000000000285cd1c19cbe2e6620d3bf16e092b401e0adf602fa1dda57b40'))
@@ -569,18 +589,18 @@ difficulty: 630f2898a810cecc2a958835ea9
 	output: P3/4KceASRm2DY9uU6AMW+Hr48g9mCXA		  10.291589971	2018-05-26 19:49:21.254';
 
 			if ($this->versionGreaterThan('0.2.4') && ($cmd[1] == 'QHul3aEvYN8KHkArCW7xOw1i5uLLGRzN' || $cmd[1] == '0000000000000285cd1c19cbe2e6620d3bf16e092b401e0adf602fa1dda57b40'))
-				return 'time: 2018-06-14 19:34:23.999
+				return '      time: 2018-06-14 19:34:23.999
  timestamp: 16c26daffff
 	 flags: 1f
 	 state: Main
   file pos: f0e00
-	  hash: 0000000000000285cd1c19cbe2e6620d3bf16e092b401e0adf602fa1dda57b40
+	  hash: 0000000000000285cd1c19cbe2e6620d3bf16e092b401e0adf602fa1dda57b40' . $block_remark . '
 difficulty: 630f2898a810cecc2a958835ea9
    balance: QHul3aEvYN8KHkArCW7xOw1i5uLLGRzN		  10.240000519
--------------------------------------------------------------------------------------------
+' . $separator . '
 							   block as transaction: details
  direction	address									   amount
--------------------------------------------------------------------------------------------
+' . $separator . '
 	   fee: QHul3aEvYN8KHkArCW7xOw1i5uLLGRzN		   1.000000000
 	output: F81tjpr7ONhatIapuqU1LqLOP3q7gzhQ		   2.000000000
 	 input: rFYU3YXvzhZHFrq0HMn1W5AwIyjCASzb		   0.000000000
@@ -594,17 +614,16 @@ difficulty: 630f2898a810cecc2a958835ea9
 	output: g3bAGI/Oecez51hF679ZSXrgHTVObW1f		   0.000000000
 	output: 9XFlMlg5G1xgptjFmwdOxUVte3HSwcWl		   0.000000000
 	output: TQxa9lLYGTOb4spslbM0LnLaJ0ihl1SA		   0.000000000
--------------------------------------------------------------------------------------------
+' . $separator . '
 								 block as address: details
- direction	transaction								   amount		time
--------------------------------------------------------------------------------------------
-   earning: QHul3aEvYN8KHkArCW7xOw1i5uLLGRzN		1024.000000000	2018-06-14 19:34:23.999
-	output: P3/4KceASRm2DY9uU6AMW+Hr48g9mCXA		  10.291589971	2018-05-26 19:49:21.254
-	output: NvfjiZMxBrtxjfp+sdZn1/EQTKQ0PDI4		   0.619787876	2018-05-26 19:49:21.252
-	output: OUj48O7cUfqFeYDOQJzw+LA/b+A9FmXi		   0.073340981	2018-05-26 19:49:21.250
-	output: szhe4/brqyt1tjcG6R5Jnp1DOes+MTq6		   0.439448512	2018-05-26 19:49:21.249
-	output: QPdsPuLRYt6xfQfeq/tA6upbJgsmHY6B		   0.346154796	2018-05-26 19:49:21.247
-	output: 80CykzY4sdap2RPMexQdSt0DIchI4Guk		   0.115601075	2018-05-26 19:49:21.245
+' . $address_header . '
+' . $separator . $earning_1 . '
+	output: P3/4KceASRm2DY9uU6AMW+Hr48g9mCXA		  10.291589971	2018-05-26 19:49:21.254' . $remark_1 . '
+	output: NvfjiZMxBrtxjfp+sdZn1/EQTKQ0PDI4		   0.619787876	2018-05-26 19:49:21.252' . $remark_1 . '
+	output: OUj48O7cUfqFeYDOQJzw+LA/b+A9FmXi		   0.073340981	2018-05-26 19:49:21.250' . $remark_1 . '
+	output: szhe4/brqyt1tjcG6R5Jnp1DOes+MTq6		   0.439448512	2018-05-26 19:49:21.249' . $remark_2 . '
+	output: QPdsPuLRYt6xfQfeq/tA6upbJgsmHY6B		   0.346154796	2018-05-26 19:49:21.247' . $remark_2 . '
+	output: 80CykzY4sdap2RPMexQdSt0DIchI4Guk		   0.115601075	2018-05-26 19:49:21.245' . $remark_2 . '
 	output: 39xEXjU8BQ7flPMLGq/9udplG9aaobxL		   0.585954342	2018-05-26 19:49:21.243
 	output: i/lOsxToXt7hJrz3TWUj21ji87hO5VH4		   0.595436891	2018-05-26 19:49:21.241
 	output: HfFCVFq9Z2wEU50AOytH90F6sPR/6ePN		   0.285451259	2018-05-26 19:49:21.239
@@ -1026,7 +1045,7 @@ difficulty: 630f2898a810cecc2a958835ea9
 	output: 2UpSicD5xv1NA/PTN04+d/QuWoH1MCYm		   2.044502267	2018-06-14 19:49:20.387
 	output: GcO1gv2BKKugmumKMiufQ0Ue3pI5Ogtm		   2.552766561	2018-06-14 19:49:20.384
 	output: QTTm45K/Reju1/3FIU/fD4D4gv+ojkbQ		   2.659098001	2018-06-14 19:49:20.381
-	output: RYvemDqKltkC4VaxkdgT2nu84RmGCQfE		   1.175313073	2018-06-14 19:49:20.378';
+	output: RYvemDqKltkC4VaxkdgT2nu84RmGCQfE		   1.175313073	2018-06-14 19:49:20.378' . $earning_2;
 
 			return 'Block is not found';
 		}
@@ -1062,29 +1081,41 @@ WLYMhgmO01vA86yfdk7bEMX2lqzFxalj';
 		}
 
 		if ($cmd[0] == 'mainblocks') {
-			$blocks = '-----------------------------------------------------------------------
+			$remark_1 = '';
+			$remark_2 = '';
+			$separator = '-----------------------------------------------------------------------';
+			$header = 'address                            time                      state';
+
+			if ($this->versionGreaterThan('0.2.5')) {
+				$remark_1 = '                                      ';
+				$remark_2 = '  test remark';
+				$separator = '---------------------------------------------------------------------------------------------------------';
+				$header = 'address                            time                      state     mined by                          ';
+			}
+
+			$blocks = $separator . '
 address                            time                      state
------------------------------------------------------------------------
-Jim9F5oqJbQA6dM68phqGZ2023UDdngs   2018-07-12 00:35:59.999   Main
-erOISXoScyQ8TAVgX5OofnOgwy/hNYcN   2018-07-12 00:34:55.999   Main
-GUImUst9bYFY8wR9I7eMxU1zsQ1hYIj9   2018-07-12 00:33:51.999   Main
-LYXHuZwIOjy6/pUZ1SoUyS6bUSvo3lFR   2018-07-12 00:32:47.999   Main
-ZAyhGaI3cRwB4IltNgY0HfW8ACsFdws+   2018-07-12 00:31:43.999   Main
-ORak8Di3DtkTjeWEVn4lg1rk+ixP/MG9   2018-07-12 00:30:39.999   Main
-1iToKTNdwFL54Nlhf4RNh3oJxwjfXDLy   2018-07-12 00:29:35.999   Main
-PzUN6WUt9+ykkEZBsHkhRXlFhZ/gAtZ4   2018-07-12 00:28:31.999   Main
-ECsF/JPS1KmhNBMewpIaLA/vPevLLusu   2018-07-12 00:27:27.999   Main
-nBjQfO2A20wMJDscmxpRNk5/GuB/ghY6   2018-07-12 00:26:23.999   Main
-PLA9HCrWooxjMVwjR5tKRuSrZcKu+5Pf   2018-07-12 00:25:19.999   Main
-9xWFYp1GrTIWSRFZ0mhQPTp6Z17Gml9J   2018-07-12 00:24:15.999   Main
-hJD/OBhexPzukGJROlw/b3ZNlJzthkVk   2018-07-12 00:23:11.999   Main
-r9Ryt+CcPgaHEo9niW0VTMac4ZJBmPbA   2018-07-12 00:22:07.999   Main
-tDg2IC19a+sBr2VcDkvVEqLXjWOcEtJy   2018-07-12 00:21:03.999   Main
-E6IKRznvpoLYMDH9FwNami2gmuTQ6/VV   2018-07-12 00:19:59.999   Main
-3bhRLUXh3kNfDGW61zuU0IFKmEQeJlga   2018-07-12 00:18:55.999   Main
-cyCapIoGsagELQG2iZogX42q4mRu7i2D   2018-07-12 00:17:51.999   Main
-IxTmxt1HDfEN4H/AkzoVlfCezXb5eK+G   2018-06-22 00:12:49.813   Main
-QHul3aEvYN8KHkArCW7xOw1i5uLLGRzN   2018-06-14 19:34:23.999   Main';
+' . $separator . '
+Jim9F5oqJbQA6dM68phqGZ2023UDdngs   2018-07-12 00:35:59.999   Main' . $remark_1 . '
+erOISXoScyQ8TAVgX5OofnOgwy/hNYcN   2018-07-12 00:34:55.999   Main' . $remark_1 . '
+GUImUst9bYFY8wR9I7eMxU1zsQ1hYIj9   2018-07-12 00:33:51.999   Main' . $remark_1 . '
+LYXHuZwIOjy6/pUZ1SoUyS6bUSvo3lFR   2018-07-12 00:32:47.999   Main' . $remark_1 . '
+ZAyhGaI3cRwB4IltNgY0HfW8ACsFdws+   2018-07-12 00:31:43.999   Main' . $remark_1 . '
+ORak8Di3DtkTjeWEVn4lg1rk+ixP/MG9   2018-07-12 00:30:39.999   Main' . $remark_1 . '
+1iToKTNdwFL54Nlhf4RNh3oJxwjfXDLy   2018-07-12 00:29:35.999   Main' . $remark_1 . '
+PzUN6WUt9+ykkEZBsHkhRXlFhZ/gAtZ4   2018-07-12 00:28:31.999   Main' . $remark_1 . '
+ECsF/JPS1KmhNBMewpIaLA/vPevLLusu   2018-07-12 00:27:27.999   Main' . $remark_1 . '
+nBjQfO2A20wMJDscmxpRNk5/GuB/ghY6   2018-07-12 00:26:23.999   Main' . $remark_1 . '
+PLA9HCrWooxjMVwjR5tKRuSrZcKu+5Pf   2018-07-12 00:25:19.999   Main' . $remark_1 . '
+9xWFYp1GrTIWSRFZ0mhQPTp6Z17Gml9J   2018-07-12 00:24:15.999   Main' . $remark_2 . '
+hJD/OBhexPzukGJROlw/b3ZNlJzthkVk   2018-07-12 00:23:11.999   Main' . $remark_1 . '
+r9Ryt+CcPgaHEo9niW0VTMac4ZJBmPbA   2018-07-12 00:22:07.999   Main' . $remark_1 . '
+tDg2IC19a+sBr2VcDkvVEqLXjWOcEtJy   2018-07-12 00:21:03.999   Main' . $remark_1 . '
+E6IKRznvpoLYMDH9FwNami2gmuTQ6/VV   2018-07-12 00:19:59.999   Main' . $remark_2 . '
+3bhRLUXh3kNfDGW61zuU0IFKmEQeJlga   2018-07-12 00:18:55.999   Main' . $remark_1 . '
+cyCapIoGsagELQG2iZogX42q4mRu7i2D   2018-07-12 00:17:51.999   Main' . $remark_1 . '
+IxTmxt1HDfEN4H/AkzoVlfCezXb5eK+G   2018-06-22 00:12:49.813   Main' . $remark_1 . '
+QHul3aEvYN8KHkArCW7xOw1i5uLLGRzN   2018-06-14 19:34:23.999   Main' . $remark_1;
 
 			return collect(explode("\n", $blocks))->take(isset($cmd[1]) ? $cmd[1] + 3 : 23)->implode("\n");
 		}

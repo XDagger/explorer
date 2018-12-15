@@ -8,7 +8,7 @@ use App\Xdag\Block\Line\LineParser;
 class AddressFilters extends Filters
 {
 	protected $addressData;
-	public $address = null, $dateFrom = null, $dateTo = null, $amountFrom = null, $amountTo = null;
+	public $address = null, $dateFrom = null, $dateTo = null, $amountFrom = null, $amountTo = null, $remark = null;
 	public $directions = [];
 
 	public function forAddressData($line)
@@ -20,90 +20,84 @@ class AddressFilters extends Filters
 
 	public function passes()
 	{
-		$passes = true;
+		if (! is_null($this->address) && ! $this->passesByAddressFilter())
+			return false;
 
-		if (! is_null($this->address) && ! $this->passesByAddressFilter()) {
-			$passes = false;
-		}
+		if (! is_null($this->dateFrom) && ! $this->passesByDateFromFilter())
+			return false;
 
-		if (! is_null($this->dateFrom) && ! $this->passesByDateFromFilter()) {
-			$passes = false;
-		}
+		if (! is_null($this->dateTo) && ! $this->passesByDateToFilter())
+			return false;
 
-		if (! is_null($this->dateTo) && ! $this->passesByDateToFilter()) {
-			$passes = false;
-		}
+		if (! is_null($this->amountFrom) && ! $this->passesByAmountFromFilter())
+			return false;
 
-		if (! is_null($this->amountFrom) && ! $this->passesByAmountFromFilter()) {
-			$passes = false;
-		}
+		if (! is_null($this->amountTo) && ! $this->passesByAmountToFilter())
+			return false;
 
-		if (! is_null($this->amountTo) && ! $this->passesByAmountToFilter()) {
-			$passes = false;
-		}
+		if (count($this->directions) > 0 && ! $this->passesByDirectionsFilter())
+			return false;
 
-		if (count($this->directions) > 0 && ! $this->passesByDirectionsFilter()) {
-			$passes = false;
-		}
+		if (! is_null($this->remark) && ! $this->passesByRemarkFilter())
+			return false;
 
-		return $passes;
+		return true;
 	}
 
 	public function passesByAddressFilter()
 	{
-		$passes = str_contains($this->addressData[2], $this->address);
-
 		$this->setUsedFilter('address');
-
-		return $passes;
+		return str_contains($this->addressData[2], $this->address);
 	}
 
 	public function passesByDateFromFilter()
 	{
-		$passes = Carbon::parse($this->addressData[4])->gte(
-			Carbon::parse($this->dateFrom)->setTime(0, 0, 0)
-		);
-
 		$this->setUsedFilter('date_from');
 
-		return $passes;
+		return Carbon::parse($this->addressData[4])->gte(
+			Carbon::parse($this->dateFrom)->setTime(0, 0, 0)
+		);
 	}
 
 	public function passesByDateToFilter()
 	{
-		$passes = Carbon::parse($this->addressData[4])->lt(
-			Carbon::parse($this->dateTo)->addDays(1)->setTime(0, 0, 0)
-		);
-
 		$this->setUsedFilter('date_to');
 
-		return $passes;
+		return Carbon::parse($this->addressData[4])->lt(
+			Carbon::parse($this->dateTo)->addDays(1)->setTime(0, 0, 0)
+		);
 	}
 
 	public function passesByAmountFromFilter()
 	{
-		$passes = (float)$this->addressData[3] >= (float)$this->amountFrom;
-
 		$this->setUsedFilter('amount_from');
-
-		return $passes;
+		return (float) $this->addressData[3] >= (float) $this->amountFrom;
 	}
 
 	public function passesByAmountToFilter()
 	{
-		$passes = (float)$this->addressData[3] <= (float)$this->amountTo;
-
 		$this->setUsedFilter('amount_to');
-
-		return $passes;
+		return (float) $this->addressData[3] <= (float) $this->amountTo;
 	}
 
 	public function passesByDirectionsFilter()
 	{
-		$passes = in_array($this->addressData[1], $this->directions);
-
 		$this->setUsedFilter('directions');
+		return in_array($this->addressData[1], $this->directions);
+	}
 
-		return $passes;
+	public function passesByRemarkFilter()
+	{
+		$this->setUsedFilter('remark');
+
+		foreach (preg_split('/\s+/si', $this->remark) as $word) {
+			if ($word === '')
+				continue;
+
+			if (stripos($this->addressData[5], $word) === false)
+				return false;
+		}
+
+		return true;
 	}
 }
