@@ -167,10 +167,10 @@ class Paginator
 		]);
 
 		if (
-			($request->segment(1) == 'text' && strlen($request->segment(3)) == 31) ||
-			($request->segment(1) == 'block' && strlen($request->segment(2)) == 31)
+			($request->segment(1) == 'text' && ($length = strlen($request->segment(3))) < 32) ||
+			($request->segment(1) == 'block' && ($length = strlen($request->segment(2))) < 32)
 		) {
-			$url = str_replace('?', '/?', $url);
+			$url = str_replace('?', str_repeat('/', 32 - $length) . '?', $url);
 		}
 
 		return $url;

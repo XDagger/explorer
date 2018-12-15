@@ -233,6 +233,22 @@ class OutputParser
 		$this->user_callback = $callback;
 	}
 
+	/*
+	 * in XDAG version < 0.2.5
+	 *     - the earning line is first, followed by entries sorted by time ASC (correct overall order)
+	 *     - parameter $flipped will be passed as FALSE - we simply yield line by line
+	 * in XDAG version = 0.2.5
+	 *     - the earning line is first, followed by entries sorted by time DESC (incorrect overall order)
+	 *     - parameter $flipped will be passed as TRUE - we manually yield the earning line last
+	 * in XDAG version >= 0.3.0
+	 *     - the earning line is LAST, followed by entries sorted by time DESC (correct overall order)
+	 *     - parameter $flipped will be passed as TRUE - we manually yield the earning line last, but since
+	 *       the line is already the last line in the output, this function has no effect.
+	 *
+	 * Summary: this function preserves correct entries order for "block as address" part of the output
+	 * for 0.2.5, but also behaves correctly in later versions.
+	 *
+	 */
 	protected function sortedOutput($output, $flipped)
 	{
 		$earning = null;

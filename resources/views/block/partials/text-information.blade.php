@@ -21,6 +21,13 @@
 	<br>
 	<br>
 
+	@if ($block->getProperties()->get('remark') !== '')
+		<strong>Remark</strong>
+		<span>{{ $block->getProperties()->get('remark') }}</span>
+		<br>
+		<br>
+	@endif
+
 	<strong>Difficulty</strong>
 	<span>{{ $block->getProperties()->get('difficulty') }}</span>
 	<br>

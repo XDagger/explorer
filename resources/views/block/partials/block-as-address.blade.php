@@ -62,6 +62,9 @@
 						<a href="/block/{{ $address['address'] }}" class="leading-normal text-sm" rel="nofollow">
 							{{ $address['address'] }}
 						</a>
+						@if ($address['remark'] !== '')
+							<br><span class="text-sm text-grey-darker">{{ $address['remark'] }}</span>
+						@endif
 					</td>
 
 					<td class="p-3 {{ $loop->index % 2 ? 'bg-grey-lightest' : 'bg-white' }} text-center">{{ $address['amount'] }}</td>

@@ -38,14 +38,26 @@
 
 				<div class="mb-4">
 					<strong class="info-label">Hash</strong>
-
 					<a href="{{ route('block', ['address_or_hash' => $block->getProperties()->get('hash')]) }}" rel="nofollow" class="leading-normal opacity-75 block break-words">{{ $block->getProperties()->get('hash') }}</a>
 				</div>
 
 				<div class="mb-4">
-					<strong class="info-label">Address</strong>
+					@if ($block->getProperties()->get('remark') !== '')
+						<div class="flex flex-wrap justify-between items-start">
+							<div class="mb-4 md:mb-0 w-full md:w-1/2">
+								<strong class="info-label">Address</strong>
+								<a href="/block/{{ $block->getProperties()->get('balance_address') }}" rel="nofollow" class="leading-normal opacity-75 block break-words">{{ $block->getProperties()->get('balance_address') }}</a>
+							</div>
 
-					<a href="/block/{{ $block->getProperties()->get('balance_address') }}" rel="nofollow" class="leading-normal opacity-75 block break-words">{{ $block->getProperties()->get('balance_address') }}</a>
+							<div class="w-full md:w-1/2">
+								<strong class="info-label">Remark</strong>
+								<span class="info-value">{{ $block->getProperties()->get('remark') }}</span>
+							</div>
+						</div>
+					@else
+						<strong class="info-label">Address</strong>
+						<a href="/block/{{ $block->getProperties()->get('balance_address') }}" rel="nofollow" class="leading-normal opacity-75 block break-words">{{ $block->getProperties()->get('balance_address') }}</a>
+					@endif
 				</div>
 
 				<div class="mb-4">

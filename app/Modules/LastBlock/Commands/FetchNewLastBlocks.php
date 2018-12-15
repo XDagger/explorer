@@ -78,7 +78,7 @@ class FetchNewLastBlocks extends Command
 		foreach ($list as $line) {
 			$line = preg_split('/\s+/u', $line);
 
-			if (count($line) !== 4 || $line[3] !== 'Main')
+			if (count($line) < 4 || $line[3] !== 'Main')
 				continue;
 
 			$address = $line[0];

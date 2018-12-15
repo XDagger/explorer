@@ -3,8 +3,8 @@ namespace App\Xdag\Block\Line;
 
 class LineParser
 {
-	const TRANSACTION_REGEX = '/\s*(fee|input|output): ([a-zA-Z0-9\/+]{32})\s*([0-9]*\.[0-9]*)/i';
-	const ADDRESS_REGEX = '/\s*(fee|input|output|earning): ([a-zA-Z0-9\/+]{32})\s*([0-9]*\.[0-9]*)\s*(.*)/i';
+	const TRANSACTION_REGEX = '/^\s*(fee|input|output): ([a-zA-Z0-9\/+]{32})\s+([0-9]+\.[0-9]+)$/si';
+	const ADDRESS_REGEX = '/^\s*(fee|input|output|earning): ([a-zA-Z0-9\/+]{32})\s+([0-9]+\.[0-9]+)\s+([0-9]{4}-[0-9]{2}-[0-9]{2}\s+[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{3})(.*)$/si';
 
 	public function blockExists($line)
 	{
@@ -13,7 +13,7 @@ class LineParser
 
 	public function shouldProceedToTransactions($line)
 	{
-		return stripos($line, 'Block as transaction: details') !== false;
+		return stripos($line, 'block as transaction: details') !== false;
 	}
 
 	public function shouldProcceedToAddresses($line)
@@ -31,10 +31,10 @@ class LineParser
 
 			if ($key == 'balance') {
 				$properties['balance_address'] = trim(current($balance = explode(' ', $matches[2])));
-				$value						   = end($balance);
+				$value = end($balance);
 			}
 
-			$properties[ snake_case($key) ] = $value;
+			$properties[snake_case($key)] = $value;
 
 			return $properties;
 		}
@@ -70,13 +70,14 @@ class LineParser
 	public function parseAddress($line)
 	{
 		if (preg_match(self::ADDRESS_REGEX, $line, $matches)) {
-			list(, $direction, $address, $amount, $time) = $matches;
+			list(, $direction, $address, $amount, $time, $remark) = $matches;
 
 			return [
 				'direction' => strtolower(trim($direction)),
 				'address'	=> trim($address),
 				'amount'	=> strtolower(trim($amount)),
 				'time'		=> strtolower(trim($time)),
+				'remark'	=> trim($remark),
 			];
 		}
 	}

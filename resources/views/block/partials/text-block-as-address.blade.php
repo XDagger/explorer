@@ -27,6 +27,9 @@
 				<a href="/text/block/{{ $address['address'] }}" rel="nofollow">
 					{{ $address['address'] }}
 				</a>
+				@if ($address['remark'] !== '')
+					<br><small>{{ $address['remark'] }}</small>
+				@endif
 			</td>
 
 			<td>{{ $address['amount'] }}</td>
