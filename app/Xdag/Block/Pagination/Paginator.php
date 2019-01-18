@@ -166,15 +166,12 @@ class Paginator
 			$this->pageName => $page,
 		]);
 
-		$segments = collect($request->segments());
+		if ($address = $request->route('address_or_hash')) {
+			$length = strlen($address);
 
-		if ($segments->shift() == 'text')
-			$segments->shift();
-
-		$length = strlen($segments->implode('/'));
-
-		if ($length < 32) {
-			$url = str_replace('?', str_repeat('/', 32 - $length) . '?', $url);
+			if ($length < 32) {
+				$url = str_replace('?', str_repeat('/', 32 - $length) . '?', $url);
+			}
 		}
 
 		return $url;
