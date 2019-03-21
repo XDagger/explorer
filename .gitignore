@@ -5,6 +5,7 @@
 /public/storage
 /public/hot
 /storage/*.key
+/storage/netdb-white.txt
 /.idea
 /.vscode
 /.vagrant

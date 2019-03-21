@@ -39,24 +39,18 @@
 								</div>
 							</td>
 
-							<td class="p-4 text-sm {{ $loop->index % 2 ? 'bg-grey-lightest' : 'bg-white' }}">
+							@php($node_data = $repo->uptimePercentageAndLastSeenAt($node))
+
+							<td class="p-4 text-sm {{ $loop->index % 2 ? 'bg-grey-lightest' : 'bg-white' }} text-center">
 								@if ($node->is_reachable)
-									<div class="flex items-center justify-center text-green">
-										@svg('arrow-up', 'w-4 h-4')
-
-										<span class="ml-2">Node is up</span>
-									</div>
+									<span class="text-green" title="Last seen: {{ $node_data['last_seen_at'] ? $node_data['last_seen_at']->toDateTimeString() : 'never' }}" v-tippy>Node is up</span>
 								@else
-									<div class="flex items-center justify-center text-red">
-										@svg('arrow-down', 'w-4 h-4')
-
-										<span class="ml-2">Node is down</span>
-									</div>
+									<span class="text-red" title="Last seen: {{ $node_data['last_seen_at'] ? $node_data['last_seen_at']->toDateTimeString() : 'never' }}" v-tippy>Node is down</span>
 								@endif
 							</td>
 
 							<td class="p-4 text-right text-sm {{ $loop->index % 2 ? 'bg-grey-lightest' : 'bg-white' }}">
-								{{ number_format($nodeStatisticsRepository->uptimePercentage($node), 2) }}%
+								{{ number_format($node_data['uptime_percentage'], 2) }}%
 							</td>
 						</tr>
 					@empty

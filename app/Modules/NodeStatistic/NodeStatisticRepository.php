@@ -5,58 +5,33 @@ use Exception;
 
 class NodeStatisticRepository
 {
-	/**
-	 * Node check timeout in seconds.
-	 */
 	const NODE_CHECK_TIMEOUT = 10;
 
-	/**
-	 * @param array $with
-	 *
-	 * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
-	 */
 	public function getPaginatedNodes($perPage = 10, $with = [])
 	{
 		return NodeStatistic::with($with)
 							->whereRaw('id IN (SELECT MAX(id) FROM node_statistics GROUP BY node)')
+							->orderBy('is_reachable', 'desc')
 							->latest()
 							->paginate($perPage);
 	}
 
-	/**
-	 * Remove node statistics except passed ones
-	 *
-	 * @param array $nodes
-	 */
 	public function removeNodeStatisticsExcept($nodes)
 	{
 		NodeStatistic::whereNotIn('node', (array)$nodes)->delete();
 	}
 
-	/**
-	 * Remove old node statistics
-	 */
 	public function removeOldNodeStatistics()
 	{
 		NodeStatistic::where('created_at', '<=', now()->subMonths(3));
 	}
 
-	/**
-	 * @return \Carbon\Carbon|null
-	 */
 	public function lastCheckAt()
 	{
 		return NodeStatistic::latest()->limit(1)->value('created_at');
 	}
 
-	/**
-	 * Calculate uptime percentage of node for last 3 months
-	 *
-	 * @param \App\Modules\NodeStatistic\NodeStatistic $node
-	 *
-	 * @return float|int
-	 */
-	public function uptimePercentage(NodeStatistic $node)
+	public function uptimePercentageAndLastSeenAt(NodeStatistic $node)
 	{
 		$since = now()->subMonths(3);
 
@@ -74,18 +49,17 @@ class NodeStatisticRepository
 			return 0;
 		}
 
-		$reachable = $statistics->filter->is_reachable->count();
+		$reachable = $statistics->filter->is_reachable;
 
-		return round(($reachable / $totalChecks) * 100, 2);
+		$first_reachable_stat = $reachable->sortByDesc('created_at')->first();
+		$last_seen_at = $first_reachable_stat ? $first_reachable_stat->reachable_at : null;
+
+		return [
+			'uptime_percentage' => round(($reachable->count() / $totalChecks) * 100, 2),
+			'last_seen_at' => $last_seen_at,
+		];
 	}
 
-	/**
-	 * Check if node is reachable
-	 *
-	 * @param string $node
-	 *
-	 * @return bool
-	 */
 	public function isReachable($node)
 	{
 		[$ip, $port] = explode(':', $node);
@@ -100,10 +74,6 @@ class NodeStatisticRepository
 		}
 	}
 
-	/**
-	 * @return \Illuminate\Support\Collection
-	 * @throws \Exception
-	 */
 	public function getNodesListFromFile()
 	{
 		$path = (string) config('services.xdag.whitelist_path');
