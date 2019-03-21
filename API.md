@@ -3,7 +3,7 @@
 ---
 
 ## Node statistics
-You can view node listing with statistics at [/node-statistics](/node-statistics)
+You can view node listing with statistics at [Node statistics page](/node-statistics).
 
 ## Synchronizing error response
 
