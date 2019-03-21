@@ -6,7 +6,7 @@
 			<h2 class="box-title">Node statistics</h2>
 
 			<div class="absolute pin-t pin-r p-8">
-				<span class="w-4 h-4 text-grey" title="Last check at: {{ $lastCheckAt ? $lastCheckAt->toDateTimeString() : 'never' }}" v-tippy>
+				<span class="w-4 h-4 text-grey" title="Last check: {{ $lastCheckAt ? $lastCheckAt->toDateTimeString() . ' UTC' : 'never' }}" v-tippy>
 					@svg('info', 'w-4 h-4')
 				</span>
 			</div>
@@ -43,9 +43,9 @@
 
 							<td class="p-4 text-sm {{ $loop->index % 2 ? 'bg-grey-lightest' : 'bg-white' }} text-center">
 								@if ($node->is_reachable)
-									<span class="text-green" title="Last seen: {{ $node_data['last_seen_at'] ? $node_data['last_seen_at']->toDateTimeString() : 'never' }}" v-tippy>Node is up</span>
+									<span class="text-green" title="Last seen: {{ $node_data['last_seen_at'] ? $node_data['last_seen_at']->toDateTimeString() . ' UTC' : 'never' }}" v-tippy>Node is up</span>
 								@else
-									<span class="text-red" title="Last seen: {{ $node_data['last_seen_at'] ? $node_data['last_seen_at']->toDateTimeString() : 'never' }}" v-tippy>Node is down</span>
+									<span class="text-red" title="Last seen: {{ $node_data['last_seen_at'] ? $node_data['last_seen_at']->toDateTimeString() . ' UTC' : 'never' }}" v-tippy>Node is down</span>
 								@endif
 							</td>
 
