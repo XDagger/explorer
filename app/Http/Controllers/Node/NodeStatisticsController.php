@@ -14,7 +14,7 @@ class NodeStatisticsController extends Controller
 		}
 
 		return view('node.index', [
-			'nodes' => $repo->getPaginatedNodes(15, 'statistics'),
+			'nodes' => $repo->getPaginatedNodes(100, 'statistics'),
 			'repo' => $repo,
 			'lastCheckAt' => $repo->lastCheckAt(),
 		]);
