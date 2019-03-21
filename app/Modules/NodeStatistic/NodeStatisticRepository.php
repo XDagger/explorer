@@ -12,7 +12,7 @@ class NodeStatisticRepository
 		return NodeStatistic::with($with)
 							->whereRaw('id IN (SELECT MAX(id) FROM node_statistics GROUP BY node)')
 							->orderBy('is_reachable', 'desc')
-							->latest()
+							->orderBy('node', 'asc')
 							->paginate($perPage);
 	}
 
