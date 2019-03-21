@@ -19,27 +19,39 @@ class NetworkSeeder extends Seeder
 		// Initial data for network hashrate chart
 		foreach (range(0, Network::DAYS_LIMIT) as $day) {
 			Network::create([
-				'blocks'	 => $stats['blocks'][1],
-				'hashrate'	 => $stats['hashrate'][1],
-				'created_at' => now()->subDays($day),
+				'main_blocks' => $stats['main_blocks'][1],
+				'difficulty'  => $stats['chain_difficulty'][1],
+				'supply'      => $stats['xdag_supply'][1],
+				'blocks'      => $stats['blocks'][1],
+				'hashrate'    => $stats['hashrate'][1],
+				'created_at'  => now()->subDays($day),
 			]);
 		}
 
 		// Initial data for network blocks chart
 		foreach (range(0, 59, 5) as $minutes) {
-			$blocks	  = $stats['blocks'][1];
-			$hashrate = $stats['hashrate'][1];
+			$main_blocks = $stats['main_blocks'][1];
+			$supply      = $stats['xdag_supply'][1];
+			$difficulty  = $stats['chain_difficulty'][1];
+			$blocks      = $stats['blocks'][1];
+			$hashrate    = $stats['hashrate'][1];
 
 			Network::create([
-				'blocks'	 => $blocks,
-				'hashrate'	 => $hashrate + $minutes,
-				'created_at' => now()->subHour(2)->startOfHour()->addMinutes($minutes),
+				'main_blocks' => $main_blocks,
+				'difficulty'  => $difficulty,
+				'supply'      => $supply,
+				'blocks'      => $blocks,
+				'hashrate'    => $hashrate + $minutes,
+				'created_at'  => now()->subHour(2)->startOfHour()->addMinutes($minutes),
 			]);
 
 			Network::create([
-				'blocks'	 => $blocks,
-				'hashrate'	 => $hashrate + $minutes,
-				'created_at' => now()->subHour(1)->startOfHour()->addMinutes($minutes),
+				'main_blocks' => $main_blocks,
+				'difficulty'  => $difficulty,
+				'supply'      => $supply,
+				'blocks'      => $blocks,
+				'hashrate'    => $hashrate + $minutes,
+				'created_at'  => now()->subHour(1)->startOfHour()->addMinutes($minutes),
 			]);
 		}
 	}

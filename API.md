@@ -2,6 +2,9 @@
 
 ---
 
+## Node statistics
+You can view node listing with statistics at [/node-statistics](/node-statistics)
+
 ## Synchronizing error response
 
 All API requests except `/api/status` check current daemon state. If the daemon is currently synchronizing, retry your API request later.
@@ -141,6 +144,18 @@ All API requests except `/api/status` check current daemon state. If the daemon 
 ```
 
 ## GET /api/block/{address_or_hash}
+
+### Pagination
+This endpoint accepts the following query parameters:
+- `transactions_per_page` - integer, number of transactions per page (default 10000000000000)
+- `transactions_page` - integer, transactions page to show (default 1 - first page)
+- `addresses_per_page` - integer, number of addresses per page (default 10000000000000)
+- `addresses_page` - integer, addresses page to show (default 1 - first page)
+
+Query parameters can be combined, for example `GET /api/block/{address_or_hash}?transactions_per_page=10&transactions_page=2&addresses_per_page=10&addresses_page=2`
+
+Block output always contains `transactions_pagination` and `addresses_pagination` elements describing the dataset, together with links to next, previous, first and last pages of the output.
+
 ### Invalid input error
 
 **Response status code:** `422`
@@ -282,7 +297,31 @@ This endpoint will return all block data, it's output may be large. Endpoint ret
     "spendings_change_last_24_hours":1013.759999922,
     "total_earnings":1024.000000000,
     "total_spendings":1013.759999922,
-    "kind":"Main block"
+    "kind":"Main block",
+    "transactions_pagination": {
+        "current_page": 1,
+        "last_page": 1,
+        "total": 13,
+        "per_page": 10000000000000,
+        "links": {
+            "prev": null,
+            "next": null,
+            "first": "https://explorer.domain/api/block/GepZhngsOumyBqsNspWYpDaP9sqZrzrJ?transactions_page=1",
+            "last": "https://explorer.domain/api/block/GepZhngsOumyBqsNspWYpDaP9sqZrzrJ?transactions_page=1"
+        }
+    },
+    "addresses_pagination": {
+        "current_page": 1,
+        "last_page": 1,
+        "total": 429,
+        "per_page": 10000000000000,
+        "links": {
+            "prev": null,
+            "next": null,
+            "first": "https://explorer.domain/api/block/GepZhngsOumyBqsNspWYpDaP9sqZrzrJ?addresses_page=1",
+            "last": "https://explorer.domain/api/block/GepZhngsOumyBqsNspWYpDaP9sqZrzrJ?addresses_page=1"
+        }
+    }
 }
 ```
 
@@ -317,6 +356,30 @@ This endpoint will return all block data, it's output may be large. Endpoint ret
     "total_fee":0.000000000,
     "total_inputs":243.493238782,
     "total_outputs":243.493238777,
-    "kind":"Transaction block"
+    "kind":"Transaction block",
+    "transactions_pagination": {
+        "current_page": 1,
+        "last_page": 1,
+        "total": 13,
+        "per_page": 10000000000000,
+        "links": {
+            "prev": null,
+            "next": null,
+            "first": "https://explorer.domain/api/block/BCZOureHCD2Ks7ZXx3Ud//rXrVgw66EL?transactions_page=1",
+            "last": "https://explorer.domain/api/block/BCZOureHCD2Ks7ZXx3Ud//rXrVgw66EL?transactions_page=1"
+        }
+    },
+    "addresses_pagination": {
+        "current_page": 1,
+        "last_page": 1,
+        "total": 429,
+        "per_page": 10000000000000,
+        "links": {
+            "prev": null,
+            "next": null,
+            "first": "https://explorer.domain/api/block/BCZOureHCD2Ks7ZXx3Ud//rXrVgw66EL?addresses_page=1",
+            "last": "https://explorer.domain/api/block/BCZOureHCD2Ks7ZXx3Ud//rXrVgw66EL?addresses_page=1"
+        }
+    }
 }
 ```

@@ -1,6 +1,7 @@
 <?php
 namespace App\Console;
 
+use App\Modules\NodeStatistic\Commands\CheckNodesReachability;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -18,6 +19,7 @@ class Kernel extends ConsoleKernel
 		LogNetwork::class,
 		FetchNewLastBlocks::class,
 		Commands\ClearXdagCache::class,
+		CheckNodesReachability::class,
 	];
 
 	/**
@@ -39,6 +41,10 @@ class Kernel extends ConsoleKernel
 
 		$schedule->command('explorer:fetch-new-last-blocks')
 				 ->everyMinute()
+				 ->withoutOverlapping();
+
+		$schedule->command('explorer:check-nodes-reachability')
+				 ->hourly()
 				 ->withoutOverlapping();
 	}
 

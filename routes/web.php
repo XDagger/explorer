@@ -14,5 +14,7 @@ Route::group(['middleware' => 'xdag.state', 'prefix' => $prefix], function () {
 	Route::get('balance-checker', 'Wallet\BalanceCheckerController@index')->name('balance checker');
 	Route::post('balance-checker', 'Wallet\BalanceCheckerController@getBalance');
 
+	Route::get('node-statistics', 'Node\NodeStatisticsController@index')->name('node statistics');
+
 	Route::get('api-docs', 'ApiDocsController@index')->name('api docs');
 });

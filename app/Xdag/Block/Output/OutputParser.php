@@ -96,15 +96,16 @@ class OutputParser
 					$total_transactions_count++;
 
 					$transaction = $this->parser->parseTransaction($line);
-					$this->callback('transaction', $transaction);
 
 					if (!is_null($this->transactionFilters) && !$this->transactionFilters->forTransactionData($line)->passes())
 						continue;
 
 					$this->handlePaginatorSetup($this->transactionPaginator, ++$transaction_number);
 
-					if ($this->shouldSaveTransaction($transaction_number))
+					if ($this->shouldSaveTransaction($transaction_number)) {
+						$this->callback('transaction', $transaction);
 						$transactions[] = $transaction;
+					}
 
 					break;
 
@@ -115,7 +116,6 @@ class OutputParser
 					$total_addresses_count++;
 
 					$address = $this->parser->parseAddress($line);
-					$this->callback('address', $address);
 
 					$date = Carbon::parse($address['time']);
 					$date_index = $date->format('Y-m-d');
@@ -165,8 +165,10 @@ class OutputParser
 
 					$this->handlePaginatorSetup($this->addressPaginator, ++$address_number);
 
-					if ($this->shouldSaveAddress($address_number))
+					if ($this->shouldSaveAddress($address_number)) {
 						$addresses[] = $address;
+						$this->callback('address', $address);
+					}
 
 					break;
 			}
@@ -222,6 +224,14 @@ class OutputParser
 			'total_transactions_count' => $total_transactions_count,
 			'total_addresses_count' => $total_addresses_count,
 		]);
+
+		if ($this->transactionPaginator) {
+			$this->callback('extras', ['transactions_pagination' => $this->transactionPaginator->toArray()]);
+		}
+
+		if ($this->addressPaginator) {
+			$this->callback('extras', ['addresses_pagination' => $this->addressPaginator->toArray()]);
+		}
 
 		$this->callback('block', $block);
 

@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Api\Block;
 
+use App\Xdag\Block\Pagination\Paginator;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -29,7 +30,10 @@ class BlockController extends Controller
 			return $this->response()->error('invalid_input', 'Incorrect address or block hash.', Response::HTTP_UNPROCESSABLE_ENTITY);
 		}
 
-		$parser = new OutputParser;
+		$transaction_paginator = new Paginator(max(1, request()->input('transactions_per_page', 10000000000000)), 'transactions_page');
+		$address_paginator = new Paginator(max(1, request()->input('addresses_per_page', 10000000000000)), 'addresses_page');
+
+		$parser = new OutputParser($transaction_paginator, $address_paginator);
 		$parser->setCallback([new OutputStream, 'stream']);
 
 		try {

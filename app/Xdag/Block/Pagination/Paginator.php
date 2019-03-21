@@ -31,7 +31,7 @@ class Paginator
 	 */
 	public function __construct($perPage = 10, $pageName = 'page')
 	{
-		$this->perPage	= $perPage;
+		$this->perPage	= max(1, (int) $perPage);
 		$this->pageName = $pageName;
 	}
 
@@ -40,7 +40,7 @@ class Paginator
 	 */
 	public function currentPage()
 	{
-		return ((int)request()->input($this->pageName, 1)) - 1;
+		return max(0, (int) request()->input($this->pageName, 1)) - 1;
 	}
 
 	/**
@@ -90,7 +90,7 @@ class Paginator
 	 */
 	public function setTotalNumberOfItems($totalNumberOfItems)
 	{
-		$this->totalNumberOfItems = $totalNumberOfItems;
+		$this->totalNumberOfItems = (int) $totalNumberOfItems;
 
 		return $this;
 	}
@@ -136,7 +136,7 @@ class Paginator
 	 */
 	public function lastPage()
 	{
-		return (int)ceil($this->totalNumberOfItems / $this->perPage);
+		return (int) ceil($this->totalNumberOfItems / $this->perPage);
 	}
 
 	/**
@@ -204,7 +204,7 @@ class Paginator
 	 */
 	public function lastPageLink()
 	{
-		return $this->pageLink($this->lastPage());
+		return $this->pageLink($this->lastPage() ?: 1);
 	}
 
 	/**
@@ -265,7 +265,7 @@ class Paginator
 	public function toArray()
 	{
 		return [
-			'current_page' => $this->currentPage(),
+			'current_page' => $this->currentPage() ?: 1,
 			'last_page'	   => $this->lastPage(),
 			'total'		   => $this->totalNumberOfItems,
 			'per_page'	   => $this->perPage,

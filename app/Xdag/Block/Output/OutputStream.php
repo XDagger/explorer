@@ -6,6 +6,7 @@ class OutputStream
 	protected $block_started = false;
 	protected $transaction_number;
 	protected $address_number;
+	protected $extras = [];
 
 	public function stream($message, $data)
 	{
@@ -94,7 +95,18 @@ class OutputStream
 			}
 
 			echo ',"kind":"' . ($data->isMainBlock() ? 'Main block' : ($data->isTransactionBlock() ? 'Transaction block' : 'Wallet')) . '"';
+
+			foreach ($this->extras as $key => $value) {
+				echo ',"'.$key.'":' . json_encode($value);
+			}
+
 			echo '}';
+		}
+
+		if ($message == 'extras') {
+			foreach ($data as $key => $value) {
+				$this->extras[$key] = $value;
+			}
 		}
 	}
 }
