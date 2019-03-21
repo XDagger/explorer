@@ -5,7 +5,7 @@ use Exception;
 
 class NodeStatisticRepository
 {
-	const NODE_CHECK_TIMEOUT = 10;
+	const NODE_CHECK_TIMEOUT = 30;
 
 	public function getPaginatedNodes($perPage = 10, $with = [])
 	{
