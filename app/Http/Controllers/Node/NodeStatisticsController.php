@@ -13,7 +13,7 @@ class NodeStatisticsController extends Controller
 			return redirect()->route('home');
 		}
 
-		return view('node.index', [
+		return view($this->resolveView('node.index', 'node.text-index'), [
 			'nodes' => $repo->getPaginatedNodes(100, 'statistics'),
 			'repo' => $repo,
 			'lastCheckAt' => $repo->lastCheckAt(),

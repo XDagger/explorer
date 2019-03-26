@@ -145,16 +145,27 @@ All API requests except `/api/status` check current daemon state. If the daemon 
 
 ## GET /api/block/{address_or_hash}
 
-### Pagination
-This endpoint accepts the following query parameters:
+### Pagination and filtering
+This endpoint accepts the following query parameters. All parameters are optional.
 - `transactions_per_page` - integer, number of transactions per page (default 10000000000000)
 - `transactions_page` - integer, transactions page to show (default 1 - first page)
 - `addresses_per_page` - integer, number of addresses per page (default 10000000000000)
 - `addresses_page` - integer, addresses page to show (default 1 - first page)
+- `addresses_address` - filter address, make sure to `urlencode` the address properly
+- `addresses_date_from` - filter date from, format: `Y-m-d`, for example `2018-05-26`. Always assumes `00:00:00.000` as the time part. Timezone is always `UTC`. Filter is inclusive.
+- `addresses_date_to` - filter date to, format: `Y-m-d`, for example `2018-06-30`. Always assumes `23:59:59.999` as the time part. Timezone is always `UTC`. Filter is inclusive.
+- `addresses_amount_from` - filter amount from
+- `addresses_amount_to` - filter amount to
+- `addresses_directions[]` - filter directions, available directions: `fee`, `input`, `output`, `earning`. You can specify multiple directions, for example `addresses_directions[]=input&addresses_directions[]=output`
+- `addresses_remark` - filter remark, search is performed on words in given string, returns entries that match all given words as substrings anywhere in the remark
+- `transactions_address` - filter address, make sure to `urlencode` the address properly
+- `transactions_amount_from` - filter amount from
+- `transactions_amount_to` - filter amount to
+- `transactions_directions[]` - filter directions, available options: `fee`, `input`, `output`. You can specify multiple directions, for example `transactions_directions[]=input&transactions_directions[]=output`
 
-Query parameters can be combined, for example `GET /api/block/{address_or_hash}?transactions_per_page=10&transactions_page=2&addresses_per_page=10&addresses_page=2`
+Query parameters can be combined, for example `GET /api/block/{address_or_hash}?addresses_amount_from=1.03&addresses_directions[]=input&transactions_directions[]=output&transactions_per_page=10&transactions_page=2&addresses_per_page=10&addresses_page=2`. If any query parameters don't pass validation, they are ignored.
 
-Block output always contains `transactions_pagination` and `addresses_pagination` elements describing the dataset, together with links to next, previous, first and last pages of the output.
+Endpoint output always contains `transactions_pagination` and `addresses_pagination` elements describing the dataset, together with links to next, previous, first and last pages of the output.
 
 ### Invalid input error
 
