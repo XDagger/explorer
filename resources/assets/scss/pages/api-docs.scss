@@ -11,7 +11,7 @@
         @apply .text-grey-darkest .text-base .font-bold .mb-4 .mt-8;
     }
 
-    p {
+    p, ul li {
         @apply .text-sm .text-grey-darkest .py-4 .leading-loose;
 
         code {
