@@ -101,8 +101,8 @@
 				<div class="mb-4">
 					<div class="flex items-center justify-between">
 						<div class="mr-4">
-							<div class="info-label">Total fee</div>
-							<span class="info-value">{{ number_format($block->getTransactions()->getTotalFee(), 9) }}</span>
+							<div class="info-label">Total fees</div>
+							<span class="info-value">{{ $block->getTotalFees() }}</span>
 						</div>
 					</div>
 				</div>
@@ -110,8 +110,8 @@
 				<div class="mb-4">
 					<div class="flex items-center justify-between">
 						<div class="mr-4">
-							<div class="info-label">{{ $count = $block->getTransactions()->inputs()->count() }} input{{ $count > 1 ? 's' : '' }}</div>
-							<span class="info-value">{{ number_format($block->getTransactions()->getInputsSum(), 9) }}</span>
+							<div class="info-label">{{ $count = $block->getTotalInputsCount() }} input{{ $count > 1 ? 's' : '' }}</div>
+							<span class="info-value">{{ $block->getTotalInputs() }}</span>
 						</div>
 					</div>
 				</div>
@@ -119,8 +119,8 @@
 				<div class="mb-4">
 					<div class="flex items-center justify-between">
 						<div class="mr-4">
-							<div class="info-label">{{ $count = $block->getTransactions()->outputs()->count() }} output{{ $count > 1 ? 's' : '' }}</div>
-							<span class="info-value">{{ number_format($block->getTransactions()->getOutputsSum(), 9) }}</span>
+							<div class="info-label">{{ $count = $block->getTotalOutputsCount() }} output{{ $count > 1 ? 's' : '' }}</div>
+							<span class="info-value">{{ $block->getTotalOutputs() }}</span>
 						</div>
 					</div>
 				</div>
@@ -135,7 +135,7 @@
 					<div class="flex items-center justify-between">
 						<div class="mr-4">
 							<div class="info-label">Balance</div>
-							<span class="info-value">{{ number_format($block->getBalance(), 9) }}</span>
+							<span class="info-value">{{ $block->getBalance() }}</span>
 						</div>
 
 						@include('support.value-change', ['valueChange' => $balanceChange, 'name' => 'Balance', 'change' => 'since 24 hours ago', 'type' => 'value'])
@@ -160,7 +160,7 @@
 					<div class="flex items-center justify-between">
 						<div class="mr-4">
 							<div class="info-label">Total Earnings</div>
-							<span class="info-value">{{ number_format($block->getTotalEarnings(), 9) }}</span>
+							<span class="info-value">{{ $block->getTotalEarnings() }}</span>
 						</div>
 
 						@include('support.value-change', ['valueChange' => $earningChange, 'name' => 'Earnings', 'change' => 'since 24 hours ago', 'type' => 'value'])
@@ -185,7 +185,7 @@
 					<div class="flex items-center justify-between">
 						<div class="mr-4">
 							<div class="info-label">Total Spendings</div>
-							<span class="info-value">{{ number_format($block->getTotalSpendings(), 9) }}</span>
+							<span class="info-value">{{ $block->getTotalSpendings() }}</span>
 						</div>
 
 						@include('support.value-change', ['valueChange' => $spendingChange, 'name' => 'Spendings', 'change' => 'since 24 hours ago', 'type' => 'value'])

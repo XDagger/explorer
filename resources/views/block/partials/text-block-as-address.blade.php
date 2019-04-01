@@ -1,5 +1,5 @@
 <h3>Block as address</h3>
-<div>Transactions: <strong>{{ number_format($addressPagination->totalNumberOfItems(), 0) }}</strong></div>
+<div>Filtered entries: <strong>{{ number_format($addressPagination->totalNumberOfItems(), 0) }}</strong></div>
 
 <table id="block-as-address" cellpadding="10">
 	<thead>
@@ -7,21 +7,17 @@
 		<th>Direction</th>
 		<th>Transaction</th>
 		<th>Amount</th>
-		<th>Date and Time</th>
+		<th>Date and Time (UTC)</th>
 	</tr>
 	</thead>
 
 	<tbody>
-	@php($earnings = $spendings = 0)
+	@php($show_totals = true)
+	@php($earnings = $block->getEarningsSum())
+	@php($spendings = $block->getSpendingsSum())
 	@forelse ($block->getAddresses() as $address)
 		<tr>
 			<td>{{ $address['direction'] }}</td>
-
-			@if (in_array($address['direction'], ['earning', 'input']))
-				@php ($earnings = bcadd($earnings, $address['amount'], 9))
-			@else
-				@php ($spendings = bcadd($spendings, $address['amount'], 9))
-			@endif
 
 			<td>
 				<a href="/text/block/{{ $address['address'] }}" rel="nofollow">
@@ -42,19 +38,19 @@
 		<tr>
 			<td colspan="4" align="center">There are no results.</td>
 		</tr>
-		@php($earnings = null)
+		@php($show_totals = false)
 	@endforelse
-	@if ($earnings !== null && ($earnings > 0 || $spendings > 0))
+	@if ($show_totals && (bccomp($earnings, '0.000000000') > 0 || bccomp($spendings, '0.000000000') > 0))
 		<tr>
 			<td>
-				<strong>Totals</strong>
+				<strong>On page</strong>
 			</td>
 			<td colspan="3">
-				@if ($earnings > 0)
-					+{{ number_format($earnings, 9) }} (earnings)
+				@if (bccomp($earnings, '0.000000000') > 0)
+					+{{ $earnings }} (earnings)
 				@endif
-				@if ($spendings > 0)
-					-{{ number_format($spendings, 9) }} (spendings)
+				@if (bccomp($spendings, '0.000000000') > 0)
+					-{{ $spendings }} (spendings)
 				@endif
 			</td>
 		</tr>

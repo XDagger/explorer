@@ -1,5 +1,5 @@
 <h3>Block as transaction</h3>
-<div>Transactions: <strong>{{ number_format($transactionPagination->totalNumberOfItems(), 0) }}</strong></div>
+<div>Filtered entries: <strong>{{ number_format($transactionPagination->totalNumberOfItems(), 0) }}</strong></div>
 
 <table id="block-as-transaction" cellpadding="10">
 	<thead>
@@ -11,16 +11,13 @@
 	</thead>
 
 	<tbody>
-	@php($inputs = $outputs = 0)
+	@php($show_totals = true)
+	@php($fees = $block->getFeesSum())
+	@php($inputs = $block->getInputsSum())
+	@php($outputs = $block->getOutputsSum())
 	@forelse ($block->getTransactions() as $transaction)
 		<tr>
 			<td>{{ $transaction['direction'] }}</td>
-
-			@if (in_array($transaction['direction'], ['earning', 'input']))
-				@php ($inputs = bcadd($inputs, $transaction['amount'], 9))
-			@else
-				@php ($outputs = bcadd($outputs, $transaction['amount'], 9))
-			@endif
 
 			<td>
 				<a href="/text/block/{{ $transaction['address'] }}" rel="nofollow">
@@ -34,19 +31,22 @@
 		<tr>
 			<td colspan="3" align="center">There are no results.</td>
 		</tr>
-		@php($inputs = null)
+		@php($show_totals = false)
 	@endforelse
-	@if ($inputs !== null && ($inputs > 0 || $outputs > 0))
+	@if ($show_totals && (bccomp($fees, '0.000000000') > 0 || bccomp($inputs, '0.000000000') > 0 || bccomp($outputs, '0.000000000') > 0))
 		<tr>
 			<td>
-				<strong>Totals</strong>
+				<strong>On page</strong>
 			</td>
-			<td colspan="3">
-				@if ($inputs > 0)
-					+{{ number_format($inputs, 9) }} (inputs)
+			<td colspan="2">
+				@if (bccomp($inputs, '0.000000000') > 0)
+					+{{ $inputs }} (inputs)
 				@endif
-				@if ($outputs > 0)
-					-{{ number_format($outputs, 9) }} (outputs)
+				@if (bccomp($outputs, '0.000000000') > 0)
+					-{{ $outputs }} (outputs)
+				@endif
+				@if (bccomp($fees, '0.000000000') > 0)
+					-{{ $fees }} (fees)
 				@endif
 			</td>
 		</tr>

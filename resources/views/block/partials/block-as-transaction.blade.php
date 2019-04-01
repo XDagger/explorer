@@ -4,7 +4,7 @@
 			<div class="flex flex-wrap items-start justify-between mb-8">
 				<div class="w-full md:w-1/2">
 					<h4 class="box-title">Block as transaction</h4>
-					<div class="box-sub-title mb-0">Transactions: <strong>{{ number_format($transactionPagination->totalNumberOfItems(), 0) }}</strong></div>
+					<div class="box-sub-title mb-0">Filtered entries: <strong>{{ number_format($transactionPagination->totalNumberOfItems(), 0) }}</strong></div>
 				</div>
 
 				<modal inline-template :shown="{{ $transactionFiltersValidation->errors()->any() ? 'true' : 'false' }}">
@@ -39,22 +39,19 @@
 			</thead>
 
 			<tbody>
-			@php($inputs = $outputs = 0)
+			@php($show_totals = true)
+			@php($fees = $block->getFeesSum())
+			@php($inputs = $block->getInputsSum())
+			@php($outputs = $block->getOutputsSum())
 			@forelse ($block->getTransactions() as $transaction)
 				<tr>
 					<td class="p-3 {{ $loop->index % 2 ? 'bg-grey-lightest' : 'bg-white' }}">
 						@if ($transaction['direction'] == 'fee')
 							<span class="rounded bg-grey-darker uppercase px-3 py-1 text-xs font-bold mr-3 text-white block w-auto sm:w-2/3 text-center mx-auto">Fee</span>
-							@php ($outputs = bcadd($outputs, $transaction['amount'], 9))
 						@elseif ($transaction['direction'] == 'input')
 							<span class="rounded bg-green uppercase px-3 py-1 text-xs font-bold mr-3 text-white block w-auto sm:w-2/3 text-center mx-auto">Input</span>
-							@php ($inputs = bcadd($inputs, $transaction['amount'], 9))
 						@elseif ($transaction['direction'] == 'output')
 							<span class="rounded bg-orange uppercase px-3 py-1 text-xs font-bold mr-3 text-white block w-auto sm:w-2/3 text-center mx-auto">Output</span>
-							@php ($outputs = bcadd($outputs, $transaction['amount'], 9))
-						@elseif ($transaction['direction'] == 'earning')
-							<span class="rounded bg-yellow uppercase px-3 py-1 text-xs font-bold mr-3 text-black block w-auto sm:w-2/3 text-center mx-auto">Earning</span>
-							@php ($inputs = bcadd($inputs, $transaction['amount'], 9))
 						@endif
 					</td>
 
@@ -78,19 +75,22 @@
 						</div>
 					</td>
 				</tr>
-				@php($inputs = null)
+				@php($show_totals = false)
 			@endforelse
-			@if ($inputs !== null && ($inputs > 0 || $outputs > 0))
+			@if ($show_totals && (bccomp($fees, '0.000000000') > 0 || bccomp($inputs, '0.000000000') > 0 || bccomp($outputs, '0.000000000') > 0))
 				<tr>
 					<td class="p-3 bg-white text-left">
-						<span class="rounded bg-purple uppercase px-3 py-1 text-xs font-bold mr-3 text-white block w-auto sm:w-2/3 text-center mx-auto">Totals</span>
+						<span class="rounded bg-purple uppercase px-3 py-1 text-xs font-bold mr-3 text-white block w-auto sm:w-2/3 text-center mx-auto">On page</span>
 					</td>
-					<td colspan="3" class="p-3 bg-white text-left">
-						@if ($inputs > 0)
-							<span class="rounded bg-green uppercase px-3 py-1 text-xs mr-3 text-white text-center mx-auto" title="Total inputs on this page" v-tippy>+{{ number_format($inputs, 9) }}</span>
+					<td colspan="2" class="p-3 bg-white text-left">
+						@if (bccomp($inputs, '0.000000000') > 0)
+							<span class="rounded bg-green uppercase px-3 py-1 text-xs mr-3 text-white text-center mx-auto" title="Total inputs on this page" v-tippy>+{{ $inputs }}</span>
 						@endif
-						@if ($outputs > 0)
-							<span class="rounded bg-red uppercase px-3 py-1 text-xs mr-3 text-white text-center mx-auto" title="Total outputs on this page" v-tippy>-{{ number_format($outputs, 9) }}</span>
+						@if (bccomp($outputs, '0.000000000') > 0)
+							<span class="rounded bg-red uppercase px-3 py-1 text-xs mr-3 text-white text-center mx-auto" title="Total outputs on this page" v-tippy>-{{ $outputs }}</span>
+						@endif
+						@if (bccomp($fees, '0.000000000') > 0)
+							<span class="rounded bg-grey-darker uppercase px-3 py-1 text-xs mr-3 text-white text-center mx-auto" title="Total fees on this page" v-tippy>-{{ $fees }}</span>
 						@endif
 					</td>
 				</tr>

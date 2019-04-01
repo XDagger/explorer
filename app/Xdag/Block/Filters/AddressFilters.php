@@ -20,28 +20,29 @@ class AddressFilters extends Filters
 
 	public function passes()
 	{
+		$passes = true;
 		if (! is_null($this->address) && ! $this->passesByAddressFilter())
-			return false;
+			$passes = false;
 
 		if (! is_null($this->dateFrom) && ! $this->passesByDateFromFilter())
-			return false;
+			$passes = false;
 
 		if (! is_null($this->dateTo) && ! $this->passesByDateToFilter())
-			return false;
+			$passes = false;
 
 		if (! is_null($this->amountFrom) && ! $this->passesByAmountFromFilter())
-			return false;
+			$passes = false;
 
 		if (! is_null($this->amountTo) && ! $this->passesByAmountToFilter())
-			return false;
+			$passes = false;
 
 		if (count($this->directions) > 0 && ! $this->passesByDirectionsFilter())
-			return false;
+			$passes = false;
 
 		if (! is_null($this->remark) && ! $this->passesByRemarkFilter())
-			return false;
+			$passes = false;
 
-		return true;
+		return $passes;
 	}
 
 	public function passesByAddressFilter()

@@ -1,75 +1,35 @@
 <?php
 namespace App\Xdag\Block\Attributes;
 
-use Illuminate\Support\Collection;
-
-class Transactions extends Collection
+class Transactions extends Movements
 {
-	public function getTotalFee()
+	public function fees()
 	{
-		$fees = 0;
-		bcscale(9);
-
-		foreach ($this->all() as $item) {
-			if ($item['direction'] == 'fee') {
-				$fees = bcadd($fees, $item['amount']);
-			}
-		}
-
-		return $fees;
+		return $this->itemsByDirections(['fee']);
 	}
 
 	public function inputs()
 	{
-		$inputs = [];
-
-		foreach ($this->all() as $item) {
-			if ($item['direction'] == 'input') {
-				$inputs[] = $item;
-			}
-		}
-
-		return collect($inputs);
+		return $this->itemsByDirections(['input']);
 	}
 
 	public function outputs()
 	{
-		$outputs = [];
-
-		foreach ($this->all() as $item) {
-			if ($item['direction'] == 'output') {
-				$outputs[] = $item;
-			}
-		}
-
-		return collect($outputs);
+		return $this->itemsByDirections(['output']);
 	}
 
 	public function getInputsSum()
 	{
-		$sum = 0;
-		bcscale(9);
-
-		foreach ($this->all() as $item) {
-			if ($item['direction'] == 'input') {
-				$sum = bcadd($sum, $item['amount']);
-			}
-		}
-
-		return $sum;
+		return $this->itemsSumByDirections(['input']);
 	}
 
 	public function getOutputsSum()
 	{
-		$sum = 0;
-		bcscale(9);
+		return $this->itemsSumByDirections(['output']);
+	}
 
-		foreach ($this->all() as $item) {
-			if ($item['direction'] == 'output') {
-				$sum = bcadd($sum, $item['amount']);
-			}
-		}
-
-		return $sum;
+	public function getFeesSum()
+	{
+		return $this->itemsSumByDirections(['fee']);
 	}
 }

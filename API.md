@@ -156,7 +156,7 @@ This endpoint accepts the following query parameters. All parameters are optiona
 - `addresses_date_to` - filter date to, format: `Y-m-d`, for example `2018-06-30`. Always assumes `23:59:59.999` as the time part. Timezone is always `UTC`. Filter is inclusive.
 - `addresses_amount_from` - filter amount from
 - `addresses_amount_to` - filter amount to
-- `addresses_directions[]` - filter directions, available directions: `fee`, `input`, `output`, `earning`. You can specify multiple directions, for example `addresses_directions[]=input&addresses_directions[]=output`
+- `addresses_directions[]` - filter directions, available directions: `input`, `output`, `earning`. You can specify multiple directions, for example `addresses_directions[]=input&addresses_directions[]=output`
 - `addresses_remark` - filter remark, search is performed on words in given string, returns entries that match all given words as substrings anywhere in the remark
 - `transactions_address` - filter address, make sure to `urlencode` the address properly
 - `transactions_amount_from` - filter amount from
@@ -212,25 +212,20 @@ This endpoint will return all block data, it's output may be large. Endpoint ret
             "address":"GepZhngsOumyBqsNspWYpDaP9sqZrzrJ",
             "amount":"0.000000000"
         },
-        {
-            "direction":"output",
-            "address":"dhy1Z5W3QSUHlLpEGaAUlqDWFZ/crCHm",
-            "amount":"0.000000000"
-        },
         ...
     ],
     "block_as_address":[
-        {
-            "direction":"earning",
-            "address":"GepZhngsOumyBqsNspWYpDaP9sqZrzrJ",
-            "amount":"1024.000000000",
-            "time":"2018-06-27 19:27:59.999"
-        },
         {
             "direction":"output",
             "address":"kT86tjhtGZLAhSzAelGD8Zyme9aF5/4T",
             "amount":"15.829778345",
             "time":"2018-06-27 19:42:56.738"
+        },
+        {
+            "direction":"earning",
+            "address":"GepZhngsOumyBqsNspWYpDaP9sqZrzrJ",
+            "amount":"1024.000000000",
+            "time":"2018-06-27 19:27:59.999"
         },
         ...
     ],
@@ -308,6 +303,10 @@ This endpoint will return all block data, it's output may be large. Endpoint ret
     "spendings_change_last_24_hours":1013.759999922,
     "total_earnings":1024.000000000,
     "total_spendings":1013.759999922,
+    "page_earnings_sum":1024.000000000,
+    "page_spendings_sum":1013.759999922,
+    "filtered_earnings_sum":1024.000000000,
+    "filtered_spendings_sum":1013.759999922,
     "kind":"Main block",
     "transactions_pagination": {
         "current_page": 1,
@@ -367,6 +366,12 @@ This endpoint will return all block data, it's output may be large. Endpoint ret
     "total_fee":0.000000000,
     "total_inputs":243.493238782,
     "total_outputs":243.493238777,
+    "page_fee_sum":0.000000000,
+    "page_inputs_sum":243.493238782,
+    "page_outputs_sum":243.493238777,
+    "filtered_fee_sum":0.000000000,
+    "filtered_inputs_sum":243.493238782,
+    "filtered_outputs_sum":243.493238777,
     "kind":"Transaction block",
     "transactions_pagination": {
         "current_page": 1,

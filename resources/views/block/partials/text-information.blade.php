@@ -57,32 +57,32 @@
 		<h3>Summary</h3>
 
 		<strong>Total fee</strong>
-		<span>{{ number_format($block->getTransactions()->getTotalFee(), 9) }}</span>
+		<span>{{ $block->getTotalFees() }}</span>
 		<br>
 		<br>
 
-		<strong>{{ $count = $block->getTransactions()->inputs()->count() }} input{{ $count !== 1 ? 's' : '' }}</strong>
-		<span>total {{ number_format($block->getTransactions()->getInputsSum(), 9) }}</span>
+		<strong>{{ $count = $block->getTotalInputsCount() }} input{{ $count !== 1 ? 's' : '' }}</strong>
+		<span>total {{ $block->getTotalInputs() }}</span>
 		<br>
 		<br>
 
-		<strong>{{ $count = $block->getTransactions()->outputs()->count() }} output{{ $count !== 1 ? 's' : '' }}</strong>
-		<span>total {{ number_format($block->getTransactions()->getOutputsSum(), 9) }}</span>
+		<strong>{{ $count = $block->getTotalOutputsCount() }} output{{ $count !== 1 ? 's' : '' }}</strong>
+		<span>total {{ $block->getTotalOutputs() }}</span>
 	@else
 		<h3>Balances</h3>
 
 		<strong>Balance</strong>
-		<span>{{ number_format($block->getBalance(), 9) }} @include('support.text-value-change', ['valueChange' => $balanceChange, 'name' => 'Balance', 'change' => 'since 24 hours ago', 'type' => 'value'])</span>
+		<span>{{ $block->getBalance() }} @include('support.text-value-change', ['valueChange' => $balanceChange, 'name' => 'Balance', 'change' => 'since 24 hours ago', 'type' => 'value'])</span>
 		<br>
 		<br>
 
 		<strong>Total earnings</strong>
-		<span>{{ number_format($block->getTotalEarnings(), 9) }} @include('support.text-value-change', ['valueChange' => $earningChange, 'name' => 'Earnings', 'change' => 'since 24 hours ago', 'type' => 'value'])</span>
+		<span>{{ $block->getTotalEarnings() }} @include('support.text-value-change', ['valueChange' => $earningChange, 'name' => 'Earnings', 'change' => 'since 24 hours ago', 'type' => 'value'])</span>
 		<br>
 		<br>
 
 		<strong>Total spendings</strong>
-		<span>{{ number_format($block->getTotalSpendings(), 9) }} @include('support.text-value-change', ['valueChange' => $spendingChange, 'name' => 'Spendings', 'change' => 'since 24 hours ago', 'type' => 'value'])</span>
+		<span>{{ $block->getTotalSpendings() }} @include('support.text-value-change', ['valueChange' => $spendingChange, 'name' => 'Spendings', 'change' => 'since 24 hours ago', 'type' => 'value'])</span>
 	@endif
 	<br>
 	<br>

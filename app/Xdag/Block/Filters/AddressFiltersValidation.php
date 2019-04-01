@@ -69,7 +69,7 @@ class AddressFiltersValidation extends FiltersValidator
 
 		if ($this->request->filled('addresses_directions')) {
 			$rules['addresses_directions']   = 'array';
-			$rules['addresses_directions.*'] = 'in:fee,input,output,earning';
+			$rules['addresses_directions.*'] = 'in:input,output,earning';
 		}
 
 		if ($this->request->filled('addresses_remark')) {
@@ -133,7 +133,7 @@ class AddressFiltersValidation extends FiltersValidator
 
 		if ($this->request->filled('directions')) {
 			$rules['directions']   = 'array';
-			$rules['directions.*'] = 'in:fee,input,output,earning';
+			$rules['directions.*'] = 'in:input,output,earning';
 		}
 
 		if ($this->request->filled('remark')) {

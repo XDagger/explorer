@@ -4,7 +4,7 @@ namespace App\Xdag\Block\Line;
 class LineParser
 {
 	const TRANSACTION_REGEX = '/^\s*(fee|input|output): ([a-zA-Z0-9\/+]{32})\s+([0-9]+\.[0-9]+)$/si';
-	const ADDRESS_REGEX = '/^\s*(fee|input|output|earning): ([a-zA-Z0-9\/+]{32})\s+([0-9]+\.[0-9]+)\s+([0-9]{4}-[0-9]{2}-[0-9]{2}\s+[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{3})(.*)$/si';
+	const ADDRESS_REGEX = '/^\s*(input|output|earning): ([a-zA-Z0-9\/+]{32})\s+([0-9]+\.[0-9]+)\s+([0-9]{4}-[0-9]{2}-[0-9]{2}\s+[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{3})(.*)$/si';
 
 	public function blockExists($line)
 	{

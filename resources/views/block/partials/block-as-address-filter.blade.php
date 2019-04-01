@@ -119,20 +119,6 @@
 						<div class="form-label">Direction</div>
 
 						<div class="flex flex-wrap w-full">
-							<checkbox inline-template :checked="{{ in_array('fee', $addressFilters->directions) ? 1 : 0 }}">
-								<div class="mb-4 w-full sm:w-1/2 md:w-1/4">
-									<input type="checkbox" class="checkbox-input hidden" name="directions[]" value="fee">
-
-									<div class="cursor-pointer w-full flex items-center" @click="toggle()" :class="{ 'text-blue': isChecked }">
-										<div class="form-checkbox flex items-center justify-center mr-2" :class="{ 'text-blue': isChecked, 'text-transparent': !isChecked }">
-											@svg('check', 'stroke-current')
-										</div>
-
-										<div class="font-medium">Fee</div>
-									</div>
-								</div>
-							</checkbox>
-
 							<checkbox inline-template :checked="{{ in_array('input', $addressFilters->directions) ? 1 : 0 }}">
 								<div class="mb-4 w-full sm:w-1/2 md:w-1/4">
 									<input type="checkbox" class="checkbox-input hidden" name="directions[]" value="input">

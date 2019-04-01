@@ -52,8 +52,8 @@
 		@endif
 	</div>
 
-	<div class="text-right">
-		<a href="{{ url()->current() }}#block-as-address" rel="nofollow" class="bg-transparent border border-blue text-blue hover:text-blue-dark hover:border-blue-dark text-sm font-medium py-2 px-4 rounded tracking-wide cursor-pointer inline-flex items-center justify-center">
+	<div class="text-right float-right">
+		<a href="/block/{{ $block->getProperties()->get('balance_address') }}#block-as-address" rel="nofollow" class="bg-transparent border border-blue text-blue hover:text-blue-dark hover:border-blue-dark text-sm font-medium py-2 px-4 rounded tracking-wide cursor-pointer inline-flex items-center justify-center">
 			<span class="h-4 mr-2">
 				@svg('x', 'fill-current')
 			</span>
@@ -61,4 +61,19 @@
 			<span>Clear filters</span>
 		</a>
 	</div>
+
+	@php($filtered_earnings = $block->getFilteredEarnings())
+	@php($filtered_spendings = $block->getFilteredSpendings())
+
+	@if (bccomp($filtered_earnings, '0.000000000') > 0 || bccomp($filtered_spendings, '0.000000000') > 0)
+		<strong class="text-lg block mb-4">Filtered totals</strong>
+		@if (bccomp($filtered_earnings, '0.000000000') > 0)
+			<span class="rounded bg-green uppercase px-3 py-1 text-xs mr-3 text-white text-center mx-auto" title="Total earnings in filtered data" v-tippy>+{{ $filtered_earnings }}</span>
+		@endif
+		@if (bccomp($filtered_spendings, '0.000000000') > 0)
+			<span class="rounded bg-red uppercase px-3 py-1 text-xs mr-3 text-white text-center mx-auto" title="Total spendings in filtered data" v-tippy>-{{ $filtered_spendings }}</span>
+		@endif
+	@endif
+
+	<div class="clearfix"></div>
 </div>

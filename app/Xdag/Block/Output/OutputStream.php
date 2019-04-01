@@ -52,9 +52,17 @@ class OutputStream
 			echo ']';
 
 			if ($data->isTransactionBlock()) {
-				echo ',"total_fee":' . $data->getTransactions()->getTotalFee();
-				echo ',"total_inputs":' . $data->getTransactions()->getInputsSum();
-				echo ',"total_outputs":' . $data->getTransactions()->getOutputsSum();
+				echo ',"total_fee":' . $data->getTotalFees();
+				echo ',"total_inputs":' . $data->getTotalInputs();
+				echo ',"total_outputs":' . $data->getTotalOutputs();
+
+				echo ',"page_fee_sum":' . $data->getFeesSum();
+				echo ',"page_inputs_sum":' . $data->getInputsSum();
+				echo ',"page_outputs_sum":' . $data->getOutputsSum();
+
+				echo ',"filtered_fee_sum":' . $data->getFilteredFees();
+				echo ',"filtered_inputs_sum":' . $data->getFilteredInputs();
+				echo ',"filtered_outputs_sum":' . $data->getFilteredOutputs();
 			} else {
 				echo ',"balances_last_week":[';
 				$num = 0;
@@ -92,6 +100,12 @@ class OutputStream
 
 				echo ',"total_earnings":' . $data->getTotalEarnings();
 				echo ',"total_spendings":' . $data->getTotalSpendings();
+
+				echo ',"page_earnings_sum":' . $data->getEarningsSum();
+				echo ',"page_spendings_sum":' . $data->getSpendingsSum();
+
+				echo ',"filtered_earnings_sum":' . $data->getFilteredEarnings();
+				echo ',"filtered_spendings_sum":' . $data->getFilteredSpendings();
 			}
 
 			echo ',"kind":"' . ($data->isMainBlock() ? 'Main block' : ($data->isTransactionBlock() ? 'Transaction block' : 'Wallet')) . '"';

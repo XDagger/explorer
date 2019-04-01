@@ -12,6 +12,10 @@ class Block
 	protected $earnings, $spendings, $balances;
 	protected $earnings_change, $spendings_change, $balance_change;
 	protected $total_earnings, $total_spendings;
+	protected $total_fees, $total_inputs, $total_outputs;
+	protected $total_fees_count, $total_inputs_count, $total_outputs_count;
+	protected $filtered_earnings, $filtered_spendings;
+	protected $filtered_fees, $filtered_inputs, $filtered_outputs;
 	protected $total_transactions_count, $total_addresses_count;
 
 	public function __construct(array $data = [])
@@ -28,8 +32,23 @@ class Block
 		$this->spendings_change = $data['spendings_change'] ?? null;
 		$this->balance_change = $data['balance_change'] ?? null;
 
-		$this->total_earnings = $data['total_earnings'] ?? 0;
-		$this->total_spendings = $data['total_spendings'] ?? 0;
+		$this->total_earnings = $data['total_earnings'] ?? '0.000000000';
+		$this->total_spendings = $data['total_spendings'] ?? '0.000000000';
+
+		$this->total_fees = $data['total_fees'] ?? '0.000000000';
+		$this->total_inputs = $data['total_inputs'] ?? '0.000000000';
+		$this->total_outputs = $data['total_outputs'] ?? '0.000000000';
+
+		$this->total_fees_count = $data['total_fees_count'] ?? 0;
+		$this->total_inputs_count = $data['total_inputs_count'] ?? 0;
+		$this->total_outputs_count = $data['total_outputs_count'] ?? 0;
+
+		$this->filtered_earnings = $data['filtered_earnings'] ?? '0.000000000';
+		$this->filtered_spendings = $data['filtered_spendings'] ?? '0.000000000';
+
+		$this->filtered_fees = $data['filtered_fees'] ?? '0.000000000';
+		$this->filtered_inputs = $data['filtered_inputs'] ?? '0.000000000';
+		$this->filtered_outputs = $data['filtered_outputs'] ?? '0.000000000';
 
 		$this->total_transactions_count = $data['total_transactions_count'] ?? 0;
 		$this->total_addresses_count = $data['total_addresses_count'] ?? 0;
@@ -103,5 +122,85 @@ class Block
 	public function getTotalSpendings()
 	{
 		return $this->total_spendings;
+	}
+
+	public function getTotalFees()
+	{
+		return $this->total_fees;
+	}
+
+	public function getTotalInputs()
+	{
+		return $this->total_inputs;
+	}
+
+	public function getTotalOutputs()
+	{
+		return $this->total_outputs;
+	}
+
+	public function getTotalFeesCount()
+	{
+		return $this->total_fees_count;
+	}
+
+	public function getTotalInputsCount()
+	{
+		return $this->total_inputs_count;
+	}
+
+	public function getTotalOutputsCount()
+	{
+		return $this->total_outputs_count;
+	}
+
+	public function getFilteredEarnings()
+	{
+		return $this->filtered_earnings;
+	}
+
+	public function getFilteredSpendings()
+	{
+		return $this->filtered_spendings;
+	}
+
+	public function getFilteredFees()
+	{
+		return $this->filtered_fees;
+	}
+
+	public function getFilteredInputs()
+	{
+		return $this->filtered_inputs;
+	}
+
+	public function getFilteredOutputs()
+	{
+		return $this->filtered_outputs;
+	}
+
+	public function getEarningsSum()
+	{
+		return $this->addresses->getEarningsSum();
+	}
+
+	public function getSpendingsSum()
+	{
+		return $this->addresses->getSpendingsSum();
+	}
+
+	public function getFeesSum()
+	{
+		return $this->transactions->getFeesSum();
+	}
+
+	public function getInputsSum()
+	{
+		return $this->transactions->getInputsSum();
+	}
+
+	public function getOutputsSum()
+	{
+		return $this->transactions->getOutputsSum();
 	}
 }

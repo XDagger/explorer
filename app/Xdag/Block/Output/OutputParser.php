@@ -39,7 +39,11 @@ class OutputParser
 	public function getBlockFromOutput($output, $flipped = false)
 	{
 		$properties = $transactions = $addresses = [];
-		$transaction_number = $address_number = $total_earnings = $total_spendings = $total_balance = 0;
+		$transaction_number = $address_number = $total_earnings = $total_spendings = $total_balance = '0.000000000';
+		$total_fees = $total_inputs = $total_outputs = '0.000000000';
+		$total_fees_count = $total_inputs_count = $total_outputs_count = 0;
+		$filtered_earnings = $filtered_spendings = '0.000000000';
+		$filtered_fees = $filtered_inputs = $filtered_outputs = '0.000000000';
 		$total_transactions_count = $total_addresses_count = 0;
 
 		$state = 'properties';
@@ -73,7 +77,7 @@ class OutputParser
 					if ($this->parser->shouldProceedToTransactions($line)) {
 						$state = 'transactions';
 						$this->callback('state', $state);
-						continue;
+						break;
 					}
 
 					if ($property = $this->parser->parseProperty($line)) {
@@ -87,18 +91,36 @@ class OutputParser
 					if ($this->parser->shouldProcceedToAddresses($line)) {
 						$state = 'addresses';
 						$this->callback('state', $state);
-						continue;
+						break;
 					}
 
 					if (!$this->parser->isValidTransaction($line))
-						continue;
+						break;
 
 					$total_transactions_count++;
 
 					$transaction = $this->parser->parseTransaction($line);
 
+					if ($transaction['direction'] == 'output') {
+						$total_outputs = bcadd($total_outputs, $transaction['amount']);
+						$total_outputs_count++;
+					} else if ($transaction['direction'] == 'fee') {
+						$total_fees = bcadd($total_fees, $transaction['amount']);
+						$total_fees_count++;
+					} else if ($transaction['direction'] == 'input') {
+						$total_inputs = bcadd($total_inputs, $transaction['amount']);
+						$total_inputs_count++;
+					}
+
 					if (!is_null($this->transactionFilters) && !$this->transactionFilters->forTransactionData($line)->passes())
-						continue;
+						break;
+
+					if ($transaction['direction'] == 'output')
+						$filtered_outputs = bcadd($filtered_outputs, $transaction['amount']);
+					else if ($transaction['direction'] == 'fee')
+						$filtered_fees = bcadd($filtered_fees, $transaction['amount']);
+					else if ($transaction['direction'] == 'input')
+						$filtered_inputs = bcadd($filtered_inputs, $transaction['amount']);
 
 					$this->handlePaginatorSetup($this->transactionPaginator, ++$transaction_number);
 
@@ -111,7 +133,7 @@ class OutputParser
 
 				case 'addresses':
 					if (!$this->parser->isValidAddress($line))
-						continue;
+						break;
 
 					$total_addresses_count++;
 
@@ -130,7 +152,7 @@ class OutputParser
 
 					$operator = $flipped ? 'subDays' : 'addDays';
 
-					if (in_array($address['direction'], ['output', 'fee'])) {
+					if ($address['direction'] == 'output') {
 						$total_spendings = bcadd($total_spendings, $address['amount']);
 						$total_balance = bcsub($total_balance, $address['amount']);
 
@@ -161,7 +183,12 @@ class OutputParser
 					}
 
 					if (!is_null($this->addressFilters) && !$this->addressFilters->forAddressData($line)->passes())
-						continue;
+						break;
+
+					if ($address['direction'] == 'output')
+						$filtered_spendings = bcadd($filtered_spendings, $address['amount']);
+					else
+						$filtered_earnings = bcadd($filtered_earnings, $address['amount']);
 
 					$this->handlePaginatorSetup($this->addressPaginator, ++$address_number);
 
@@ -213,14 +240,33 @@ class OutputParser
 			'properties' => $properties,
 			'transactions' => $transactions,
 			'addresses' => $addresses,
+
 			'earnings' => $earnings_graph,
 			'spendings' => $spendings_graph,
 			'balances' => $balances_graph,
+
 			'earnings_change' => $this->change->calculate($flipped ? $total_earnings - $earnings_base : $earnings_base, $total_earnings),
 			'spendings_change' => $this->change->calculate($flipped ? $total_spendings - $spendings_base : $spendings_base, $total_spendings),
 			'balance_change' => $this->change->calculate($flipped ? $total_balance - $balance_base : $balance_base, $total_balance),
+
 			'total_earnings' => $total_earnings,
 			'total_spendings' => $total_spendings,
+
+			'total_fees' => $total_fees,
+			'total_inputs' => $total_inputs,
+			'total_outputs' => $total_outputs,
+
+			'total_fees_count' => $total_fees_count,
+			'total_inputs_count' => $total_inputs_count,
+			'total_outputs_count' => $total_outputs_count,
+
+			'filtered_earnings' => $filtered_earnings,
+			'filtered_spendings' => $filtered_spendings,
+
+			'filtered_fees' => $filtered_fees,
+			'filtered_inputs' => $filtered_inputs,
+			'filtered_outputs' => $filtered_outputs,
+
 			'total_transactions_count' => $total_transactions_count,
 			'total_addresses_count' => $total_addresses_count,
 		]);
