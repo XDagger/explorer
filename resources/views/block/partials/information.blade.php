@@ -25,8 +25,8 @@
 				<div class="mb-4">
 					<div class="flex flex-wrap justify-between items-start">
 						<div class="mb-4 md:mb-0 w-full md:w-1/2">
-							<strong class="info-label">Date and time</strong>
-							<span class="info-value">{{ $block->getProperties()->get('time') }} UTC</span>
+							<strong class="info-label">Date and time (UTC)</strong>
+							<span class="info-value">{{ $block->getProperties()->get('time') }}</span>
 						</div>
 
 						<div class="w-full md:w-1/2">

@@ -1,56 +1,96 @@
 <?php
+
 namespace App\Xdag;
 
-class Cache
-{
-	protected $storage_path;
+use Illuminate\Database\Eloquent\Model;
+use App\Xdag\Exceptions\XdagException;
 
-	public function __construct()
+class Cache extends Model
+{
+	protected $table = 'cache';
+	public $incrementing = false;
+	protected $primaryKey = 'key';
+	protected $keyType = 'string';
+
+	protected $fillable = ['key', 'file', 'expires_at'];
+
+	protected $dates = ['expires_at', 'created_at', 'updated_at'];
+
+	public function hasKey($key)
 	{
-		$this->storage_path = storage_path('cache');
+		return self::where('key', $key)->exists();
 	}
 
-	public function create($cmd, $ttl)
+	public static function read(string $key, callable $read_callback)
 	{
-		$path = $this->getPath($ttl);
-		@mkdir($path);
-		$file = @fopen($path . '/' . md5($cmd), 'x');
+		$result = self::find($key);
 
-		if ($file === false)
+		if (!$result)
 			return false;
 
-		fopen($path . '/lock_' . md5($cmd), 'x');
-
-		return $file;
-	}
-
-	public function finishCreate($cmd, $ttl)
-	{
-		$path = $this->getPath($ttl);
-		@unlink($path . '/lock_' . md5($cmd));
-	}
-
-	public function open($cmd, $ttl)
-	{
-		$path = $this->getPath($ttl);
-		$lock = $path . '/lock_' . md5($cmd);
-		$wait = $ttl * 60;
-
-		while ($wait && @file_exists($lock)) {
+		$tries = 60;
+		while ($tries && $result->file === null) {
 			sleep(1);
-			$wait--;
+
+			$result = self::find($key);
+
+			if (!$result)
+				return false;
+
+			$tries--;
 		}
 
-		$file = @fopen($this->getPath($ttl) . '/' . md5($cmd), 'r');
-
-		if ($file === false)
+		if ($result->file === null)
 			return false;
 
-		return $file;
+		$file = @fopen(storage_path('cache') . '/' . $result->file, 'rb');
+
+		if (!$file)
+			return false;
+
+		call_user_func($read_callback, $file);
+		fclose($file);
+
+		return true;
 	}
 
-	public function getPath($ttl)
+	public static function write(string $key, int $ttl, callable $write_callback)
 	{
-		return $this->storage_path . '/' . $ttl;
+		$expires_at = now()->addMinutes($ttl);
+
+		$cache = new self([
+			'key' => $key,
+			'expires_at' => $expires_at,
+		]);
+
+		try {
+			$cache->save();
+		} catch (\Exception $ex) {
+			return false;
+		}
+
+		$tries = 5;
+
+		do {
+			$file_name = str_random(32);
+			$file = @fopen(storage_path('cache') . '/' . $file_name, 'x');
+			$tries--;
+		} while (!$file && $tries > 0);
+
+		if (!$file)
+			return false;
+
+		$output = call_user_func($write_callback, $file);
+		fclose($file);
+
+		$cache->file = $file_name;
+
+		try {
+			$cache->save();
+		} catch (\Exception $ex) {
+			return false;
+		}
+
+		return $output;
 	}
 }

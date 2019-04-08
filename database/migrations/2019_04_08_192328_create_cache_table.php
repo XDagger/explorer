@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateNodeStatisticsTable extends Migration
+class CreateCacheTable extends Migration
 {
 	/**
 	 * Run the migrations.
@@ -13,15 +13,13 @@ class CreateNodeStatisticsTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('node_statistics', function (Blueprint $table) {
-			$table->increments('id');
-
-			$table->string('node');
-
-			$table->boolean('is_reachable')->default(false);
-			$table->timestamp('reachable_at')->nullable();
+		Schema::create('cache', function (Blueprint $table) {
+			$table->string('key')->unique();
+			$table->string('file')->nullable();
+			$table->datetime('expires_at')->nullable();
 
 			$table->timestamps();
+			$table->primary('key');
 		});
 	}
 
@@ -32,6 +30,6 @@ class CreateNodeStatisticsTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::dropIfExists('node_statistics');
+		Schema::dropIfExists('cache');
 	}
 }

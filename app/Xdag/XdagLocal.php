@@ -14,30 +14,48 @@ class XdagLocal extends Xdag implements XdagInterface
 		$this->socketFile = null;
 	}
 
-	public function getVersion($provided = null)
+	public function getVersion()
 	{
-		return parent::getVersion($this->version);
+		return $this->simpleCachedCommand('version', 30, function ($file) {
+			fwrite($file, $this->version);
+			return $this->version;
+		});
 	}
 
-	protected function commandStream($cmd, $generator = null)
+	protected function commandStream($cmd, $read_lines)
 	{
-		return parent::commandStream($cmd, $this->commandGenerator($cmd));
+		$file = $this->getCommandFile($cmd);
+
+		if ($read_lines) {
+			while ($line = fgets($file, 1024)) {
+				yield rtrim($line, "\n");
+			}
+		} else {
+			while (!feof($file)) {
+				yield fread($file, 16384);
+			}
+		}
+
+		fclose($file);
 	}
 
-	protected function commandGenerator($cmd)
+	protected function commandOutputFile($data)
 	{
-		$data = explode("\n", $this->getCommandData($cmd));
+		// php://temp handler stores data in memory if they don't exceed predefined limit (usually 2MB).
+		// data is then stored to a temp file on disk, and automatically discarded by PHP if script execution ends.
+		$file = fopen('php://temp', 'w+');
+		fwrite($file, $data);
+		fseek($file, 0);
 
-		foreach ($data as $line)
-			yield $line;
+		return $file;
 	}
 
-	protected function getCommandData($cmd)
+	protected function getCommandFile($cmd)
 	{
 		$cmd = preg_split('/\s+/', trim($cmd));
 
 		if ($cmd[0] == 'state')
-			return 'Synchronized with the main network. Normal operation.';
+			return $this->commandOutputFile('Synchronized with the main network. Normal operation.');
 
 		if ($cmd[0] == 'stats') {
 			$date = Carbon::parse('2018-06-14 19:34:23.999');
@@ -49,7 +67,7 @@ class XdagLocal extends Xdag implements XdagInterface
 			$supply = $main_blocks * Block::REWARD;
 			$net_hash = round(75100856 + rand(1024, 8192) * 1024, 2);
 
-			return "Statistics for ours and maximum known parameters:
+			return $this->commandOutputFile("Statistics for ours and maximum known parameters:
 			hosts: 456 of 456
 		   blocks: $blocks of $blocks
 	  main blocks: $main_blocks of $main_blocks
@@ -57,18 +75,18 @@ class XdagLocal extends Xdag implements XdagInterface
  wait sync blocks: 260
  chain difficulty: 630fcc7af946716ccb8c40865da of 630fcc7af946716ccb8c40865da
 	  XDAG supply: $supply.000000000 of $supply.000000000
-4 hr hashrate MHs: 2357987.48 of $net_hash";
+4 hr hashrate MHs: 2357987.48 of $net_hash");
 		}
 
 		if ($cmd[0] == 'balance')
-			return 'Balance: 24542.435093494 XDAG';
+			return $this->commandOutputFile('Balance: 24542.435093494 XDAG');
 
 		if ($cmd[0] == 'net' && isset($cmd[1]) && $cmd[1] == 'conn')
-			return 'Current connections:
+			return $this->commandOutputFile('Current connections:
   0. 1.2.3.4:55555		   183417 sec, 33962388992/6979446272 in/out bytes, 64507158/11558944 packets, 0/3 dropped
   1. 111.11.111.111:123	   148832 sec, 24856093184/5718993408 in/out bytes, 47044872/9426490 packets, 0/6 dropped
   2. 110.110.110.11:33333  124050 sec, 11723742208/8924076032 in/out bytes, 21416469/15970217 packets, 0/1 dropped
-  3. 22.22.133.123:11111   118280 sec, 6187444224/16896978944 in/out bytes, 10839877/31606947 packets, 0/3 dropped';
+  3. 22.22.133.123:11111   118280 sec, 6187444224/16896978944 in/out bytes, 10839877/31606947 packets, 0/3 dropped');
 
 		if ($cmd[0] == 'block' && isset($cmd[1])) {
 			$block_remark = '';
@@ -92,12 +110,12 @@ class XdagLocal extends Xdag implements XdagInterface
 			// large wallet block
 			if ($cmd[1] == 'WLYMhgmO01vA86yfdk7bEMX2lqzFxalj' || $cmd[1] == 'b458f488ad0ff62963a9c5c5ac96f6c510db4e769facf3c05bd38e09860cb658') {
 				// > 0.2.5 simulation not supported on example large block
-				return file_get_contents(__DIR__ . '/ExampleData/largeblock.txt');
+				return fopen(__DIR__ . '/ExampleData/largeblock.txt', 'r');
 			}
 
 			// tx block
 			if ($cmd[1] == 'IxTmxt1HDfEN4H/AkzoVlfCezXb5eK+G' || $cmd[1] == '1377bfff49a19d0086af78f976cd9ef095153a93c07fe00df10d47ddc6e61423')
-				return '      time: 2018-06-22 00:12:49.813
+				return $this->commandOutputFile('      time: 2018-06-22 00:12:49.813
  timestamp: 16cb0fc0741
      flags: 1c
      state: Accepted
@@ -125,11 +143,11 @@ difficulty: 67afc768f709c3c51fe467dd6e3
 ' . $separator . '
                                  block as address: details
 ' . $address_header . '
-' . $separator;
+' . $separator);
 
 			// main block
 			if (!$this->versionGreaterThan('0.2.4') && ($cmd[1] == '////3aEv+N8KHkA/CW7xOw+i5uLL////' || $cmd[1] == '0000000000000285cd1c19cbe2e6620d3bf16e092b401e0adf602fa1dda57b40'))
-				return 'time: 2018-06-14 19:34:23.999
+				return $this->commandOutputFile('      time: 2018-06-14 19:34:23.999
  timestamp: 16c26daffff
 	 flags: 1f
 	 state: Main
@@ -586,10 +604,10 @@ difficulty: 630f2898a810cecc2a958835ea9
 	output: szhe4/brqyt1tjcG6R5Jnp1DOes+MTq6		   0.439448512	2018-05-26 19:49:21.249
 	output: OUj48O7cUfqFeYDOQJzw+LA/b+A9FmXi		   0.073340981	2018-05-26 19:49:21.250
 	output: NvfjiZMxBrtxjfp+sdZn1/EQTKQ0PDI4		   0.619787876	2018-05-26 19:49:21.252
-	output: P3/4KceASRm2DY9uU6AMW+Hr48g9mCXA		  10.291589971	2018-05-26 19:49:21.254';
+	output: P3/4KceASRm2DY9uU6AMW+Hr48g9mCXA		  10.291589971	2018-05-26 19:49:21.254');
 
 			if ($this->versionGreaterThan('0.2.4') && ($cmd[1] == '////3aEv+N8KHkA/CW7xOw+i5uLL////' || $cmd[1] == '0000000000000285cd1c19cbe2e6620d3bf16e092b401e0adf602fa1dda57b40'))
-				return '      time: 2018-06-14 19:34:23.999
+				return $this->commandOutputFile('      time: 2018-06-14 19:34:23.999
  timestamp: 16c26daffff
 	 flags: 1f
 	 state: Main
@@ -1045,9 +1063,9 @@ difficulty: 630f2898a810cecc2a958835ea9
 	output: 2UpSicD5xv1NA/PTN04+d/QuWoH1MCYm		   2.044502267	2018-06-14 19:49:20.387
 	output: GcO1gv2BKKugmumKMiufQ0Ue3pI5Ogtm		   2.552766561	2018-06-14 19:49:20.384
 	output: QTTm45K/Reju1/3FIU/fD4D4gv+ojkbQ		   2.659098001	2018-06-14 19:49:20.381
-	output: RYvemDqKltkC4VaxkdgT2nu84RmGCQfE		   1.175313073	2018-06-14 19:49:20.378' . $earning_2;
+	output: RYvemDqKltkC4VaxkdgT2nu84RmGCQfE		   1.175313073	2018-06-14 19:49:20.378' . $earning_2);
 
-			return 'Block is not found';
+			return $this->commandOutputFile('Block is not found');
 		}
 
 		if ($cmd[0] == 'lastblocks') {
@@ -1077,7 +1095,7 @@ g5d/i+mZU3oRJerl265sTXri96asevHI
 VAzMAs0tYNkS6ch7gJfS0H53x1paaV4T
 WLYMhgmO01vA86yfdk7bEMX2lqzFxalj';
 
-			return collect(explode("\n", $blocks))->take($cmd[1] ?? 20)->implode("\n");
+			return $this->commandOutputFile(collect(explode("\n", $blocks))->take($cmd[1] ?? 20)->implode("\n"));
 		}
 
 		if ($cmd[0] == 'mainblocks') {
@@ -1117,9 +1135,9 @@ cyCapIoGsagELQG2iZogX42q4mRu7i2D   2018-07-12 00:17:51.999   Main' . $remark_1 .
 IxTmxt1HDfEN4H/AkzoVlfCezXb5eK+G   2018-06-22 00:12:49.813   Main' . $remark_1 . '
 ////3aEv+N8KHkA/CW7xOw+i5uLL////   2018-06-14 19:34:23.999   Main' . $remark_1;
 
-			return collect(explode("\n", $blocks))->take(isset($cmd[1]) ? $cmd[1] + 3 : 23)->implode("\n");
+			return $this->commandOutputFile(collect(explode("\n", $blocks))->take(isset($cmd[1]) ? $cmd[1] + 3 : 23)->implode("\n"));
 		}
 
-		return 'Illegal command.';
+		return $this->commandOutputFile('Illegal command.');
 	}
 }

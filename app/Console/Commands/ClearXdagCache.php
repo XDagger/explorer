@@ -4,26 +4,18 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
+use App\Xdag\Cache;
+
 class ClearXdagCache extends Command
 {
-	protected $signature = 'explorer:clear-cache {--full}';
-	protected $description = 'Clear expired or all Xdag cache entries (with --full argument).';
+	protected $signature = 'explorer:clear-cache';
+	protected $description = 'Clear all expired cache entries and delete cache files older than 15 minutes.';
 
 	public function handle()
 	{
-		$storage_path = storage_path('cache');
-		$dir = opendir($storage_path);
+		Cache::where('expires_at', '<', now())->delete();
 
-		while (($file = readdir($dir)) !== false) {
-			if ($file == '.' || $file == '..')
-				continue;
-
-			if (filetype($storage_path . '/' . $file) == 'dir') {
-				$this->clear($storage_path . '/' . $file, $this->option('full') ? 0 : (int) $file);
-			}
-		}
-
-		closedir($dir);
+		$this->clear(storage_path('cache'), 15);
 
 		$this->info('ClearXdagCache completed successfully.');
 	}
@@ -33,7 +25,7 @@ class ClearXdagCache extends Command
 		$dirh = opendir($dir);
 
 		while (($file = readdir($dirh)) !== false) {
-			if ($file == '.' || $file == '..')
+			if ($file == '.' || $file == '..' || $file == 'status.json' || $file == '.gitignore')
 				continue;
 
 			if (@filetype($dir . '/' . $file) == 'file') {

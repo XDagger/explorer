@@ -20,6 +20,7 @@ class Xdag implements XdagInterface
 		$this->socketFile = $socketFile;
 	}
 
+	/* helper methods */
 	public function isReady()
 	{
 		$state = $this->getState();
@@ -27,30 +28,24 @@ class Xdag implements XdagInterface
 		return stripos($state, 'normal') !== false || stripos($state, 'transfer to complete') !== false;
 	}
 
-	public function getState()
-	{
-		return $this->command('state');
-	}
-
 	public function versionGreaterThan($version = '0.2.4')
 	{
 		return version_compare($this->getVersion(), $version) === 1;
 	}
 
-	public function getVersion($provided = null)
+	/* cached commands */
+	public function getState()
 	{
-		$cache = new Cache();
-		if (($file = $cache->open('version', 30)) !== false) {
-			$version = trim(fgets($file));
-			fclose($file);
-			return $version;
-		}
+		return $this->simpleCachedCommand('state', 1);
+	}
 
-		if ($provided === null) {
+	public function getVersion()
+	{
+		return $this->simpleCachedCommand('version', 30, function ($file) {
 			$file = str_replace('"', '\"', dirname($this->socketFile) . '/xdag');
 			exec('"' . $file . '"', $out);
 
-			if (! $out) {
+			if (!$out) {
 				$version = '???';
 			} else {
 				$line = current($out);
@@ -58,94 +53,88 @@ class Xdag implements XdagInterface
 
 				$version = rtrim(end($line), '.');
 			}
-		} else {
-			$version = $provided;
-		}
 
-		if (($file = $cache->create('version', 30)) !== false) {
 			fwrite($file, $version);
-			$cache->finishCreate('version', 30);
-		}
-
-		return $version;
-	}
-
-	public function getLastBlocks($number = 100)
-	{
-		if (! $this->isReady()) {
-			throw new XdagNodeNotReadyException;
-		}
-
-		return $this->commandStream('lastblocks ' . min(100, max(1, intval($number))));
-	}
-
-	public function getMainBlocks($number = 100)
-	{
-		if (! $this->isReady()) {
-			throw new XdagNodeNotReadyException;
-		}
-
-		return $this->commandStream('mainblocks ' . min(100, max(1, intval($number))));
-	}
-
-	public function getBlock($input, OutputParser $parser)
-	{
-		if (!Validator::isAddress($input) && !Validator::isBlockHash($input)) {
-			throw new InvalidArgumentException('Invalid address or block hash.');
-		}
-
-		if (! $this->isReady()) {
-			throw new XdagNodeNotReadyException;
-		}
-
-		$block = $parser->getBlockFromOutput($this->commandStream('block ' . $input), $this->versionGreaterThan('0.2.4'));
-
-		if (!$block)
-			return $block;
-
-		$cache = new Cache;
-		if (Validator::isBlockHash($input)) {
-			$cmd = 'block ' . $block->getProperties()->get('balance_address');
-		} else {
-			$cmd = 'block ' . $block->getProperties()->get('hash');
-		}
-
-		if ($file = $cache->create($cmd, 3)) {
-			$other_file = @fopen($cache->getPath(3) . '/' . md5('block ' . $input), 'rb');
-			if ($other_file) {
-				while (!feof($other_file)) {
-					fwrite($file, fread($other_file, 4096));
-				}
-
-				fclose($other_file);
-				$cache->finishCreate($cmd, 3);
-			}
-		}
-
-		return $block;
+			return $version;
+		});
 	}
 
 	public function getBalance($address)
 	{
-		if (! Validator::isAddress($address)) {
+		if (!Validator::isAddress($address))
 			throw new InvalidArgumentException('Invalid address.');
-		}
 
-		if (! $this->isReady()) {
+		if (!$this->isReady())
 			throw new XdagNodeNotReadyException;
-		}
 
-		$output = $this->command("balance $address");
+		$output = $this->simpleCachedCommand("balance $address", 3);
 		$output = explode(' ', $output);
 
 		return $output[1] ?? '0.000000000';
+	}
+
+	public function getBlock($input, OutputParser $parser)
+	{
+		if (!Validator::isAddress($input) && !Validator::isBlockHash($input))
+			throw new InvalidArgumentException('Invalid address or block hash.');
+
+		if (!$this->isReady())
+			throw new XdagNodeNotReadyException;
+
+		$parser->setFlippedOutput($this->versionGreaterThan('0.2.4'));
+
+		$cmd = 'block ' . $input;
+
+		$reader = function() use ($cmd, $parser) {
+			$block = null;
+
+			Cache::read($cmd, function ($file) use ($parser, &$block) {
+				$generator = function () use ($file) {
+					while (($line = fgets($file, 1024)) !== false) {
+						yield $line;
+					}
+				};
+
+				$block = $parser->getBlockFromOutput($generator());
+			});
+
+			return $block;
+		};
+
+		if ($block = $reader())
+			return $block;
+
+		Cache::write($cmd, 3, function($file) use ($cmd) {
+			foreach ($this->commandStream($cmd, false) as $chunk) {
+				fwrite($file, $chunk);
+			}
+		});
+
+		return $reader();
+	}
+
+	/* non-cached commands */
+	public function getLastBlocks($number = 100)
+	{
+		if (!$this->isReady())
+			throw new XdagNodeNotReadyException;
+
+		return $this->commandLines('lastblocks ' . min(100, max(1, intval($number))));
+	}
+
+	public function getMainBlocks($number = 100)
+	{
+		if (!$this->isReady())
+			throw new XdagNodeNotReadyException;
+
+		return $this->commandLines('mainblocks ' . min(100, max(1, intval($number))));
 	}
 
 	public function getConnections()
 	{
 		$connections = [];
 
-		foreach ($this->commandStream('net conn') as $line) {
+		foreach ($this->commandLines('net conn') as $line) {
 			$line = preg_split('/\s+/', trim($line));
 
 			if (count($line) != 11) {
@@ -168,7 +157,7 @@ class Xdag implements XdagInterface
 	{
 		$stats = [];
 
-		foreach ($this->commandStream('stats') as $line) {
+		foreach ($this->commandLines('stats') as $line) {
 			if (preg_match('/\s*(.*): (.*)/i', $line, $matches)) {
 				$key	= strtolower(trim($matches[1]));
 				$values = explode(' of ', $raw_value = strtolower(trim($matches[2])));
@@ -204,96 +193,72 @@ class Xdag implements XdagInterface
 		return $stats;
 	}
 
+	/* daemon communication functions */
 	protected function command($cmd)
 	{
+		$output = '';
+
+		foreach ($this->commandStream($cmd, false) as $data)
+			$output.= $data;
+
+		return $output;
+	}
+
+	protected function commandLines($cmd)
+	{
 		$lines = [];
-		foreach ($this->commandStream($cmd) as $line) {
+
+		foreach ($this->commandStream($cmd, true) as $line)
 			$lines[] = $line;
-		}
 
-		return implode("\n", $lines);
+		return $lines;
 	}
 
-	protected function commandStream($cmd, $generator = null)
+	protected function commandStream($cmd, $read_lines)
 	{
-		$command = explode(' ', $cmd)[0];
-		$ttl_map = ['block' => 3, 'stats' => 0];
-		$ttl = $ttl_map[$command] ?? 1;
+		$socket = @socket_create(AF_UNIX, SOCK_STREAM, 0);
 
-		if ($ttl == 0)
-			return $this->directCommandStream($cmd, $generator);
+		if (!$socket || !@socket_connect($socket, $this->socketFile))
+			throw new XdagException('Error establishing a connection with the socket');
 
-		$cache = new Cache();
+		$command = "$cmd\0";
+		socket_send($socket, $command, strlen($command), 0);
 
-		if (($file = $cache->open($cmd, $ttl)) !== false)
-			return $this->cachedCommandStream($file);
-
-		if (($file = $cache->create($cmd, $ttl)) !== false)
-			$this->commandStreamToCache($cache, $ttl, $file, $cmd, $generator);
-		else
-			throw new XdagException('Unable to write cache for command "' . $cmd . '" with ttl ' . $ttl);
-
-		$file = $cache->open($cmd, $ttl);
-		return $this->cachedCommandStream($file);
-	}
-
-	protected function directCommandStream($cmd, $generator = null, $chunk_read = false)
-	{
-		if (!$generator) {
-			$socket = @socket_create(AF_UNIX, SOCK_STREAM, 0);
-
-			if (! $socket || ! @socket_connect($socket, $this->socketFile)) {
-				throw new XdagException('Error establishing a connection with the socket');
-			}
-
-			$command = "$cmd\0";
-			socket_send($socket, $command, strlen($command), 0);
-
-			if (!$chunk_read) {
-				while ($line = @socket_read($socket, 1024, PHP_NORMAL_READ)) {
-					yield rtrim($line, "\n");
-				}
-			} else {
-				while ($data = @socket_read($socket, 4096, PHP_BINARY_READ)) {
-					yield $data;
-				}
-			}
-
-			socket_close($socket);
-		} else {
-			foreach ($generator as $line) {
+		if ($read_lines) {
+			while ($line = @socket_read($socket, 1024, PHP_NORMAL_READ)) {
 				yield rtrim($line, "\n");
 			}
-		}
-	}
-
-	protected function cachedCommandStream($file)
-	{
-		while (($line = fgets($file)) !== false)
-			yield rtrim($line, "\n");
-
-		fclose($file);
-	}
-
-	protected function commandStreamToCache($cache, $ttl, $file, $cmd, $generator = null)
-	{
-		$chunk_read = false;
-
-		if (!$generator) {
-			$generator = $this->directCommandStream($cmd, null, true);
-			$chunk_read = true;
-		}
-
-		foreach ($generator as $data) {
-			if (!$chunk_read) {
-				fwrite($file, $data . "\n");
-			} else {
-				fwrite($file, $data);
+		} else {
+			while ($data = @socket_read($socket, 16384, PHP_BINARY_READ)) {
+				yield $data;
 			}
 		}
 
-		fclose($file);
+		socket_close($socket);
+	}
 
-		$cache->finishCreate($cmd, $ttl);
+	/* cache helper for simple commands whose output fits in memory */
+	protected function simpleCachedCommand($cmd, $ttl, callable $output_generator = null)
+	{
+		$reader = function () use ($cmd) {
+			$output = null;
+
+			Cache::read($cmd, function ($file) use (&$output) {
+				while (!feof($file))
+					$output .= fread($file, 8192);
+			});
+
+			return $output;
+		};
+
+		if ($output = $reader())
+			return $output;
+
+		Cache::write($cmd, $ttl, $output_generator ?? function($file) use ($cmd) {
+			fwrite($file, $output = $this->command($cmd));
+			return $output;
+		});
+
+		return $reader();
 	}
 }

@@ -20,6 +20,7 @@ class OutputParser
 	protected $transactionFilters, $addressFilters;
 	protected $parser, $change;
 	protected $user_callback;
+	protected $flipped;
 
 	public function __construct(
 		?Paginator $transactionPaginator = null,
@@ -36,7 +37,12 @@ class OutputParser
 		$this->change = resolve(ValueChangeCalculator::class);
 	}
 
-	public function getBlockFromOutput($output, $flipped = false)
+	public function setFlippedOutput($flipped)
+	{
+		$this->flipped = (boolean) $flipped;
+	}
+
+	public function getBlockFromOutput($output)
 	{
 		$properties = $transactions = $addresses = [];
 		$transaction_number = $address_number = $total_earnings = $total_spendings = $total_balance = '0.000000000';
@@ -64,7 +70,7 @@ class OutputParser
 
 		$last_day_boundary = now()->subDays(1);
 
-		foreach ($this->sortedOutput($output, $flipped) as $line) {
+		foreach ($this->sortedOutput($output) as $line) {
 			switch ($state) {
 				case 'properties':
 					if (!$this->parser->blockExists($line)) {
@@ -142,7 +148,7 @@ class OutputParser
 					$date = Carbon::parse($address['time']);
 					$date_index = $date->format('Y-m-d');
 
-					$operator = $flipped ? 'lte' : 'gte';
+					$operator = $this->flipped ? 'lte' : 'gte';
 
 					if ($earnings_base === null && $date->$operator($last_day_boundary)) {
 						$earnings_base = $total_earnings;
@@ -150,7 +156,7 @@ class OutputParser
 						$balance_base = $total_balance;
 					}
 
-					$operator = $flipped ? 'subDays' : 'addDays';
+					$operator = $this->flipped ? 'subDays' : 'addDays';
 
 					if ($address['direction'] == 'output') {
 						$total_spendings = bcadd($total_spendings, $address['amount']);
@@ -216,7 +222,7 @@ class OutputParser
 		}
 
 		// fix up balances graph for 0.2.5+ flipped block command output
-		if ($flipped) {
+		if ($this->flipped) {
 			$balances_graph = array_reverse($balances_graph);
 			$previous = $diff = null;
 
@@ -245,9 +251,9 @@ class OutputParser
 			'spendings' => $spendings_graph,
 			'balances' => $balances_graph,
 
-			'earnings_change' => $this->change->calculate($flipped ? $total_earnings - $earnings_base : $earnings_base, $total_earnings),
-			'spendings_change' => $this->change->calculate($flipped ? $total_spendings - $spendings_base : $spendings_base, $total_spendings),
-			'balance_change' => $this->change->calculate($flipped ? $total_balance - $balance_base : $balance_base, $total_balance),
+			'earnings_change' => $this->change->calculate($this->flipped ? $total_earnings - $earnings_base : $earnings_base, $total_earnings),
+			'spendings_change' => $this->change->calculate($this->flipped ? $total_spendings - $spendings_base : $spendings_base, $total_spendings),
+			'balance_change' => $this->change->calculate($this->flipped ? $total_balance - $balance_base : $balance_base, $total_balance),
 
 			'total_earnings' => $total_earnings,
 			'total_spendings' => $total_spendings,
@@ -292,25 +298,25 @@ class OutputParser
 	/*
 	 * in XDAG version < 0.2.5
 	 *     - the earning line is first, followed by entries sorted by time ASC (correct overall order)
-	 *     - parameter $flipped will be passed as FALSE - we simply yield line by line
+	 *     - class variable $flipped will be FALSE - we simply yield line by line
 	 * in XDAG version = 0.2.5
 	 *     - the earning line is first, followed by entries sorted by time DESC (incorrect overall order)
-	 *     - parameter $flipped will be passed as TRUE - we manually yield the earning line last
+	 *     - class variable $flipped will be TRUE - we manually yield the earning line last
 	 * in XDAG version >= 0.3.0
 	 *     - the earning line is LAST, followed by entries sorted by time DESC (correct overall order)
-	 *     - parameter $flipped will be passed as TRUE - we manually yield the earning line last, but since
+	 *     - class variable $flipped will be TRUE - we manually yield the earning line last, but since
 	 *       the line is already the last line in the output, this function has no effect.
 	 *
 	 * Summary: this function preserves correct entries order for "block as address" part of the output
-	 * for 0.2.5, but also behaves correctly in later versions.
+	 * for 0.2.5, but also behaves correctly in other versions.
 	 *
 	 */
-	protected function sortedOutput($output, $flipped)
+	protected function sortedOutput($output)
 	{
 		$earning = null;
 
 		foreach ($output as $line) {
-			if ($flipped && substr(trim($line), 0, 8) === 'earning:') {
+			if ($this->flipped && substr(trim($line), 0, 8) === 'earning:') {
 				$earning = $line;
 			} else {
 				yield $line;

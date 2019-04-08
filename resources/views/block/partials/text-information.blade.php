@@ -1,8 +1,8 @@
 <div>
 	<h2>Block Information</h2>
 
-	<strong>Date and time</strong>
-	<span>{{ $block->getProperties()->get('time') }} UTC</span>
+	<strong>Date and time (UTC)</strong>
+	<span>{{ $block->getProperties()->get('time') }}</span>
 	<br>
 	<br>
 
