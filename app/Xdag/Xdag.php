@@ -43,7 +43,7 @@ class Xdag implements XdagInterface
 	{
 		return $this->simpleCachedCommand('version', 30, function ($file_handle) {
 			$file = str_replace('"', '\"', dirname($this->socketFile) . '/xdag');
-			exec('"' . $file . '"', $out);
+			exec('"' . $file . '" --help', $out);
 
 			if (!$out) {
 				$version = '???';
@@ -253,7 +253,7 @@ class Xdag implements XdagInterface
 		if ($output = $reader())
 			return $output;
 
-		Cache::write($cmd, $ttl, $output_generator ?? function($file) use ($cmd) {
+		Cache::write($cmd, $ttl, $output_generator ?? function ($file) use ($cmd) {
 			fwrite($file, $this->command($cmd));
 		});
 

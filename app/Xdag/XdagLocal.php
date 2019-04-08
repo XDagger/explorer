@@ -18,7 +18,6 @@ class XdagLocal extends Xdag implements XdagInterface
 	{
 		return $this->simpleCachedCommand('version', 30, function ($file) {
 			fwrite($file, $this->version);
-			return $this->version;
 		});
 	}
 
