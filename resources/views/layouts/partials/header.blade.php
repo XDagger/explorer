@@ -27,7 +27,7 @@
 				</a>
 			</div>
 
-			<div :class="{ 'hidden lg:flex': !shown }" class="hidden lg:flex flex-1 mt-4 lg:mt-0 items-center justify-end">
+			<div class="lg:flex flex-1 mt-4 lg:mt-0 items-center justify-end">
 				<form action="{{ route('block search') }}" method="POST" class="w-full lg:w-3/4">
 					{{ csrf_field() }}
 

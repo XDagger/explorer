@@ -14,7 +14,7 @@
 <div id="app" class="flex flex-col min-h-screen">
 	@include('layouts.partials.header')
 
-	<div class="flex-1 mt-16">
+	<div class="flex-1 mt-24 pt-8 lg:mt-16 lg:pt-0">
 		@include('support.notifications')
 
 		@yield('body')
