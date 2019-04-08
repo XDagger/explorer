@@ -80,7 +80,7 @@ class Cache extends Model
 		if (!$file)
 			return false;
 
-		$output = call_user_func($write_callback, $file);
+		call_user_func($write_callback, $file);
 		fclose($file);
 
 		$cache->file = $file_name;
@@ -91,6 +91,6 @@ class Cache extends Model
 			return false;
 		}
 
-		return $output;
+		return true;
 	}
 }
