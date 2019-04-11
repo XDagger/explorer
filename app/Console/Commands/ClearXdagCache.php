@@ -9,13 +9,13 @@ use App\Xdag\Cache;
 class ClearXdagCache extends Command
 {
 	protected $signature = 'explorer:clear-cache';
-	protected $description = 'Clear all expired cache entries and delete cache files older than 15 minutes.';
+	protected $description = 'Clear all expired cache entries and delete cache files older than 1 hour.';
 
 	public function handle()
 	{
 		Cache::where('expires_at', '<', now())->delete();
 
-		$this->clear(storage_path('cache'), 15);
+		$this->clear(storage_path('cache'), 60);
 
 		$this->info('ClearXdagCache completed successfully.');
 	}
