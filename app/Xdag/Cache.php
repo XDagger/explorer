@@ -8,7 +8,9 @@ use App\Xdag\Exceptions\XdagException;
 class Cache extends Model
 {
 	protected $table = 'cache';
+
 	public $incrementing = false;
+
 	protected $primaryKey = 'key';
 	protected $keyType = 'string';
 
@@ -16,34 +18,29 @@ class Cache extends Model
 
 	protected $dates = ['expires_at', 'created_at', 'updated_at'];
 
-	public function hasKey($key)
-	{
-		return self::where('key', $key)->exists();
-	}
-
 	public static function read(string $key, callable $read_callback)
 	{
-		$result = self::find($key);
+		$cache = self::find($key);
 
-		if (!$result)
+		if (!$cache)
 			return false;
 
 		$tries = 60;
-		while ($tries && $result->file === null) {
+		while ($tries && $cache->file === null) {
 			sleep(1);
 
-			$result = self::find($key);
+			$cache = self::find($key);
 
-			if (!$result)
+			if (!$cache)
 				return false;
 
 			$tries--;
 		}
 
-		if ($result->file === null)
+		if ($cache->file === null)
 			return false;
 
-		$file = @fopen(storage_path('cache') . '/' . $result->file, 'rb');
+		$file = @fopen(storage_path('cache') . '/' . $cache->file, 'rb');
 
 		if (!$file)
 			return false;
@@ -80,10 +77,40 @@ class Cache extends Model
 		if (!$file)
 			return false;
 
-		call_user_func($write_callback, $file);
-		fclose($file);
+		try {
+			if (call_user_func($write_callback, $file) === false)
+				throw new \Exception;
+		} catch (\Exception $ex) {
+			// callback was unable to write the cache, delete entry
+			$cache->delete();
+			fclose($file);
+			return false;
+		}
 
 		$cache->file = $file_name;
+		fclose($file);
+
+		try {
+			$cache->save();
+		} catch (\Exception $ex) {
+			return false;
+		}
+
+		return true;
+	}
+
+	public static function copy(string $key, string $other_key)
+	{
+		$cache = self::find($key);
+
+		if (!$cache || $cache->file === null)
+			return false;
+
+		$cache = new self([
+			'key' => $other_key,
+			'expires_at' => $cache->expires_at,
+			'file' => $cache->file,
+		]);
 
 		try {
 			$cache->save();

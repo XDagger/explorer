@@ -11,7 +11,7 @@ use App\Support\ValueChangeCalculator;
 use App\Xdag\XdagInterface;
 
 use App\Xdag\Block\Pagination\Paginator;
-use App\Xdag\Exceptions\XdagBlockNotFoundException;
+use App\Xdag\Exceptions\{XdagException, XdagBlockNotFoundException};
 
 use App\Xdag\Block\Output\OutputParser;
 use App\Xdag\Block\Filters\{AddressFiltersBuilder, AddressFiltersValidation, TransactionFiltersBuilder, TransactionFiltersValidation};
@@ -50,11 +50,14 @@ class BlockController extends Controller
 
 		try {
 			$block = $this->xdag->getBlock($address_or_hash, $output_parser);
-		} catch (InvalidArgumentException $e) {
+		} catch (InvalidArgumentException $ex) {
 			$this->notify()->error('Block was not found. Please make sure you entered correct address or block hash.');
 			return redirect()->route('home');
-		} catch (XdagBlockNotFoundException $e) {
+		} catch (XdagBlockNotFoundException $ex) {
 			$this->notify()->error('Block was not found. Please make sure you entered correct address or block hash.');
+			return redirect()->route('home');
+		} catch (XdagException $ex) {
+			$this->notify()->error('Unable to retrieve block data, please try again later. Message: ' . $ex->getMessage());
 			return redirect()->route('home');
 		}
 

@@ -84,7 +84,7 @@ class Xdag implements XdagInterface
 
 		$cmd = 'block ' . $input;
 
-		$reader = function() use ($cmd, $parser) {
+		$reader = function () use ($cmd, $parser, $input) {
 			$block = null;
 
 			Cache::read($cmd, function ($file) use ($parser, &$block) {
@@ -96,6 +96,13 @@ class Xdag implements XdagInterface
 
 				$block = $parser->getBlockFromOutput($generator());
 			});
+
+			if ($block) {
+				if (Validator::isAddress($input))
+					Cache::copy($cmd, 'block ' . $block->getProperties()->get('hash'));
+				else
+					Cache::copy($cmd, 'block ' . $block->getProperties()->get('balance_address'));
+			}
 
 			return $block;
 		};
@@ -244,7 +251,7 @@ class Xdag implements XdagInterface
 
 			Cache::read($cmd, function ($file) use (&$output) {
 				while (!feof($file))
-					$output .= fread($file, 8192);
+					$output .= fread($file, 16384);
 			});
 
 			return $output;

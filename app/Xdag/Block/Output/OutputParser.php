@@ -75,7 +75,7 @@ class OutputParser
 				case 'properties':
 					if (!$this->parser->blockExists($line)) {
 						if ($this->user_callback)
-							return $this->callback('not_found');
+							return $this->callback('not_found', '');
 						else
 							throw new XdagBlockNotFoundException;
 					}
@@ -209,7 +209,7 @@ class OutputParser
 
 		if ($state !== 'addresses') {
 			if ($this->user_callback)
-				return $this->callback('invalid_markup');
+				return $this->callback('invalid_markup', '');
 			else
 				throw new XdagException('Invalid block markup.');
 		}
