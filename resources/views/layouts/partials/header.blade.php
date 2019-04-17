@@ -28,7 +28,7 @@
 			<form :class="{ 'hidden lg:flex-1 lg:flex': !shown, 'flex w-full': shown }" action="{{ route('block search') }}" method="POST" class="hidden lg:flex-1 lg:flex justify-end">
 				{{ csrf_field() }}
 
-				<div class="flex w-full lg:w-3/4">
+				<div class="flex w-full lg:w-auto xl:w-3/4">
 					<input type="text" name="search_address_or_hash" class="w-full text-md text-grey-darkest bg-white px-4 py-3 rounded-lg rounded-r-none outline-none" placeholder="View address / block hash">
 					<button :class="{ 'small': shown }" type="submit" class="button primary text-md font-bold py-3 px-4 rounded-lg rounded-l-none">
 						@svg('search', ['class' => 'stroke-current w-5 h-5'])
