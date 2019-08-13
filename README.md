@@ -1,9 +1,6 @@
 # XDAG Block Explorer
 This software provides a detailed view on the xdag network presented in a nice, comfortable UI for the users.
 
-# Status
-[![Throughput Graph](https://graphs.waffle.io/XDagger/explorer/throughput.svg)](https://waffle.io/XDagger/explorer/metrics/throughput)
-
 # Features
 - responsive design
 - network statistics on the home page, including a list of 20 latest main blocks, with creation time
