@@ -33,6 +33,13 @@ class Xdag implements XdagInterface
 		return version_compare($this->getVersion(), $version) === 1;
 	}
 
+	public function isTestnet()
+	{
+		$state = $this->getState();
+
+		return stripos($state, 'test') !== false;
+	}
+
 	/* cached commands */
 	public function getState()
 	{

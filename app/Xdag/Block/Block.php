@@ -2,11 +2,14 @@
 namespace App\Xdag\Block;
 
 use App\Xdag\Block\Attributes\{Properties, Transactions, Addresses, Earnings, Spendings, Balances};
+use App\Modules\Network\Network;
+use App\Xdag\XdagInterface;
 
 class Block
 {
 	const MAIN_BLOCK_FLAGS = '1f';
-	const REWARD = 1024; // TODO: in future, reward may decrease
+	const APOLLO_FORK_HEIGHT_MAINNET = 1015601;
+	const APOLLO_FORK_HEIGHT_TESTNET = 196250;
 
 	protected $properties,  $transactions, $addresses;
 	protected $earnings, $spendings, $balances;
@@ -52,6 +55,24 @@ class Block
 
 		$this->total_transactions_count = $data['total_transactions_count'] ?? 0;
 		$this->total_addresses_count = $data['total_addresses_count'] ?? 0;
+	}
+
+	public static function getReward()
+	{
+		$log = Network::orderBy('id', 'desc')->limit(1)->first();
+
+		if (!$log)
+			return 1024;
+
+		return $log->main_blocks > static::getApolloForkHeight() ? 128 : 1024;
+	}
+
+	public static function getApolloForkHeight(&$is_testnet = null)
+	{
+		$xdag = app(XdagInterface::class);
+		$is_testnet = $xdag->isTestnet();
+
+		return $is_testnet ? static::APOLLO_FORK_HEIGHT_TESTNET : static::APOLLO_FORK_HEIGHT_MAINNET;
 	}
 
 	public function isMainBlock()

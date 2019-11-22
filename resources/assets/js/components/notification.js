@@ -1,17 +1,22 @@
 export default {
-    data() {
-        return {
-            showNotification: true
-        }
-    },
+	props: {
+		delay: {
+			default: 5000
+		}
+	},
+	data() {
+		return {
+			showNotification: true
+		}
+	},
 
-    mounted() {
-        _.delay(() => { this.hideNotification() }, 5000)
-    },
+	mounted() {
+		_.delay(() => { this.hideNotification() }, this.delay)
+	},
 
-    methods: {
-        hideNotification() {
-            this.showNotification = false
-        }
-    }
+	methods: {
+		hideNotification() {
+			this.showNotification = false
+		}
+	}
 }
