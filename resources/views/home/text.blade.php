@@ -7,7 +7,7 @@
 @if ($network->main_blocks >= $fork_height - 1350 * 7 && $network->main_blocks <= $fork_height + 1350 * 7)
 	<div style="color: blue">
 		<span style="font-size: 150%">Heads up!</span> -
-			XDAG Apollo network {{ $already_forked ? 'was' : 'will be' }} activated on {{ $is_testnet ? 'test' : 'main' }}
+			XDAG Apollo network {{ $already_forked ? 'was' : 'will be' }} activated on {{ $is_testnet ? 'testnet' : '' }} main
 			block <strong>{{ $fork_height }}</strong>.
 			Block reward {{ $already_forked ? 'was decreased' : 'will decrease' }} to 128 XDAG.
 	</div>

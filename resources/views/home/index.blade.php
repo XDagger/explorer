@@ -15,7 +15,7 @@
 
 					<p class="m-0 font-medium mr-2">
 						<strong>Heads up!</strong>
-						XDAG Apollo network {{ $already_forked ? 'was' : 'will be' }} activated on {{ $is_testnet ? 'test' : 'main' }}
+						XDAG Apollo network {{ $already_forked ? 'was' : 'will be' }} activated on {{ $is_testnet ? 'testnet' : '' }} main
 						block <strong>{{ $fork_height }}</strong>.
 						Block reward {{ $already_forked ? 'was decreased' : 'will decrease' }} to 128 XDAG.
 					</p>
