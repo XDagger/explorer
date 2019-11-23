@@ -63,7 +63,7 @@ class XdagLocal extends Xdag implements XdagInterface
 			$new_main_blocks = floor($diff / 64);
 			$main_blocks = 189734 + $new_main_blocks;
 			$blocks = 58027510 + $new_main_blocks * 1000 + (int) rand(100, 800);
-			$supply = $main_blocks * Block::REWARD;
+			$supply = $main_blocks * 1024; // for test data, this is enough
 			$net_hash = round(75100856 + rand(1024, 8192) * 1024, 2);
 
 			return $this->commandOutputFile("Statistics for ours and maximum known parameters:
@@ -80,12 +80,20 @@ class XdagLocal extends Xdag implements XdagInterface
 		if ($cmd[0] == 'balance')
 			return $this->commandOutputFile('Balance: 24542.435093494 XDAG');
 
-		if ($cmd[0] == 'net' && isset($cmd[1]) && $cmd[1] == 'conn')
+		if ($cmd[0] == 'net' && isset($cmd[1]) && $cmd[1] == 'conn') {
+			if ($this->versionGreaterThan('0.3.0'))
+				return $this->commandOutputFile('---------------------------------------------------------------------------------------------------------
+Connection list:
+  0. 10.0.0.1:16775          398 sec, [in/out] - 18432/18944 bytes, 36/37 packets, 0/0 dropped
+  1. 192.168.0.111:35234     334 sec, [in/out] - 13824/13824 bytes, 27/27 packets, 0/0 dropped
+---------------------------------------------------------------------------------------------------------');
+
 			return $this->commandOutputFile('Current connections:
   0. 1.2.3.4:55555		   183417 sec, 33962388992/6979446272 in/out bytes, 64507158/11558944 packets, 0/3 dropped
   1. 111.11.111.111:123	   148832 sec, 24856093184/5718993408 in/out bytes, 47044872/9426490 packets, 0/6 dropped
   2. 110.110.110.11:33333  124050 sec, 11723742208/8924076032 in/out bytes, 21416469/15970217 packets, 0/1 dropped
   3. 22.22.133.123:11111   118280 sec, 6187444224/16896978944 in/out bytes, 10839877/31606947 packets, 0/3 dropped');
+		}
 
 		if ($cmd[0] == 'block' && isset($cmd[1])) {
 			$block_remark = '';

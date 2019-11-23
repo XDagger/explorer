@@ -150,17 +150,28 @@ class Xdag implements XdagInterface
 		foreach ($this->commandLines('net conn') as $line) {
 			$line = preg_split('/\s+/', trim($line));
 
-			if (count($line) != 11) {
-				continue;
-			}
+			$count = count($line);
 
-			$connections[] = [
-				'host' => $line[1],
-				'seconds' => (int)$line[2],
-				'in_out_bytes' => array_map('intval', explode('/', $line[4])),
-				'in_out_packets' => array_map('intval', explode('/', $line[7])),
-				'in_out_dropped' => array_map('intval', explode('/', $line[9])),
-			];
+			if ($count !== 11 && $count !== 12)
+				continue;
+
+			if ($count == 11) { // pre 0.3.1
+				$connections[] = [
+					'host' => $line[1],
+					'seconds' => (int) $line[2],
+					'in_out_bytes' => array_map('intval', explode('/', $line[4])),
+					'in_out_packets' => array_map('intval', explode('/', $line[7])),
+					'in_out_dropped' => array_map('intval', explode('/', $line[9])),
+				];
+			} else {
+				$connections[] = [
+					'host' => $line[1],
+					'seconds' => (int) $line[2],
+					'in_out_bytes' => array_map('intval', explode('/', $line[6])),
+					'in_out_packets' => array_map('intval', explode('/', $line[8])),
+					'in_out_dropped' => array_map('intval', explode('/', $line[10])),
+				];
+			}
 		}
 
 		return $connections;
