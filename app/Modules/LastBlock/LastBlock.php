@@ -21,6 +21,7 @@ class LastBlock extends Model
 	 */
 	protected $fillable = [
 		'address',
+		'remark',
 		'found_at',
 	];
 
@@ -51,5 +52,17 @@ class LastBlock extends Model
 	public function scopeLimited($query)
 	{
 		return $query->limit(self::LIMIT);
+	}
+
+	/* getters */
+	public function getRemarkColorAttribute()
+	{
+		$hash = crc32($this->remark);
+
+		$hue = $hash % 215;
+		$saturation = [50, 55, 60][$hash / 360 % 3];
+		$lightness = [50, 55, 60][$hash / 360 / 3 % 3];
+
+		return "hsl({$hue}, {$saturation}%, {$lightness}%)";
 	}
 }
