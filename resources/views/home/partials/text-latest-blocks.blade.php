@@ -4,7 +4,7 @@
 @foreach ($last_blocks as $chunk)
 	@foreach($chunk as $last_block)
 		<span>({{ $last_block->found_at->format('Y-m-d H:i:s') }} UTC)</span>
-		<a href="/text/block/{{ $last_block->address }}" rel="nofollow">{{ $last_block->address }}</a>{{ $last_block->remark !== null ? ' [' . $last_block->remark . ']' : '' }}
+		<a href="/text/block/{{ $last_block->address }}" rel="nofollow">{{ $last_block->address }}</a>{!! $last_block->remark !== null ? ' (Found by ' . $last_block->text_remark . ')' : '' !!}
 
 		@if (! $loop->last)
 			<br>

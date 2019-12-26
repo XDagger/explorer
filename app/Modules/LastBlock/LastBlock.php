@@ -55,14 +55,30 @@ class LastBlock extends Model
 	}
 
 	/* getters */
-	public function getRemarkColorAttribute()
+	public function getRemarkBackgroundColorAttribute()
 	{
 		$hash = crc32($this->remark);
 
-		$hue = $hash % 215;
-		$saturation = [50, 55, 60][$hash / 360 % 3];
-		$lightness = [50, 55, 60][$hash / 360 / 3 % 3];
+		$hue = 31 + $hash % 247;
+		$lightness = 80 + ($hash % 3 * 5);
 
-		return "hsl({$hue}, {$saturation}%, {$lightness}%)";
+		return "hsl({$hue}, 50%, {$lightness}%)";
+	}
+
+	public function getFirstRemarkLinkAttribute()
+	{
+		if (preg_match('~https?://\S+~siu', $this->remark, $match))
+			return $match[0];
+	}
+
+	public function getCleanRemarkAttribute()
+	{
+		return preg_replace('~https?://([a-z0-9-.]+)\S*~siu', '$1', e($this->remark));
+	}
+
+	// used in text view
+	public function getTextRemarkAttribute()
+	{
+		return preg_replace('~https?://([a-z0-9-.]+)\S*~siu', '<a href="$0" target="_blank" style="color: inherit">$1</a>', e($this->remark));
 	}
 }
