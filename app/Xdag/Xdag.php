@@ -49,8 +49,12 @@ class Xdag implements XdagInterface
 	public function getVersion()
 	{
 		return $this->simpleCachedCommand('version', 30, function ($file_handle) {
-			$file = str_replace('"', '\"', dirname($this->socketFile) . '/xdag');
-			exec('"' . $file . '" --help', $out);
+			if ($this->versionGreaterThan('0.3.0')) {
+				$out = [$this->command('version')];
+			} else {
+				$file = str_replace('"', '\"', dirname($this->socketFile) . '/xdag');
+				exec('"' . $file . '" --help', $out);
+			}
 
 			if (!$out) {
 				$version = '???';

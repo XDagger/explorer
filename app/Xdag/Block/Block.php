@@ -8,7 +8,7 @@ use App\Xdag\XdagInterface;
 class Block
 {
 	const MAIN_BLOCK_FLAGS = '1f';
-	const APOLLO_FORK_HEIGHT_MAINNET = 955825;
+	const APOLLO_FORK_HEIGHT_MAINNET = 1017323;
 	const APOLLO_FORK_HEIGHT_TESTNET = 196250;
 
 	protected $properties,  $transactions, $addresses;
