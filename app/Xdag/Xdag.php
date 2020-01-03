@@ -51,7 +51,7 @@ class Xdag implements XdagInterface
 		return $this->simpleCachedCommand('version', 30, function ($file_handle) {
 			$out = $this->command('version');
 
-			if (stripos($out, 'illegal') !== false) {
+			if (stripos($out, 'illegal') === false) {
 				$out = [$out];
 			} else {
 				$file = str_replace('"', '\"', dirname($this->socketFile) . '/xdag');
