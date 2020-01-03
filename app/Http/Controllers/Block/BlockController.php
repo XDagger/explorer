@@ -61,6 +61,11 @@ class BlockController extends Controller
 			return redirect()->route('home');
 		}
 
+		if ($block === null) {
+			$this->notify()->error('Unable to retrieve block data, please try again later.');
+			return redirect()->route('home');
+		}
+
 		return view($this->resolveView('block.index', 'block.text-index'), [
 			'block' => $block,
 			'addressFiltersValidation' => $address_filters_validation,
