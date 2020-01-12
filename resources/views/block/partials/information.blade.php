@@ -51,7 +51,7 @@
 
 							<div class="w-full md:w-1/2">
 								<strong class="info-label">Remark</strong>
-								<span class="info-value">{{ $block->getProperties()->get('remark') }}</span>
+								<span class="info-value">{!! clickable_full_links($block->getProperties()->get('remark')) !!}</span>
 							</div>
 						</div>
 					@else

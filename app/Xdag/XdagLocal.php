@@ -105,13 +105,13 @@ Connection list:
 			$remark_2 = '';
 
 			if ($this->versionGreaterThan('0.2.5')) {
-				$block_remark = "\n    remark: test block remark";
+				$block_remark = "\n    remark: https://test.com <b>xss</b>";
 				$separator = '-----------------------------------------------------------------------------------------------------------------------------';
 				$address_header = ' direction  transaction                                amount       time                     remark                          ';
 				$earning_1 = '';
 				$earning_2 = "\n   earning: ////3aEv+N8KHkA/CW7xOw+i5uLL////		1024.000000000	2018-06-14 19:34:23.999";
-				$remark_1 = '  test   remark   1';
-				$remark_2 = '  test   remark   2';
+				$remark_1 = '  http://a.com http://b.com 1';
+				$remark_2 = '  html <br> inject test';
 			}
 
 			// large wallet block
@@ -1113,7 +1113,7 @@ WLYMhgmO01vA86yfdk7bEMX2lqzFxalj';
 
 			if ($this->versionGreaterThan('0.2.5')) {
 				$remark_1 = '                                      ';
-				$remark_2 = ' test   remark    3  ';
+				$remark_2 = ' http://a.com http://b.com <hr> ';
 				$separator = '---------------------------------------------------------------------------------------------------------';
 				$header = 'address                            time                      state     mined by                          ';
 			}
