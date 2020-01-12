@@ -7,7 +7,6 @@ use App\Xdag\XdagInterface;
 
 class Block
 {
-	const MAIN_BLOCK_FLAGS = '1f';
 	const APOLLO_FORK_HEIGHT_MAINNET = 1017323;
 	const APOLLO_FORK_HEIGHT_TESTNET = 196250;
 
@@ -77,7 +76,7 @@ class Block
 
 	public function isMainBlock()
 	{
-		return $this->properties->has('flags') && $this->properties->get('flags') === self::MAIN_BLOCK_FLAGS;
+		return $this->properties->has('flags') && in_array($this->properties->get('flags'), ['1f', '9f']);
 	}
 
 	public function isTransactionBlock()
