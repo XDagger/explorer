@@ -25,7 +25,10 @@ class LineParser
 	{
 		if (preg_match('/\s*(.*): (.*)/', $line, $matches)) {
 			$key   = strtolower(trim($matches[1]));
-			$value = strtolower(trim($matches[2]));
+			$value = trim($matches[2]);
+
+			if ($key !== 'remark')
+				$value = strtolower($value);
 
 			$properties = [];
 
