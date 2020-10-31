@@ -34,7 +34,7 @@
 
 				<div class="flex items-center">
 					<span class="info-value mr-4">
-						{{ number_format($network->blocks, 0) }}
+						{{ number_format($network->blocks) }}
 					</span>
 
 
@@ -57,7 +57,7 @@
 					<span>Main blocks</span>
 				</div>
 				<span class="info-value">
-					{{ number_format($network->main_blocks, 0) }}
+					<a href="/block/{{ $network->main_blocks }}" title="Show latest main block" v-tippy>{{ number_format($network->main_blocks) }}</a>
 				</span>
 			</div>
 
@@ -70,7 +70,7 @@
 					<span>Supply</span>
 				</div>
 				<span class="info-value">
-					{{ number_format($network->supply, 0) }} XDAG
+					{{ number_format($network->supply) }} XDAG
 				</span>
 			</div>
 		</div>
