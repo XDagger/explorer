@@ -87,6 +87,9 @@ class Xdag implements XdagInterface
 
 	public function getBlock($input, OutputParser $parser)
 	{
+		if (Validator::isHeight($input))
+			$input = ltrim($input, '0');
+
 		if (!Validator::isAddress($input) && !Validator::isBlockHash($input) && !Validator::isHeight($input))
 			throw new InvalidArgumentException('Invalid address, block hash or height.');
 

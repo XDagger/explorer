@@ -88,6 +88,7 @@ class FetchNewLastBlocks extends Command
 
 			$block = LastBlock::firstOrNew(compact('address'));
 			$block->found_at = Carbon::parse($line[1] . ' ' . $line[2]);
+			$block->height = null;
 
 			array_splice($line, 0, 4);
 			// will truncate multiple whitespace into one space because of preg_split before
