@@ -5,7 +5,7 @@ $prefix = starts_with(request()->path(), ['text']) ? 'text' : null;
 Route::group(['middleware' => 'xdag.state', 'prefix' => $prefix], function () {
 	Route::get('/', 'HomeController@index')->name('home');
 
-	Route::get('block/{address_or_hash}', 'Block\BlockController@show')->name('block')->where('address_or_hash', '(.*)');
+	Route::get('block/{search}', 'Block\BlockController@show')->name('block')->where('search', '(.*)');
 	Route::post('block', 'Block\BlockController@search')->name('block search');
 
 	Route::get('mining-calculator', 'Mining\CalculatorController@index')->name('mining calculator');

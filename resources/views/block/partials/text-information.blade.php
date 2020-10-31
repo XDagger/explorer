@@ -12,7 +12,7 @@
 	<br>
 
 	<strong>Hash</strong>
-	<a href="{{ route('block', ['address_or_hash' => $block->getProperties()->get('hash')]) }}" rel="nofollow">{{ $block->getProperties()->get('hash') }}</a>
+	<a href="{{ route('block', ['search' => $block->getProperties()->get('hash')]) }}" rel="nofollow">{{ $block->getProperties()->get('hash') }}</a>
 	<br>
 	<br>
 
@@ -34,7 +34,20 @@
 	<br>
 
 	<strong>Kind</strong>
-	<span>{{ $block->isMainBlock() ? 'Main block' : ($block->isTransactionBlock() ? 'Transaction block' : 'Wallet') }}</span>
+	@if ($block->isMainBlock())
+		@if ($height = $block->getProperties()->get('height'))
+			<a href="/text/block/{{ $height }}" rel="nofollow">Main block {{ $height }}</a>
+
+			@if ($height > 1)
+				<a href="/text/block/{{ $height - 1 }}" rel="nofollow" title="Previous main block">&laquo;</a>
+			@endif
+			<a href="/text/block/{{ $height + 1 }}" rel="nofollow" title="Next main block" v-tippy>&raquo;</a>
+		@else
+			Main block
+		@endif
+	@else
+		{{ $block->isTransactionBlock() ? 'Transaction block' : 'Wallet' }}
+	@endif
 	<br>
 	<br>
 
@@ -52,6 +65,13 @@
 	<span>{{ $block->getProperties()->get('file_pos') }}</span>
 	<br>
 	<br>
+
+	@if ($block->getProperties()->get('file'))
+		<strong>File</strong>
+		<span>{{ $block->getProperties()->get('file') }}</span>
+		<br>
+		<br>
+	@endif
 
 	@if ($block->isTransactionBlock())
 		<h3>Summary</h3>

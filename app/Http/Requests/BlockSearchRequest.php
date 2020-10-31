@@ -25,9 +25,9 @@ class BlockSearchRequest extends FormRequest
 	public function rules()
 	{
 		return [
-			'search_address_or_hash' => [
+			'search' => [
 				'required',
-				'regex:/^([a-zA-Z0-9\/+]{32}|[a-f0-9]{64})$/',
+				'regex:/^([a-zA-Z0-9\/+]{32}|[a-f0-9]{64}|[0-9]{1,10})$/',
 				'not_in:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
 			],
 		];

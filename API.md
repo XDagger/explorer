@@ -24,7 +24,7 @@ All API requests except `/api/status` check current daemon state. If the daemon 
 
 ```json
 {
-    "version": "0.2.3",
+    "version": "0.4.0",
     "state": "Synchronized with the main network. Normal operation.",
     "stats": {
         "hosts": [456, 456],
@@ -114,8 +114,10 @@ All API requests except `/api/status` check current daemon state. If the daemon 
     "limit": 20,
     "blocks": [
         {
+            "height": "196333",
             "address": "QHul3aEvYN8KHkArCW7xOw1i5uLLGRzN",
-            "time": "2018-06-14 19:34:23"
+            "time": "2018-06-14 19:34:23",
+            "remark": "mined by remark"
         },
         ...
     ]
@@ -143,7 +145,9 @@ All API requests except `/api/status` check current daemon state. If the daemon 
 }
 ```
 
-## GET /api/block/{address_or_hash}
+## GET /api/block/{search}
+
+Search parameter may be either address, block hash or main block height.
 
 ### Pagination and filtering
 This endpoint accepts the following query parameters. All parameters are optional.
@@ -163,7 +167,7 @@ This endpoint accepts the following query parameters. All parameters are optiona
 - `transactions_amount_to` - filter amount to
 - `transactions_directions[]` - filter directions, available options: `fee`, `input`, `output`. You can specify multiple directions, for example `transactions_directions[]=input&transactions_directions[]=output`
 
-Query parameters can be combined, for example `GET /api/block/{address_or_hash}?addresses_amount_from=1.03&addresses_directions[]=input&transactions_directions[]=output&transactions_per_page=10&transactions_page=2&addresses_per_page=10&addresses_page=2`. If any query parameters don't pass validation, they are ignored.
+Query parameters can be combined, for example `GET /api/block/{search}?addresses_amount_from=1.03&addresses_directions[]=input&transactions_directions[]=output&transactions_per_page=10&transactions_page=2&addresses_per_page=10&addresses_page=2`. If any query parameters don't pass validation, they are ignored.
 
 Endpoint output always contains `transactions_pagination` and `addresses_pagination` elements describing the dataset, together with links to next, previous, first and last pages of the output.
 
@@ -174,12 +178,12 @@ Endpoint output always contains `transactions_pagination` and `addresses_paginat
 ```json
 {
     "error": "invalid_input",
-    "message": "Incorrect address or block hash."
+    "message": "Incorrect address, block hash or height."
 }
 ```
 
 ### Successful response
-This endpoint will return all block data, it's output may be large. Endpoint returns status code `200` even for blocks that don't exist on the network, but the input (address or hash) is syntactically valid.
+This endpoint will return all block data, it's output may be large. Endpoint returns status code `200` even for blocks that don't exist on the network, but the input (address, hash or height) is syntactically valid.
 
 **Response status code:** `200`
 
@@ -195,14 +199,19 @@ This endpoint will return all block data, it's output may be large. Endpoint ret
 **Response status code:** `200`
 
 **Response type:** `block found` (Main or Wallet block)
+- height is only present for main blocks
+
 ```json
 {
+    "height": "196333",
     "time":"2018-06-27 19:27:59.999",
     "timestamp":"16ccf94ffff",
     "flags":"1f",
     "state":"Main",
     "file_pos":"19200",
+    "file":"storage/01/7e/72/53.dat",
     "hash":"0000000000001de7c93aaf99caf68f36a49895b20dab06b2e93a2c788659ea19",
+    "remark": "",
     "difficulty":"684bc5abbf2e34ce9bd55442320",
     "balance_address":"GepZhngsOumyBqsNspWYpDaP9sqZrzrJ",
     "balance":"10.240000054",
@@ -219,13 +228,15 @@ This endpoint will return all block data, it's output may be large. Endpoint ret
             "direction":"output",
             "address":"kT86tjhtGZLAhSzAelGD8Zyme9aF5/4T",
             "amount":"15.829778345",
-            "time":"2018-06-27 19:42:56.738"
+            "time":"2018-06-27 19:42:56.738",
+            "remark: "tx remark"
         },
         {
             "direction":"earning",
             "address":"GepZhngsOumyBqsNspWYpDaP9sqZrzrJ",
             "amount":"1024.000000000",
-            "time":"2018-06-27 19:27:59.999"
+            "time":"2018-06-27 19:27:59.999",
+            "remark: ""
         },
         ...
     ],
@@ -345,7 +356,9 @@ This endpoint will return all block data, it's output may be large. Endpoint ret
     "flags":"1c",
     "state":"Accepted",
     "file_pos":"e00",
+    "file":"storage/01/7e/72/53.dat",
     "hash":"4ee22e5da5b979140ba1eb3058add7faff1d75c757b6b38a3d0887b7ba4e2604",
+    "remark":"",
     "difficulty":"6a5a22b4abf81b1ec9679b64dce",
     "balance_address":"BCZOureHCD2Ks7ZXx3Ud//rXrVgw66EL",
     "balance":"0.000000000",

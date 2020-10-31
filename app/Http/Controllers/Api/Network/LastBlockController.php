@@ -15,8 +15,10 @@ class LastBlockController extends Controller
 			'limit'	 => LastBlock::LIMIT,
 			'blocks' => $lastBlocks->map(function (LastBlock $block) {
 				return [
+					'height'  => strval($block->height),
 					'address' => $block->address,
 					'time'	  => $block->found_at->toDateTimeString(),
+					'remark'  => strval($block->remark),
 				];
 			}),
 		]);

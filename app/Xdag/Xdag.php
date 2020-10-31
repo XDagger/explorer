@@ -87,15 +87,16 @@ class Xdag implements XdagInterface
 
 	public function getBlock($input, OutputParser $parser)
 	{
-		if (!Validator::isAddress($input) && !Validator::isBlockHash($input))
-			throw new InvalidArgumentException('Invalid address or block hash.');
+		if (!Validator::isAddress($input) && !Validator::isBlockHash($input) && !Validator::isHeight($input))
+			throw new InvalidArgumentException('Invalid address, block hash or height.');
 
 		if (!$this->isReady())
 			throw new XdagNodeNotReadyException;
 
 		$parser->setFlippedOutput($this->versionGreaterThan('0.2.4'));
 
-		$cmd = 'block ' . $input;
+		$base_cmd = Validator::isHeight($input) && $this->versionGreaterThan('0.3.9') ? 'blockbyheight' : 'block';
+		$cmd = $base_cmd . ' ' . (Validator::isHeight($input) && !$this->versionGreaterThan('0.3.9') ? 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' : $input);
 
 		$reader = function () use ($cmd, $parser, $input) {
 			$block = null;
@@ -111,10 +112,24 @@ class Xdag implements XdagInterface
 			});
 
 			if ($block) {
-				if (Validator::isAddress($input))
+				$has_height = $block->getProperties()->get('height') ? true : false;
+
+				if (Validator::isHeight($input)) {
 					Cache::copy($cmd, 'block ' . $block->getProperties()->get('hash'));
-				else
 					Cache::copy($cmd, 'block ' . $block->getProperties()->get('balance_address'));
+				} else if (Validator::isAddress($input)) {
+					Cache::copy($cmd, 'block ' . $block->getProperties()->get('hash'));
+
+					if ($has_height) {
+						Cache::copy($cmd, 'blockbyheight ' . $block->getProperties()->get('height'));
+					}
+				} else {
+					Cache::copy($cmd, 'block ' . $block->getProperties()->get('balance_address'));
+
+					if ($has_height) {
+						Cache::copy($cmd, 'blockbyheight ' . $block->getProperties()->get('height'));
+					}
+				}
 			}
 
 			return $block;

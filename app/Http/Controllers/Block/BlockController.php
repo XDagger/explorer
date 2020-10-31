@@ -27,15 +27,15 @@ class BlockController extends Controller
 
 	public function search(BlockSearchRequest $request)
 	{
-		$address_or_hash = $request->input('search_address_or_hash');
-		$url = (starts_with($request->getPathInfo(), '/text') ? '/text/block/' : '/block/') . $address_or_hash;
+		$search = $request->input('search');
+		$url = (starts_with($request->getPathInfo(), '/text') ? '/text/block/' : '/block/') . $search;
 		return response('', 301)->header('Location', $url);
 	}
 
-	public function show($address_or_hash, ValueChangeCalculator $change)
+	public function show($search, ValueChangeCalculator $change)
 	{
-		if (strlen($address_or_hash) < 32)
-			$address_or_hash = str_pad($address_or_hash, 32, '/');
+		if (strlen($search) < 32 && !ctype_digit($search))
+			$search = str_pad($search, 32, '/');
 
 		$transaction_paginator = new Paginator(20, 'transactions-page');
 		$address_paginator = new Paginator(20, 'addresses-page');
@@ -49,12 +49,12 @@ class BlockController extends Controller
 		$output_parser = new OutputParser($transaction_paginator, $address_paginator, $transaction_filters, $address_filters);
 
 		try {
-			$block = $this->xdag->getBlock($address_or_hash, $output_parser);
+			$block = $this->xdag->getBlock($search, $output_parser);
 		} catch (InvalidArgumentException $ex) {
-			$this->notify()->error('Block was not found. Please make sure you entered correct address or block hash.');
+			$this->notify()->error('Block was not found. Please make sure you entered correct address, block hash or height.');
 			return redirect()->route('home');
 		} catch (XdagBlockNotFoundException $ex) {
-			$this->notify()->error('Block was not found. Please make sure you entered correct address or block hash.');
+			$this->notify()->error('Block was not found. Please make sure you entered correct address, block hash or height.');
 			return redirect()->route('home');
 		} catch (XdagException $ex) {
 			$this->notify()->error('Unable to retrieve block data, please try again later. Message: ' . $ex->getMessage());

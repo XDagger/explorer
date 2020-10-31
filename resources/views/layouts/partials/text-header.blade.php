@@ -12,9 +12,9 @@
 
 <form action="{{ route('block search') }}" method="POST">
 	{{ csrf_field() }}
-	<label for="search_address_or_hash">View address / block hash</label><br>
-	<input type="text" name="search_address_or_hash" id="search_address_or_hash">
-	<button type="submit">View</button>
+	<label for="search">Search address / block hash / height</label><br>
+	<input type="text" name="search" id="search">
+	<button type="submit">Search</button>
 </form>
 <br>
 <hr>

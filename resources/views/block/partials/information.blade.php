@@ -38,7 +38,7 @@
 
 				<div class="mb-4">
 					<strong class="info-label">Hash</strong>
-					<a href="{{ route('block', ['address_or_hash' => $block->getProperties()->get('hash')]) }}" rel="nofollow" class="leading-normal opacity-75 block break-words">{{ $block->getProperties()->get('hash') }}</a>
+					<a href="{{ route('block', ['search' => $block->getProperties()->get('hash')]) }}" rel="nofollow" class="leading-normal opacity-75 block break-words">{{ $block->getProperties()->get('hash') }}</a>
 				</div>
 
 				<div class="mb-4">
@@ -69,7 +69,24 @@
 
 						<div class="w-full md:w-1/2">
 							<strong class="info-label">Kind</strong>
-							<span class="info-value">{{ $block->isMainBlock() ? 'Main block' : ($block->isTransactionBlock() ? 'Transaction block' : 'Wallet') }}</span>
+							@if ($block->isMainBlock())
+								@if ($height = $block->getProperties()->get('height'))
+									<div class="flex items-center justify-between">
+										<a href="/block/{{ $height }}" rel="nofollow" class="leading-normal opacity-75 break-words text-grey-darkest">Main block {{ $height }}</a>
+
+										<div class="flex items-center">
+											@if ($height > 1)
+												<a href="/block/{{ $height - 1 }}" rel="nofollow" class="mr-2" title="Previous main block" v-tippy>@svg('arrow-left', 'stroke-current')</a>
+											@endif
+											<a href="/block/{{ $height + 1 }}" rel="nofollow" title="Next main block" v-tippy>@svg('arrow-right', 'stroke-current')</a>
+										</div>
+									</div>
+								@else
+									<span class="info-value">Main block</span>
+								@endif
+							@else
+								<span class="info-value">{{ $block->isTransactionBlock() ? 'Transaction block' : 'Wallet' }}</span>
+							@endif
 						</div>
 					</div>
 				</div>
@@ -83,8 +100,8 @@
 							</div>
 
 							<div class="w-full md:w-1/2">
-								<strong class="info-label">Flags, file pos</strong>
-								<span class="info-value">{{ $block->getProperties()->get('flags') }}, {{ $block->getProperties()->get('file_pos') }}</span>
+								<strong class="info-label">Flags, file pos{{ $block->getProperties()->get('file') ? ', file' : '' }}</strong>
+								<span class="info-value">{{ $block->getProperties()->get('flags') }}, {{ $block->getProperties()->get('file_pos') }}{{ $block->getProperties()->get('file') ? ', ' . $block->getProperties()->get('file') : '' }}</span>
 							</div>
 						</div>
 					</div>

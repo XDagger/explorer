@@ -166,10 +166,10 @@ class Paginator
 			$this->pageName => $page,
 		]);
 
-		if ($address = $request->route('address_or_hash')) {
+		if ($address = $request->route('search')) {
 			$length = strlen($address);
 
-			if ($length < 32) {
+			if ($length < 32 && !ctype_digit($address)) {
 				$url = str_replace('?', str_repeat('/', 32 - $length) . '?', $url);
 			}
 		}

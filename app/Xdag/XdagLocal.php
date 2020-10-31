@@ -95,6 +95,93 @@ Connection list:
   3. 22.22.133.123:11111   118280 sec, 6187444224/16896978944 in/out bytes, 10839877/31606947 packets, 0/3 dropped');
 		}
 
+		if ($cmd[0] == 'blockbyheight' && isset($cmd[1]) && $this->versionGreaterThan('0.3.9')) {
+			if ($cmd[1] == 196333) {
+				return $this->commandOutputFile('    height: 00196333
+      time: 2020-08-22 01:03:59.999
+ timestamp: 17d01bbffff
+     flags: 9f
+     state: Main
+  file pos: 0
+      file: storage-testnet/01/7d/01/bb.dat
+      hash: 022af4b0f4649aac4d8759cd135ffc9b64a5b332ec858ae8c364dad1735c10e5
+    remark: rocksdb
+difficulty: 8e9484a1e80be790430609
+   balance: 5RBcc9HaZMPoioXsMrOlZJv8XxPNWYdN         128.000000000
+-----------------------------------------------------------------------------------------------------------------------------
+                               block as transaction: details
+ direction  address                                    amount
+-----------------------------------------------------------------------------------------------------------------------------
+       fee: 5RBcc9HaZMPoioXsMrOlZJv8XxPNWYdN           0.000000000
+    output: ibRzt35+uv2NQOmrcBaags0+xluze/Yu           0.000000000
+-----------------------------------------------------------------------------------------------------------------------------
+                                 block as address: details
+ direction  transaction                                amount       time                     remark
+-----------------------------------------------------------------------------------------------------------------------------
+   earning: 5RBcc9HaZMPoioXsMrOlZJv8XxPNWYdN         128.000000000  2020-08-22 01:03:59.999');
+			}
+
+			if ($cmd[1] == 196334) {
+				return $this->commandOutputFile('    height: 00196334
+      time: 2020-10-30 22:33:35.999
+ timestamp: 17e7252ffff
+     flags: 9f
+     state: Main
+  file pos: 0
+      file: storage-testnet/01/7e/72/52.dat
+      hash: 184e2555291fe2c9cdf966294d5383fd199dbc5102837677bfe5935f4aad976e
+    remark: 031
+difficulty: 8e9484a1e80bf218a2196d
+   balance: bpetSl+T5b93doMCUbydGf2DU00pZvnN         128.000000000
+-----------------------------------------------------------------------------------------------------------------------------
+                               block as transaction: details
+ direction  address                                    amount
+-----------------------------------------------------------------------------------------------------------------------------
+       fee: bpetSl+T5b93doMCUbydGf2DU00pZvnN           0.000000000
+    output: 5RBcc9HaZMPoioXsMrOlZJv8XxPNWYdN           0.000000000
+    output: v47O24q8zE7rgwyb4LUZV593RAGP/28R           0.000000000
+    output: IBtAm/jK77GzEBqL9nPrEPNusXcErOnb           0.000000000
+    output: 5RBcc9HaZMPoioXsMrOlZJv8XxPNWYdN           0.000000000
+    output: QpYvvPXGKMixZCM2BtQK+M7a2FP0Z1WX           0.000000000
+-----------------------------------------------------------------------------------------------------------------------------
+                                 block as address: details
+ direction  transaction                                amount       time                     remark
+-----------------------------------------------------------------------------------------------------------------------------
+   earning: bpetSl+T5b93doMCUbydGf2DU00pZvnN         128.000000000  2020-10-30 22:33:35.999 ');
+			}
+
+			if ($cmd[1] == 196335) {
+				return $this->commandOutputFile('    height: 00196335
+      time: 2020-10-30 22:34:39.999
+ timestamp: 17e7253ffff
+     flags: 9f
+     state: Main
+  file pos: 0
+      file: storage-testnet/01/7e/72/53.dat
+      hash: 6d0b4f2888b3ab4283bd66573de0b86d4f9ea4529e9187107f940b6f6fc6c03c
+    remark: 031
+difficulty: 8e9484a1e80bf471a327ca
+   balance: PMDGb28LlH8Qh5GeUqSeT2244D1XZr2D         128.000000000
+-----------------------------------------------------------------------------------------------------------------------------
+                               block as transaction: details
+ direction  address                                    amount
+-----------------------------------------------------------------------------------------------------------------------------
+       fee: PMDGb28LlH8Qh5GeUqSeT2244D1XZr2D           0.000000000
+    output: bpetSl+T5b93doMCUbydGf2DU00pZvnN           0.000000000
+    output: v47O24q8zE7rgwyb4LUZV593RAGP/28R           0.000000000
+    output: IBtAm/jK77GzEBqL9nPrEPNusXcErOnb           0.000000000
+    output: 5RBcc9HaZMPoioXsMrOlZJv8XxPNWYdN           0.000000000
+    output: QpYvvPXGKMixZCM2BtQK+M7a2FP0Z1WX           0.000000000
+-----------------------------------------------------------------------------------------------------------------------------
+                                 block as address: details
+ direction  transaction                                amount       time                     remark
+-----------------------------------------------------------------------------------------------------------------------------
+   earning: PMDGb28LlH8Qh5GeUqSeT2244D1XZr2D         128.000000000  2020-10-30 22:34:39.999 ');
+			}
+
+			return $this->commandOutputFile('Block is not found.');
+		}
+
 		if ($cmd[0] == 'block' && isset($cmd[1])) {
 			$block_remark = '';
 			$separator = '-------------------------------------------------------------------------------------------';
@@ -613,12 +700,22 @@ difficulty: 630f2898a810cecc2a958835ea9
 	output: NvfjiZMxBrtxjfp+sdZn1/EQTKQ0PDI4		   0.619787876	2018-05-26 19:49:21.252
 	output: P3/4KceASRm2DY9uU6AMW+Hr48g9mCXA		  10.291589971	2018-05-26 19:49:21.254');
 
-			if ($this->versionGreaterThan('0.2.4') && ($cmd[1] == '////3aEv+N8KHkA/CW7xOw+i5uLL////' || $cmd[1] == '0000000000000285cd1c19cbe2e6620d3bf16e092b401e0adf602fa1dda57b40'))
-				return $this->commandOutputFile('      time: 2018-06-14 19:34:23.999
+			if ($this->versionGreaterThan('0.2.4') && ($cmd[1] == '////3aEv+N8KHkA/CW7xOw+i5uLL////' || $cmd[1] == '0000000000000285cd1c19cbe2e6620d3bf16e092b401e0adf602fa1dda57b40')) {
+				$height = $file = '';
+
+				if ($this->versionGreaterThan('0.3.0')) {
+					$file = "\n      file: storage/01/7e/72/53.dat\n";
+				}
+
+				if ($this->versionGreaterThan('0.3.9')) {
+					$height = "    height: 00196333\n";
+				}
+
+				return $this->commandOutputFile($height . '      time: 2018-06-14 19:34:23.999
  timestamp: 16c26daffff
 	 flags: 1f
 	 state: Main
-  file pos: f0e00
+  file pos: f0e00' . $file . '
 	  hash: 0000000000000285cd1c19cbe2e6620d3bf16e092b401e0adf602fa1dda57b40' . $block_remark . '
 difficulty: 630f2898a810cecc2a958835ea9
    balance: ////3aEv+N8KHkA/CW7xOw+i5uLL////		  10.240000519
@@ -1071,8 +1168,9 @@ difficulty: 630f2898a810cecc2a958835ea9
 	output: GcO1gv2BKKugmumKMiufQ0Ue3pI5Ogtm		   2.552766561	2018-06-14 19:49:20.384
 	output: QTTm45K/Reju1/3FIU/fD4D4gv+ojkbQ		   2.659098001	2018-06-14 19:49:20.381
 	output: RYvemDqKltkC4VaxkdgT2nu84RmGCQfE		   1.175313073	2018-06-14 19:49:20.378' . $earning_2);
+			}
 
-			return $this->commandOutputFile('Block is not found');
+			return $this->commandOutputFile('Block is not found.');
 		}
 
 		if ($cmd[0] == 'lastblocks') {
@@ -1102,6 +1200,34 @@ g5d/i+mZU3oRJerl265sTXri96asevHI
 VAzMAs0tYNkS6ch7gJfS0H53x1paaV4T
 WLYMhgmO01vA86yfdk7bEMX2lqzFxalj';
 
+			if ($this->versionGreaterThan('0.3.9')) {
+				$blocks = '////3aEv+N8KHkA/CW7xOw+i5uLL////   00196333
+IxTmxt1HDfEN4H/AkzoVlfCezXb5eK+G   00196332
+JsH+GlSWOF5ctx8221AYio2GDnsrpZGC   00196331
+b917aMjg0LGIP99NAp8hw25Z7vwUadtf   00196330
+ZoDut9H09F9a4C4C5jPoqvLK3qSZOwq9   00196329
+qnwOb9OGApYHY/tnnT+9SrwdCNWBjes5   00196328
+mtkz/h5DZzv7wZsogdmO8mONV/B46Lyj   00196327
+/NAJ9U8UDoq9K9kj1YBXmhIUGoa/7kIQ   00196326
+LDro009JXqR76o2CXv33445Ajn2Ij//q   00196325
+P087teZGZrhuckaRjmlOi5kc/1+MEUSY   00196324
+jDzljCeKXiem5KztENpPhKSHCulGM1Y2   00196323
+45ho1vnZtpxe0C7G+nWzLWIiDhuTpM5X   00196322
+HvZjAlhyyQQN8j42flmDPo0gWzlUZLoN   00196321
+uD4RyhT/ypODPNoW0FMl1c16uKtw6+7E   00196320
+7rsMubsh6pVQxL9P3KcvcUjtQ2yPjgYj   00196319
+xFyqCU75r9zACLgp5mmiw7yLB7A4aV70   00196318
+BBvOON5qJW4OpW6N/7onNCdThiey4hMi   00196317
+m1hq4E0dKDOj0+ww7liKAbpY0GBX3El3   00196316
+Ui9dof5niOYQfcqJPc5gPGGst5RRL/R8   00196315
+yljjLTsqhfp9QqUaiaKaapPHO8w+hc9H   00196314
+thCbE4wkFDptYG1mbQA9Iog4hBFdjWN1   00196313
+e8ewboUZLKwW6BzDEgDijqEib6w1Fgev   00196312
+g5d/i+mZU3oRJerl265sTXri96asevHI   00196311
+VAzMAs0tYNkS6ch7gJfS0H53x1paaV4T   00196310
+WLYMhgmO01vA86yfdk7bEMX2lqzFxalj   00196309';
+			}
+
 			return $this->commandOutputFile(collect(explode("\n", $blocks))->take($cmd[1] ?? 20)->implode("\n"));
 		}
 
@@ -1111,6 +1237,11 @@ WLYMhgmO01vA86yfdk7bEMX2lqzFxalj';
 			$separator = '-----------------------------------------------------------------------';
 			$header = 'address                            time                      state';
 
+			for ($i = 0; $i < 20; $i++) {
+				$var = 'height' . str_pad($i, 2, '0', STR_PAD_LEFT);
+				$$var = '';
+			}
+
 			if ($this->versionGreaterThan('0.2.5')) {
 				$remark_1 = '                                      ';
 				$remark_2 = ' http://a.com http://b.com <hr> ';
@@ -1118,29 +1249,38 @@ WLYMhgmO01vA86yfdk7bEMX2lqzFxalj';
 				$header = 'address                            time                      state     mined by                          ';
 			}
 
+			if ($this->versionGreaterThan('0.3.9')) {
+				$header = 'height        address                            time                      state     mined by            ';
+				$h = 196333;
+				for ($i = 0; $i < 20; $i++) {
+					$var = 'height' . str_pad($i, 2, '0', STR_PAD_LEFT);
+					$$var = str_pad($h++, 8, '0', STR_PAD_LEFT) . '   ';
+				}
+			}
+
 			$blocks = $separator . '
 ' . $header . '
 ' . $separator . '
-Jim9F5oqJbQA6dM68phqGZ2023UDdngs   2018-07-12 00:35:59.999   Main' . $remark_1 . '
-erOISXoScyQ8TAVgX5OofnOgwy/hNYcN   2018-07-12 00:34:55.999   Main' . $remark_1 . '
-GUImUst9bYFY8wR9I7eMxU1zsQ1hYIj9   2018-07-12 00:33:51.999   Main' . $remark_1 . '
-LYXHuZwIOjy6/pUZ1SoUyS6bUSvo3lFR   2018-07-12 00:32:47.999   Main' . $remark_1 . '
-ZAyhGaI3cRwB4IltNgY0HfW8ACsFdws+   2018-07-12 00:31:43.999   Main' . $remark_1 . '
-ORak8Di3DtkTjeWEVn4lg1rk+ixP/MG9   2018-07-12 00:30:39.999   Main' . $remark_1 . '
-1iToKTNdwFL54Nlhf4RNh3oJxwjfXDLy   2018-07-12 00:29:35.999   Main' . $remark_1 . '
-PzUN6WUt9+ykkEZBsHkhRXlFhZ/gAtZ4   2018-07-12 00:28:31.999   Main' . $remark_1 . '
-ECsF/JPS1KmhNBMewpIaLA/vPevLLusu   2018-07-12 00:27:27.999   Main' . $remark_1 . '
-nBjQfO2A20wMJDscmxpRNk5/GuB/ghY6   2018-07-12 00:26:23.999   Main' . $remark_1 . '
-PLA9HCrWooxjMVwjR5tKRuSrZcKu+5Pf   2018-07-12 00:25:19.999   Main' . $remark_1 . '
-9xWFYp1GrTIWSRFZ0mhQPTp6Z17Gml9J   2018-07-12 00:24:15.999   Main' . $remark_2 . '
-hJD/OBhexPzukGJROlw/b3ZNlJzthkVk   2018-07-12 00:23:11.999   Main' . $remark_1 . '
-r9Ryt+CcPgaHEo9niW0VTMac4ZJBmPbA   2018-07-12 00:22:07.999   Main' . $remark_1 . '
-tDg2IC19a+sBr2VcDkvVEqLXjWOcEtJy   2018-07-12 00:21:03.999   Main' . $remark_1 . '
-E6IKRznvpoLYMDH9FwNami2gmuTQ6/VV   2018-07-12 00:19:59.999   Main' . $remark_2 . '
-3bhRLUXh3kNfDGW61zuU0IFKmEQeJlga   2018-07-12 00:18:55.999   Main' . $remark_1 . '
-cyCapIoGsagELQG2iZogX42q4mRu7i2D   2018-07-12 00:17:51.999   Main' . $remark_1 . '
-IxTmxt1HDfEN4H/AkzoVlfCezXb5eK+G   2018-06-22 00:12:49.813   Main' . $remark_1 . '
-////3aEv+N8KHkA/CW7xOw+i5uLL////   2018-06-14 19:34:23.999   Main' . $remark_1;
+' . $height19 . 'Jim9F5oqJbQA6dM68phqGZ2023UDdngs   2018-07-12 00:35:59.999   Main' . $remark_1 . '
+' . $height18 . 'erOISXoScyQ8TAVgX5OofnOgwy/hNYcN   2018-07-12 00:34:55.999   Main' . $remark_1 . '
+' . $height17 . 'GUImUst9bYFY8wR9I7eMxU1zsQ1hYIj9   2018-07-12 00:33:51.999   Main' . $remark_1 . '
+' . $height16 . 'LYXHuZwIOjy6/pUZ1SoUyS6bUSvo3lFR   2018-07-12 00:32:47.999   Main' . $remark_1 . '
+' . $height15 . 'ZAyhGaI3cRwB4IltNgY0HfW8ACsFdws+   2018-07-12 00:31:43.999   Main' . $remark_1 . '
+' . $height14 . 'ORak8Di3DtkTjeWEVn4lg1rk+ixP/MG9   2018-07-12 00:30:39.999   Main' . $remark_1 . '
+' . $height13 . '1iToKTNdwFL54Nlhf4RNh3oJxwjfXDLy   2018-07-12 00:29:35.999   Main' . $remark_1 . '
+' . $height12 . 'PzUN6WUt9+ykkEZBsHkhRXlFhZ/gAtZ4   2018-07-12 00:28:31.999   Main' . $remark_1 . '
+' . $height11 . 'ECsF/JPS1KmhNBMewpIaLA/vPevLLusu   2018-07-12 00:27:27.999   Main' . $remark_1 . '
+' . $height10 . 'nBjQfO2A20wMJDscmxpRNk5/GuB/ghY6   2018-07-12 00:26:23.999   Main' . $remark_1 . '
+' . $height09 . 'PLA9HCrWooxjMVwjR5tKRuSrZcKu+5Pf   2018-07-12 00:25:19.999   Main' . $remark_1 . '
+' . $height08 . '9xWFYp1GrTIWSRFZ0mhQPTp6Z17Gml9J   2018-07-12 00:24:15.999   Main' . $remark_2 . '
+' . $height07 . 'hJD/OBhexPzukGJROlw/b3ZNlJzthkVk   2018-07-12 00:23:11.999   Main' . $remark_1 . '
+' . $height06 . 'r9Ryt+CcPgaHEo9niW0VTMac4ZJBmPbA   2018-07-12 00:22:07.999   Main' . $remark_1 . '
+' . $height05 . 'tDg2IC19a+sBr2VcDkvVEqLXjWOcEtJy   2018-07-12 00:21:03.999   Main' . $remark_1 . '
+' . $height04 . 'E6IKRznvpoLYMDH9FwNami2gmuTQ6/VV   2018-07-12 00:19:59.999   Main' . $remark_2 . '
+' . $height03 . '3bhRLUXh3kNfDGW61zuU0IFKmEQeJlga   2018-07-12 00:18:55.999   Main' . $remark_1 . '
+' . $height02 . 'cyCapIoGsagELQG2iZogX42q4mRu7i2D   2018-07-12 00:17:51.999   Main' . $remark_1 . '
+' . $height01 . 'IxTmxt1HDfEN4H/AkzoVlfCezXb5eK+G   2018-06-22 00:12:49.813   Main' . $remark_1 . '
+' . $height00 . '////3aEv+N8KHkA/CW7xOw+i5uLL////   2018-06-14 19:34:23.999   Main' . $remark_1;
 
 			return $this->commandOutputFile(collect(explode("\n", $blocks))->take(isset($cmd[1]) ? $cmd[1] + 3 : 23)->implode("\n"));
 		}

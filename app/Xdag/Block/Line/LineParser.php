@@ -37,6 +37,10 @@ class LineParser
 				$value = end($balance);
 			}
 
+			if ($key == 'height')  {
+				$value = ltrim($value, '0');
+			}
+
 			$properties[snake_case($key)] = $value;
 
 			return $properties;

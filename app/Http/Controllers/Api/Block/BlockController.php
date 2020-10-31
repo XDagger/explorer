@@ -25,13 +25,13 @@ class BlockController extends Controller
 		$this->xdag = $xdag;
 	}
 
-	public function show($address_or_hash)
+	public function show($search)
 	{
-		if (strlen($address_or_hash) < 32)
-			$address_or_hash = str_pad($address_or_hash, 32, '/');
+		if (strlen($search) < 32 && !ctype_digit($search))
+			$search = str_pad($search, 32, '/');
 
-		if (! Validator::isAddress($address_or_hash) && ! Validator::isBlockHash($address_or_hash)) {
-			return $this->response()->error('invalid_input', 'Incorrect address or block hash.', Response::HTTP_UNPROCESSABLE_ENTITY);
+		if (!Validator::isAddress($search) && !Validator::isBlockHash($search) && !Validator::isBlockHash($search)) {
+			return $this->response()->error('invalid_input', 'Incorrect address, block hash or height.', Response::HTTP_UNPROCESSABLE_ENTITY);
 		}
 
 		$transaction_paginator = new Paginator(max(1, request()->input('transactions_per_page', 10000000000000)), 'transactions_page');
@@ -47,8 +47,8 @@ class BlockController extends Controller
 		$parser->setCallback([new OutputStream, 'stream']);
 
 		try {
-			$callback = function () use ($address_or_hash, $parser) {
-				$this->xdag->getBlock($address_or_hash, $parser);
+			$callback = function () use ($search, $parser) {
+				$this->xdag->getBlock($search, $parser);
 			};
 
 			return StreamedResponse::create($callback, Response::HTTP_OK, ['Content-Type' => 'application/json']);
