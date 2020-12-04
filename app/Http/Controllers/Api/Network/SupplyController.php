@@ -36,4 +36,26 @@ class SupplyController extends Controller
 
 		return response($log ? number_format($log->supply . '.000000000', 9, '', '') : '0.000000000', 200)->header('Content-Type', 'text/plain');
 	}
+
+	public function showTotal()
+	{
+		return $this->response()->make([
+			'total_supply' => 1412000000,
+		]);
+	}
+
+	public function rawTotal()
+	{
+		return response(1412000000, 200)->header('Content-Type', 'text/plain');
+	}
+
+	public function coinGeckoWithSeparatorsTotal()
+	{
+		return response(number_format('1412000000.000000000', 9, '.', ','), 200)->header('Content-Type', 'text/plain');
+	}
+
+	public function coinGeckoWithoutSeparatorsTotal()
+	{
+		return response(number_format('1412000000.000000000', 9, '', ''), 200)->header('Content-Type', 'text/plain');
+	}
 }

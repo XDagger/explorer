@@ -105,6 +105,40 @@ All API requests except `/api/status` check current daemon state. If the daemon 
 232990720000000000
 ```
 
+## GET /api/total-supply
+### Successful response
+**Response status code:** `200`
+
+```json
+{
+    "total_supply": 1412000000
+}
+```
+
+## GET /api/total-supply/raw
+### Successful response
+**Response status code:** `200`
+
+```
+1412000000
+```
+
+## GET /api/total-supply/coingecko/with-separators
+### Successful response
+**Response status code:** `200`
+
+```
+1,412,000,000.000000000
+```
+
+## GET /api/total-supply/coingecko/without-separators
+### Successful response
+**Response status code:** `200`
+
+```
+1412000000000000000
+```
+
 ## GET /api/last-blocks
 
 ### Successful response
