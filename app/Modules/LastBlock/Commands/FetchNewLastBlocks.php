@@ -22,7 +22,7 @@ class FetchNewLastBlocks extends Command
 		$this->xdag = $xdag;
 		$this->parser = $parser;
 
-		if ($this->xdag->versionGreaterThan('0.3.9'))
+		if ($this->xdag->versionGreaterThan('0.3.2'))
 			$this->processMainBlocksWithHeight();
 		else if ($this->xdag->versionGreaterThan('0.2.4'))
 			$this->processMainBlocks();

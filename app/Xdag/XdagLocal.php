@@ -95,7 +95,7 @@ Connection list:
   3. 22.22.133.123:11111   118280 sec, 6187444224/16896978944 in/out bytes, 10839877/31606947 packets, 0/3 dropped');
 		}
 
-		if ($cmd[0] == 'blockbyheight' && isset($cmd[1]) && $this->versionGreaterThan('0.3.9')) {
+		if ($cmd[0] == 'blockbyheight' && isset($cmd[1]) && $this->versionGreaterThan('0.3.2')) {
 			if ($cmd[1] == 196333) {
 				return $this->commandOutputFile('    height: 00196333
       time: 2020-08-22 01:03:59.999
@@ -707,7 +707,7 @@ difficulty: 630f2898a810cecc2a958835ea9
 					$file = "\n      file: storage/01/7e/72/53.dat\n";
 				}
 
-				if ($this->versionGreaterThan('0.3.9')) {
+				if ($this->versionGreaterThan('0.3.2')) {
 					$height = "    height: 00196333\n";
 				}
 
@@ -1200,7 +1200,7 @@ g5d/i+mZU3oRJerl265sTXri96asevHI
 VAzMAs0tYNkS6ch7gJfS0H53x1paaV4T
 WLYMhgmO01vA86yfdk7bEMX2lqzFxalj';
 
-			if ($this->versionGreaterThan('0.3.9')) {
+			if ($this->versionGreaterThan('0.3.2')) {
 				$blocks = '////3aEv+N8KHkA/CW7xOw+i5uLL////   00196333
 IxTmxt1HDfEN4H/AkzoVlfCezXb5eK+G   00196332
 JsH+GlSWOF5ctx8221AYio2GDnsrpZGC   00196331
@@ -1249,7 +1249,7 @@ WLYMhgmO01vA86yfdk7bEMX2lqzFxalj   00196309';
 				$header = 'address                            time                      state     mined by                          ';
 			}
 
-			if ($this->versionGreaterThan('0.3.9')) {
+			if ($this->versionGreaterThan('0.3.2')) {
 				$header = 'height        address                            time                      state     mined by            ';
 				$h = 196333;
 				for ($i = 0; $i < 20; $i++) {

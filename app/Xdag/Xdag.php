@@ -98,8 +98,8 @@ class Xdag implements XdagInterface
 
 		$parser->setFlippedOutput($this->versionGreaterThan('0.2.4'));
 
-		$base_cmd = Validator::isHeight($input) && $this->versionGreaterThan('0.3.9') ? 'blockbyheight' : 'block';
-		$cmd = $base_cmd . ' ' . (Validator::isHeight($input) && !$this->versionGreaterThan('0.3.9') ? 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' : $input);
+		$base_cmd = Validator::isHeight($input) && $this->versionGreaterThan('0.3.2') ? 'blockbyheight' : 'block';
+		$cmd = $base_cmd . ' ' . (Validator::isHeight($input) && !$this->versionGreaterThan('0.3.2') ? 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' : $input);
 
 		$reader = function () use ($cmd, $parser, $input) {
 			$block = null;
