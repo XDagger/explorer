@@ -8,7 +8,7 @@ class LineParser
 
 	public function blockExists($line)
 	{
-		return stripos($line, 'Block is not found') === false;
+		return stripos($line, 'Block is not found') === false && stripos($line, 'Illegal number') === false;
 	}
 
 	public function shouldProceedToTransactions($line)
