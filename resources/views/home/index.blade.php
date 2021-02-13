@@ -18,7 +18,7 @@
 						XDAG {{ $already_forked ? 'switched' : 'will switch' }} to RandomX mining algorithm on {{ $is_testnet ? 'testnet' : '' }} main
 						block <strong>{{ $fork_height }}</strong>.
 						RandomX miner must be used after the switch, downloads available on
-						<a href="https://github.com/swordlet/DaggerRandomxMiner/releases" target="_blank" class="text-white underline" rel="nofollow">GitHub</a>.
+						<a href="https://github.com/swordlet/DaggerRandomxMiner/releases" target="_blank" rel="nofollow">GitHub</a>.
 					</p>
 
 					<div class="ml-auto">
