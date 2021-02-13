@@ -2,9 +2,9 @@
 
 @section('body')
 
-@php($fork_height = \App\Xdag\Block\Block::getApolloForkHeight($is_testnet))
+@php($fork_height = \App\Xdag\Block\Block::getRandomXForkHeight($is_testnet))
 @php($already_forked = $network->main_blocks >= $fork_height)
-@if ($network->main_blocks >= $fork_height - 1350 * 7 && $network->main_blocks <= $fork_height + 1350 * 7)
+@if ($network->main_blocks >= $fork_height - 1350 * 10 && $network->main_blocks <= $fork_height + 1350 * 10)
 	<notification inline-template :delay="60000">
 		<transition name="fade">
 			<div class="container p-8 pb-0" v-if="showNotification">
@@ -15,9 +15,10 @@
 
 					<p class="m-0 font-medium mr-2">
 						<strong>Heads up!</strong>
-						XDAG Apollo network {{ $already_forked ? 'was' : 'will be' }} activated on {{ $is_testnet ? 'testnet' : '' }} main
+						XDAG {{ $already_forked ? 'switched' : 'will switch' }} to RandomX mining algorithm on {{ $is_testnet ? 'testnet' : '' }} main
 						block <strong>{{ $fork_height }}</strong>.
-						Block reward {{ $already_forked ? 'was decreased' : 'will decrease' }} to 128 XDAG.
+						RandomX miner must be used after the switch, downloads available on
+						<a href="https://github.com/swordlet/DaggerRandomxMiner/releases" target="_blank" rel="nofollow">GitHub</a>.
 					</p>
 
 					<div class="ml-auto">

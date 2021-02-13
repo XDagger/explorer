@@ -10,6 +10,9 @@ class Block
 	const APOLLO_FORK_HEIGHT_MAINNET = 1017323;
 	const APOLLO_FORK_HEIGHT_TESTNET = 196250;
 
+	const RANDOMX_FORK_HEIGHT_MAINNET = 1540096;
+	const RANDOMX_FORK_HEIGHT_TESTNET = 196288;
+
 	protected $properties,  $transactions, $addresses;
 	protected $earnings, $spendings, $balances;
 	protected $earnings_change, $spendings_change, $balance_change;
@@ -72,6 +75,14 @@ class Block
 		$is_testnet = $xdag->isTestnet();
 
 		return $is_testnet ? static::APOLLO_FORK_HEIGHT_TESTNET : static::APOLLO_FORK_HEIGHT_MAINNET;
+	}
+
+	public static function getRandomXForkHeight(&$is_testnet = null)
+	{
+		$xdag = app(XdagInterface::class);
+		$is_testnet = $xdag->isTestnet();
+
+		return $is_testnet ? static::RANDOMX_FORK_HEIGHT_TESTNET : static::RANDOMX_FORK_HEIGHT_MAINNET;
 	}
 
 	public function isMainBlock()
