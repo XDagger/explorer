@@ -10,7 +10,7 @@ class Block
 	const APOLLO_FORK_HEIGHT_MAINNET = 1017323;
 	const APOLLO_FORK_HEIGHT_TESTNET = 196250;
 
-	const RANDOMX_FORK_HEIGHT_MAINNET = 1540096;
+	const RANDOMX_FORK_HEIGHT_MAINNET = 1540224;
 	const RANDOMX_FORK_HEIGHT_TESTNET = 196288;
 
 	protected $properties,  $transactions, $addresses;
