@@ -32,7 +32,7 @@ export default {
 
 	computed: {
 		hashrateInHs() {
-			return Math.abs(this.hashrate * 1024 * 1024 * 1024)
+			return Math.abs(this.hashrate * 1024)
 		},
 
 		hasError() {

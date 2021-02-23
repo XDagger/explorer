@@ -6,7 +6,7 @@
 	<form action="{{ route('mining calculator') }}" method="POST">
 		{{ csrf_field() }}
 
-		<label for="hashrate">Your Hashrate (Gh/s)</label><br>
+		<label for="hashrate">Your Hashrate (Kh/s)</label><br>
 		<input type="text" name="hashrate" id="hashrate" value="{{ request('hashrate') }}">
 
 		<button type="submit">Estimate</button>

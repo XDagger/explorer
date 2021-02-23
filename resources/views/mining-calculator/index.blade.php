@@ -9,7 +9,7 @@
 				<div class="flex flex-wrap">
 					<div class="w-full md:w-1/2 md:pr-6 mb-4 md:mb-0">
 						<div class="form-group">
-							<label for="hashrate" class="form-label">Your Hashrate (Gh/s)</label>
+							<label for="hashrate" class="form-label">Your Hashrate (Kh/s)</label>
 
 							<input class="form-input" type="text" placeholder="Enter your hashrate" name="hashrate" id="hashrate" v-model="hashrate">
 						</div>

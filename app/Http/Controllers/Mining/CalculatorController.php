@@ -23,13 +23,13 @@ class CalculatorController extends Controller
 	public function calculate()
 	{
 		$log = Network::orderBy('id', 'desc')->limit(1)->first();
-		$networkHashrate = $log ? $log->hashrate : 0;
+		$networkHashrateInHs = $log ? $log->hashrate : 0;
 
-		$hashrateInHs = ((float) request('hashrate')) * Hashpower::GHS;
+		$hashrateInHs = ((float) request('hashrate')) * Hashpower::KHS;
 
-		$networkHashrate += $hashrateInHs;
+		$networkHashrateInHs += $hashrateInHs;
 
-		$result = number_format(round($hashrateInHs * self::MAX_BLOCKS_PER_DAY_ON_NETWORK * Block::getReward() / $networkHashrate, 9), 9);
+		$result = number_format(round($hashrateInHs * self::MAX_BLOCKS_PER_DAY_ON_NETWORK * Block::getReward() / $networkHashrateInHs, 9), 9);
 
 		return view('mining-calculator.text-index', compact('result'));
 	}

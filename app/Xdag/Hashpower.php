@@ -3,6 +3,8 @@ namespace App\Xdag;
 
 class Hashpower
 {
+	const KHS = 1024;
+	const MHS = 1024 * 1024;
 	const GHS = 1024 * 1024 * 1024;
 	const THS = 1024 * 1024 * 1024 * 1024;
 
