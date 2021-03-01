@@ -14,7 +14,7 @@ class HashrateLastDaysChart
 		$logs = Network::selectRaw('avg(hashrate) hashrate, DATE_FORMAT(created_at, "%Y-%m-%d %H:00:00") created_at')->groupBy('created_at')->orderBy('created_at')->get();
 
 		foreach ($logs as $log) {
-			$this->chart[$log->created_at->format('m-d H:00')] = round($log->hashrate / Hashpower::THS, 2);
+			$this->chart[$log->created_at->format('m-d H:00')] = round($log->hashrate / Hashpower::MHS, 2);
 		}
 
 		$this->chart = collect($this->chart);

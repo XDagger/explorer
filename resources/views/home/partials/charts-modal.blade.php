@@ -6,7 +6,7 @@
 				<h2 class="text-black text-xl font-bold">Network hashrate</h2>
 				<div class="text-grey-dark text-base font-normal mb-8">Last {{ \App\Modules\Network\Network::DAYS_LIMIT }} days</div>
 
-				<single-line-chart chart-name="Network Hashrate Th/s"
+				<single-line-chart chart-name="Network Hashrate Mh/s"
 					color="blue"
 					:class="'w-full h-32 md:h-48'"
 					:labels='{!! $hashrate_chart['days'] !!}'
