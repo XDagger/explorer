@@ -11,7 +11,7 @@
     },
     "devDependencies": {
         "axios": "^0.18.1",
-        "chart.js": "^2.7.2",
+        "chart.js": "^2.9.4",
         "cross-env": "^5.1",
         "laravel-mix": "^2.0",
         "laravel-mix-purgecss": "^1.0",
