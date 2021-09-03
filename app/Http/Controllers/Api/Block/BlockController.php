@@ -30,7 +30,7 @@ class BlockController extends Controller
 		if (strlen($search) < 32 && !ctype_digit($search))
 			$search = str_pad($search, 32, '/');
 
-		if (!Validator::isAddress($search) && !Validator::isBlockHash($search) && !Validator::isBlockHash($search)) {
+		if (!Validator::isAddress($search) && !Validator::isBlockHash($search) && !Validator::isHeight($search)) {
 			return $this->response()->error('invalid_input', 'Incorrect address, block hash or height.', Response::HTTP_UNPROCESSABLE_ENTITY);
 		}
 
