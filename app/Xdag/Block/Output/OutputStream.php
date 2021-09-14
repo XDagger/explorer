@@ -7,12 +7,16 @@ class OutputStream
 	protected $transaction_number;
 	protected $address_number;
 	protected $extras = [];
+	protected $block_not_found_called = false;
 	protected $invalid_markup_called = false;
 
 	public function stream($message, $data)
 	{
 		if ($message == 'not_found') {
-			echo '{"error":"block_not_found","message":"Block was not found."}';
+			if (!$this->block_not_found_called)
+				echo '{"error":"block_not_found","message":"Block was not found."}';
+
+			$this->block_not_found_called = true;
 			return;
 		}
 
