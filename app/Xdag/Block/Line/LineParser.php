@@ -1,6 +1,8 @@
 <?php
 namespace App\Xdag\Block\Line;
 
+use Illuminate\Support\Str;
+
 class LineParser
 {
 	const TRANSACTION_REGEX = '/^\s*(fee|input|output): ([a-zA-Z0-9\/+]{32})\s+([0-9]+\.[0-9]+)$/si';
@@ -41,7 +43,7 @@ class LineParser
 				$value = ltrim($value, '0');
 			}
 
-			$properties[snake_case($key)] = $value;
+			$properties[Str::snake($key)] = $value;
 
 			return $properties;
 		}

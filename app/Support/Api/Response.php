@@ -1,153 +1,65 @@
 <?php
 namespace App\Support\Api;
 
-use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
-
 final class Response
 {
-	/**
-	 * Create json response
-	 *
-	 * @param mixed $data
-	 * @param int	$statusCode
-	 *
-	 * @return \Illuminate\Http\JsonResponse
-	 */
-	public function make($data = [], $statusCode = SymfonyResponse::HTTP_OK)
+	public function make($data = [], $statusCode = 200)
 	{
 		return response()->json($data, $statusCode);
 	}
 
-	/**
-	 * Return 204 http response without content.
-	 *
-	 * @return \Illuminate\Contracts\Routing\ResponseFactory|SymfonyResponse
-	 */
 	public function noContent()
 	{
-		return response('', SymfonyResponse::HTTP_NO_CONTENT);
+		return response('', 204);
 	}
 
-	/**
-	 * Return 202 http response with optional location and content
-	 *
-	 * @param null	 $location
-	 * @param string $content
-	 *
-	 * @return \Illuminate\Contracts\Routing\ResponseFactory|SymfonyResponse
-	 */
 	public function accepted($location = null, $content = '')
 	{
-		return response($content, SymfonyResponse::HTTP_ACCEPTED, $location ? compact('location') : []);
+		return response($content, 202, $location ? compact('location') : []);
 	}
 
-	/**
-	 * Return 201 http response with optional location and content
-	 *
-	 * @param null	 $location
-	 * @param string $content
-	 *
-	 * @return \Illuminate\Contracts\Routing\ResponseFactory|SymfonyResponse
-	 */
 	public function created($location = null, $content = '')
 	{
-		return response($content, SymfonyResponse::HTTP_CREATED, $location ? compact('location') : []);
+		return response($content, 201, $location ? compact('location') : []);
 	}
 
-	/**
-	 * Return an error response.
-	 *
-	 * @param string $error
-	 * @param int	 $statusCode
-	 *
-	 * @return \Illuminate\Http\JsonResponse
-	 */
 	public function error($error, $message, $statusCode)
 	{
 		return $this->make(compact('error', 'message'), $statusCode);
 	}
 
-	/**
-	 * Return a 404 not found error.
-	 *
-	 * @param string $message
-	 *
-	 * @return \Illuminate\Http\JsonResponse
-	 */
 	public function errorNotFound($message = 'Not Found')
 	{
-		return $this->error($message, SymfonyResponse::HTTP_NOT_FOUND);
+		return $this->error($message, 404);
 	}
 
-	/**
-	 * Return a 400 bad request error.
-	 *
-	 * @param string $message
-	 *
-	 * @return \Illuminate\Http\JsonResponse
-	 */
 	public function errorBadRequest($message = 'Bad Request')
 	{
-		return $this->error($message, SymfonyResponse::HTTP_BAD_REQUEST);
+		return $this->error($message, 400);
 	}
 
-	/**
-	 * Return a 403 forbidden error.
-	 *
-	 * @param string $message
-	 *
-	 * @return \Illuminate\Http\JsonResponse
-	 */
 	public function errorForbidden($message = 'Forbidden')
 	{
-		return $this->error($message, SymfonyResponse::HTTP_FORBIDDEN);
+		return $this->error($message, 403);
 	}
 
-	/**
-	 * Return a 500 internal server error.
-	 *
-	 * @param string $message
-	 *
-	 * @return \Illuminate\Http\JsonResponse
-	 */
 	public function errorInternal($message = 'Internal Error')
 	{
-		return $this->error($message, SymfonyResponse::HTTP_INTERNAL_SERVER_ERROR);
+		return $this->error($message, 500);
 	}
 
-	/**
-	 * Return a 401 unauthorized error.
-	 *
-	 * @param string $message
-	 *
-	 * @return \Illuminate\Http\JsonResponse
-	 */
 	public function errorUnauthorized($message = 'Unauthorized')
 	{
-		return $this->error($message, SymfonyResponse::HTTP_UNAUTHORIZED);
+		return $this->error($message, 401);
 	}
 
-	/**
-	 * Return a 405 method not allowed error.
-	 *
-	 * @param string $message
-	 *
-	 * @return \Illuminate\Http\JsonResponse
-	 */
 	public function errorMethodNotAllowed($message = 'Method Not Allowed')
 	{
-		return $this->error($message, SymfonyResponse::HTTP_METHOD_NOT_ALLOWED);
+		return $this->error($message, 405);
 	}
 
-	/**
-	 * 418 Response, because why not
-	 *
-	 * @param string $message
-	 *
-	 * @return \Illuminate\Http\JsonResponse
-	 */
 	public function teapot($message = 'Hey dude I am teapot')
 	{
-		return $this->error($message, SymfonyResponse::HTTP_I_AM_A_TEAPOT);
+		return $this->error($message, 418);
 	}
 }

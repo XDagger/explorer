@@ -162,7 +162,7 @@
 						<div>
 							<div class="w-full flex items-center text-blue-dark font-medium cursor-pointer tracking-wide text-center text-sm" @click="toggleModal">
 								<div class="h-4 mr-2">
-									@svg('chart', ['class' => 'stroke-current w-3 h-3'])
+									@svg('chart', 'stroke-current w-3 h-3')
 								</div>
 
 								<span>Details</span>
@@ -187,7 +187,7 @@
 						<div>
 							<div class="w-full flex items-center text-blue-dark font-medium cursor-pointer tracking-wide text-center text-sm" @click="toggleModal">
 								<div class="h-4 mr-2">
-									@svg('chart', ['class' => 'stroke-current w-3 h-3'])
+									@svg('chart', 'stroke-current w-3 h-3')
 								</div>
 
 								<span>Details</span>
@@ -212,7 +212,7 @@
 						<div>
 							<div class="w-full flex items-center text-blue-dark font-medium cursor-pointer tracking-wide text-center text-sm" @click="toggleModal">
 								<div class="h-4 mr-2">
-									@svg('chart', ['class' => 'stroke-current w-3 h-3'])
+									@svg('chart', 'stroke-current w-3 h-3')
 								</div>
 
 								<span>Details</span>

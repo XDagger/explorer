@@ -32,6 +32,6 @@ class Controller extends BaseController
 	 */
 	public function usingTextView()
 	{
-		return starts_with(request()->path(), ['text']);
+		return str_starts_with(request()->path(), 'text');
 	}
 }

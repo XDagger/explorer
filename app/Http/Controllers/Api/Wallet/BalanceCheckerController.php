@@ -1,8 +1,6 @@
 <?php
 namespace App\Http\Controllers\Api\Wallet;
 
-use Symfony\Component\HttpFoundation\Response;
-
 use App\Http\Controllers\Api\Controller;
 
 use App\Xdag\XdagInterface;
@@ -16,7 +14,7 @@ class BalanceCheckerController extends Controller
 			$address = str_pad($address, 32, '/');
 
 		if (! Validator::isAddress($address)) {
-			return $this->response()->error('invalid_input', 'Incorrect address.', Response::HTTP_UNPROCESSABLE_ENTITY);
+			return $this->response()->error('invalid_input', 'Incorrect address.', 422);
 		}
 
 		try {
@@ -24,7 +22,7 @@ class BalanceCheckerController extends Controller
 				'balance' => $xdag->getBalance($address),
 			]);
 		} catch (\Exception $e) {
-			return $this->response()->error('server_error', $e->getMessage(), Response::HTTP_SERVICE_UNAVAILABLE);
+			return $this->response()->error('server_error', $e->getMessage(), 503);
 		}
 	}
 }

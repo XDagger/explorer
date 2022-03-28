@@ -1,20 +1,16 @@
 <?php
+
 namespace App\Console;
 
-use App\Modules\NodeStatistic\Commands\CheckNodesReachability;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
+use App\Modules\NodeStatistic\Commands\CheckNodesReachability;
 use App\Modules\Network\Commands\LogNetwork;
 use App\Modules\LastBlock\Commands\FetchNewLastBlocks;
 
 class Kernel extends ConsoleKernel
 {
-	/**
-	 * The Artisan commands provided by your application.
-	 *
-	 * @var array
-	 */
 	protected $commands = [
 		LogNetwork::class,
 		FetchNewLastBlocks::class,
@@ -25,27 +21,15 @@ class Kernel extends ConsoleKernel
 	/**
 	 * Define the application's command schedule.
 	 *
-	 * @param  \Illuminate\Console\Scheduling\Schedule $schedule
-	 *
+	 * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
 	 * @return void
 	 */
 	protected function schedule(Schedule $schedule)
 	{
-		$schedule->command('explorer:clear-cache')
-				 ->everyMinute()
-				 ->withoutOverlapping();
-
-		$schedule->command('explorer:log-network')
-				 ->everyMinute()
-				 ->withoutOverlapping();
-
-		$schedule->command('explorer:fetch-new-last-blocks')
-				 ->everyMinute()
-				 ->withoutOverlapping();
-
-		$schedule->command('explorer:check-nodes-reachability')
-				 ->hourly()
-				 ->withoutOverlapping();
+		$schedule->command('explorer:clear-cache')->everyMinute()->withoutOverlapping();
+		$schedule->command('explorer:log-network')->everyMinute()->withoutOverlapping();
+		$schedule->command('explorer:fetch-new-last-blocks')->everyMinute()->withoutOverlapping();
+		$schedule->command('explorer:check-nodes-reachability')->hourly()->withoutOverlapping();
 	}
 
 	/**
@@ -55,7 +39,7 @@ class Kernel extends ConsoleKernel
 	 */
 	protected function commands()
 	{
-		$this->load(__DIR__ . '/Commands');
+		$this->load(__DIR__.'/Commands');
 
 		require base_path('routes/console.php');
 	}

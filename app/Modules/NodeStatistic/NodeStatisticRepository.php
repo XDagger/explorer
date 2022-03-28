@@ -76,7 +76,7 @@ class NodeStatisticRepository
 
 	public function getNodesListFromFile()
 	{
-		$path = (string) config('services.xdag.whitelist_path');
+		$path = (string) config('xdag.whitelist_path');
 
 		if ($path === '' || !file_exists($path)) {
 			throw new Exception('Nodes list file does not exist.');

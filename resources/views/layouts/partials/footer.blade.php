@@ -15,7 +15,7 @@
 				</a>
 
 				<a href="https://xdag.io" target="_blank">
-					@svg('dagcoin', ['class' => 'w-8 h-8'])
+					@svg('dagcoin', 'w-8 h-8')
 				</a>
 			</div>
 		</div>

@@ -17,9 +17,8 @@ class XdagServiceProvider extends ServiceProvider
 	public function register()
 	{
 		$this->app->bind(XdagInterface::class, function ($app) {
-			if ($app['config']['services']['xdag']['real']) {
-				return new Xdag($app['config']['services']['xdag']['socket_file']);
-			}
+			if ($app['config']['xdag']['real'])
+				return new Xdag($app['config']['xdag']['socket_file']);
 
 			return new XdagLocal();
 		});

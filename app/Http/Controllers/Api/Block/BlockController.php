@@ -6,8 +6,6 @@ use App\Xdag\Block\Filters\AddressFiltersValidation;
 use App\Xdag\Block\Filters\TransactionFiltersBuilder;
 use App\Xdag\Block\Filters\TransactionFiltersValidation;
 use App\Xdag\Block\Pagination\Paginator;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 use App\Http\Controllers\Api\Controller;
 
@@ -31,7 +29,7 @@ class BlockController extends Controller
 			$search = str_pad($search, 32, '/');
 
 		if (!Validator::isAddress($search) && !Validator::isBlockHash($search) && !Validator::isHeight($search)) {
-			return $this->response()->error('invalid_input', 'Incorrect address, block hash or height.', Response::HTTP_UNPROCESSABLE_ENTITY);
+			return $this->response()->error('invalid_input', 'Incorrect address, block hash or height.', 422);
 		}
 
 		$transaction_paginator = new Paginator(max(1, request()->input('transactions_per_page', 10000000000000)), 'transactions_page');
@@ -47,13 +45,11 @@ class BlockController extends Controller
 		$parser->setCallback([new OutputStream, 'stream']);
 
 		try {
-			$callback = function () use ($search, $parser) {
+			return response()->stream(function () use ($search, $parser) {
 				$this->xdag->getBlock($search, $parser);
-			};
-
-			return StreamedResponse::create($callback, Response::HTTP_OK, ['Content-Type' => 'application/json']);
+			}, 200, ['Content-Type' => 'application/json']);
 		} catch (\InvalidArgumentException $e) {
-			return $this->response()->error('block_not_found', 'Block was not found.', Response::HTTP_NOT_FOUND);
+			return $this->response()->error('block_not_found', 'Block was not found.', 404);
 		}
 	}
 }

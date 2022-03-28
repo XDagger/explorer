@@ -8,6 +8,7 @@
 	<title>{{ config('app.name', 'XDAG Block Explorer') }}</title>
 
 	<link rel="stylesheet" href="{{ mix('dist/app.css') }}">
+	<link rel="icon" type="image/x-icon" href="/favicon.ico">
 </head>
 <body class="font-sans antialiased text-black leading-tight bg-grey-lightest cursor-default">
 

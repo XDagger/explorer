@@ -28,7 +28,7 @@ class BlockController extends Controller
 	public function search(BlockSearchRequest $request)
 	{
 		$search = $request->input('search');
-		$url = (starts_with($request->getPathInfo(), '/text') ? '/text/block/' : '/block/') . $search;
+		$url = (str_starts_with($request->getPathInfo(), '/text') ? '/text/block/' : '/block/') . $search;
 		return response('', 301)->header('Location', $url);
 	}
 

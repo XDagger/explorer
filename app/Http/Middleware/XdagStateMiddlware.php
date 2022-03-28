@@ -2,9 +2,6 @@
 namespace App\Http\Middleware;
 
 use Closure;
-
-use Symfony\Component\HttpFoundation\Response;
-
 use App\Xdag\XdagInterface;
 
 class XdagStateMiddlware
@@ -19,13 +16,13 @@ class XdagStateMiddlware
 	 */
 	public function handle($request, Closure $next)
 	{
-		if (starts_with($request->path(), 'api/status')) {
+		if (str_starts_with($request->path(), 'api/status')) {
 			// /api/status is always available
 			return $next($request);
 		}
 
 		if (! resolve(XdagInterface::class)->isReady()) {
-			if (request()->wantsJson() || starts_with($request->path(), 'api')) {
+			if (request()->wantsJson() || str_starts_with($request->path(), 'api')) {
 				return $this->jsonResponse();
 			}
 
@@ -43,7 +40,7 @@ class XdagStateMiddlware
 		return (new \App\Support\Api\Response())->error(
 			'synchronizing',
 			'Block explorer is currently synchronizing.',
-			Response::HTTP_SERVICE_UNAVAILABLE
+			503
 		);
 	}
 }

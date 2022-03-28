@@ -3,7 +3,7 @@
 <hr>
 <br>
 @php($url = request()->getPathInfo())
-@if (starts_with($url, '/text'))
+@if (str_starts_with($url, '/text'))
 	@php($url = substr($url, 5))
 	@if ($url === '')
 		@php($url = '/')

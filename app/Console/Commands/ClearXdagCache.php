@@ -18,6 +18,7 @@ class ClearXdagCache extends Command
 		$this->clear(storage_path('cache'), 60);
 
 		$this->info('ClearXdagCache completed successfully.');
+		return 0;
 	}
 
 	protected function clear($dir, $ttl)

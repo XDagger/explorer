@@ -3,6 +3,7 @@
 namespace App\Xdag;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use App\Xdag\Exceptions\XdagException;
 
 class Cache extends Model
@@ -69,7 +70,7 @@ class Cache extends Model
 		$tries = 5;
 
 		do {
-			$file_name = str_random(32);
+			$file_name = Str::random(32);
 			$file = @fopen(storage_path('cache') . '/' . $file_name, 'x');
 			$tries--;
 		} while (!$file && $tries > 0);

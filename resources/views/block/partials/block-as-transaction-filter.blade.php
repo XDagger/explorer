@@ -105,7 +105,7 @@
 			</form>
 
 			<span @click="toggleModal" class="absolute pin-t pin-r pt-4 px-4 text-grey hover:text-grey-darkest cursor-pointer">
-				@svg('x', ['class' => 'w-6 h-6 fill-current'])
+				@svg('x', 'w-6 h-6 fill-current')
 			</span>
 		</div>
 	</div>

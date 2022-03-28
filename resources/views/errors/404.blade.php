@@ -15,7 +15,7 @@
 	<div class="container">
 		<a href="{{ route('home') }}" rel="nofollow" class="no-underline flex items-center justify-center text-white hover:text-blue-lighter scale transition tracking-wide">
 			<div class="h-16">
-				@svg('dagcoin', ['class' => 'w-16 h-16'])
+				@svg('dagcoin', 'w-16 h-16')
 			</div>
 
 			<h1 class="pl-4 text-3xl">XDAG Block Explorer</h1>

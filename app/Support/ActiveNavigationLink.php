@@ -10,7 +10,7 @@ class ActiveNavigationLink
 	 */
 	public static function checkPath($path)
 	{
-		return starts_with('/' . request()->path(), $path);
+		return str_starts_with('/' . request()->path(), $path);
 	}
 
 	/**
@@ -20,6 +20,6 @@ class ActiveNavigationLink
 	 */
 	public static function checkRoute($name, $parameters = [])
 	{
-		return starts_with('/' . request()->path(), route($name, $parameters, false));
+		return str_starts_with('/' . request()->path(), route($name, $parameters, false));
 	}
 }

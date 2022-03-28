@@ -3,7 +3,7 @@
 		<div class="container px-8 py-3 lg:py-0 lg:h-16 relative z-10 flex flex-wrap items-center justify-between relative">
 			<a href="{{ route('home') }}" class="w-full lg:w-auto no-underline flex items-center lg:justify-center text-white hover:text-blue-lighter scale transition mb-2 mr-8 tracking-wide">
 				<div class="h-8">
-					@svg('dagcoin', ['class' => 'w-8 h-8'])
+					@svg('dagcoin', 'w-8 h-8')
 				</div>
 
 				<h1 class="pl-4 text-xl">XDAG Block Explorer</h1>
@@ -31,13 +31,13 @@
 				<div class="flex w-full lg:w-auto xl:w-3/4">
 					<input type="text" name="search" class="w-full text-md text-grey-darkest bg-white px-4 py-3 rounded-lg rounded-r-none outline-none" placeholder="Search address / block hash / height">
 					<button :class="{ 'small': shown }" type="submit" class="button primary text-md font-bold py-3 px-4 rounded-lg rounded-l-none">
-						@svg('search', ['class' => 'stroke-current w-5 h-5'])
+						@svg('search', 'stroke-current w-5 h-5')
 					</button>
 				</div>
 			</form>
 
 			<div class="absolute z-10 pin-r pin-t h-16 px-4 mr-4 text-white lg:hidden flex items-center cursor-pointer" @click="toggleMenu">
-				@svg('menu', ['class' => 'stroke-current w-6 h-6'])
+				@svg('menu', 'stroke-current w-6 h-6')
 			</div>
 		</div>
 	</div>
