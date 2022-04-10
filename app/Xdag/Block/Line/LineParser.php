@@ -76,15 +76,21 @@ class LineParser
 		return ! ! preg_match(self::ADDRESS_REGEX, $line);
 	}
 
-	public function parseAddress($line)
+	public function parseAddress($line, $blockNumber = null)
 	{
 		if (preg_match(self::ADDRESS_REGEX, $line, $matches)) {
 			list(, $direction, $address, $amount, $time, $remark) = $matches;
 
+			$direction = strtolower(trim($direction));
+			$amount = strtolower(trim($amount));
+
+			if ($blockNumber !== null && $direction == 'earning')
+				$amount = \App\Xdag\Block\Block::getReward($blockNumber) . '.000000000';
+
 			return [
-				'direction' => strtolower(trim($direction)),
+				'direction' => $direction,
 				'address'	=> trim($address),
-				'amount'	=> strtolower(trim($amount)),
+				'amount'	=> $amount,
 				'time'		=> strtolower(trim($time)),
 				'remark'	=> trim($remark),
 			];
