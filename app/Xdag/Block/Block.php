@@ -75,10 +75,10 @@ class Block
 		if ($blockNumber < static::getApolloForkHeight())
 			return 1024;
 
-		if ($blockNumber < HALVING_INTERVAL)
+		if ($blockNumber < static::HALVING_INTERVAL)
 			return 128;
 
-		return 128 >> floor($blockNumber / HALVING_INTERVAL);
+		return 128 >> floor($blockNumber / static::HALVING_INTERVAL);
 	}
 
 	public static function getApolloForkHeight(&$is_testnet = null)
