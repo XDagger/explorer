@@ -13,6 +13,8 @@ class Block
 	const RANDOMX_FORK_HEIGHT_MAINNET = 1540224;
 	const RANDOMX_FORK_HEIGHT_TESTNET = 196288;
 
+	const HALVING_INTERVAL = 2097152;
+
 	protected $properties,  $transactions, $addresses;
 	protected $earnings, $spendings, $balances;
 	protected $earnings_change, $spendings_change, $balance_change;
@@ -70,10 +72,13 @@ class Block
 				$blockNumber = $log->main_blocks;
 		}
 
-		if ($blockNumber > static::getApolloForkHeight())
+		if ($blockNumber < static::getApolloForkHeight())
+			return 1024;
+
+		if ($blockNumber < HALVING_INTERVAL)
 			return 128;
 
-		return 1024;
+		return 128 >> floor($blockNumber / HALVING_INTERVAL);
 	}
 
 	public static function getApolloForkHeight(&$is_testnet = null)
