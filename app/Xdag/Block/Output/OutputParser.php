@@ -143,7 +143,7 @@ class OutputParser
 
 					$total_addresses_count++;
 
-					$address = $this->parser->parseAddress($line);
+					$address = $this->parser->parseAddress($line, $properties['Height'] ?? null);
 
 					$date = Carbon::parse($address['time']);
 					$date_index = $date->format('Y-m-d');

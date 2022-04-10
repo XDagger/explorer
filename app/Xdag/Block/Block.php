@@ -59,14 +59,21 @@ class Block
 		$this->total_addresses_count = $data['total_addresses_count'] ?? 0;
 	}
 
-	public static function getReward()
+	public static function getReward($blockNumber = null)
 	{
-		$log = Network::orderBy('id', 'desc')->limit(1)->first();
+		if ($blockNumber === null) {
+			$log = Network::orderBy('id', 'desc')->limit(1)->first();
 
-		if (!$log)
-			return 1024;
+			if (!$log)
+				$blockNumber = 1;
+			else
+				$blockNumber = $log->main_blocks;
+		}
 
-		return $log->main_blocks > static::getApolloForkHeight() ? 128 : 1024;
+		if ($blockNumber > static::getApolloForkHeight())
+			return 128;
+
+		return 1024;
 	}
 
 	public static function getApolloForkHeight(&$is_testnet = null)
