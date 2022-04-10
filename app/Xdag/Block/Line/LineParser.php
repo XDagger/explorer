@@ -83,7 +83,7 @@ class LineParser
 			$amount = strtolower(trim($amount));
 
 			if ($blockNumber !== null && $direction == 'earning')
-				$amount = App\Xdag\Block\Block::getReward($blockNumber) . '.000000000';
+				$amount = \App\Xdag\Block\Block::getReward($blockNumber) . '.000000000';
 
 			return [
 				'direction' => $direction,
