@@ -2,9 +2,7 @@
 	<div class="bg-blue-darkest w-full fixed z-50 pin-t overflow-hidden shadow-md" id="header">
 		<div class="container px-8 py-3 lg:py-0 lg:h-16 relative z-10 flex flex-wrap items-center justify-between relative">
 			<a href="{{ route('home') }}" class="w-full lg:w-auto no-underline flex items-center lg:justify-center text-white hover:text-blue-lighter scale transition mb-2 mr-8 tracking-wide">
-				<div class="h-8">
-					@svg('dagcoin', 'w-8 h-8')
-				</div>
+				<img src="/images/xdag.png" class="w-8 h-8" style="transform: translateZ(0) scale(0.999999)">
 
 				<h1 class="pl-4 text-xl">XDAG Block Explorer</h1>
 			</a>
