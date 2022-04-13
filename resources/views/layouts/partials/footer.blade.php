@@ -15,7 +15,7 @@
 				</a>
 
 				<a href="https://xdag.io" target="_blank">
-					<img src="/images/xdag.png" class="w-8 h-8">
+					<img src="/images/xdag.png" class="w-8 h-8" style="translateZ(0) scale(0.999999)">
 				</a>
 			</div>
 		</div>

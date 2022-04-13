@@ -14,7 +14,7 @@
 
 	<div class="container">
 		<a href="{{ route('home') }}" rel="nofollow" class="no-underline flex items-center justify-center text-white hover:text-blue-lighter scale transition tracking-wide">
-			<img src="/images/xdag.png" class="w-16 h-16">
+			<img src="/images/xdag.png" class="w-16 h-16" style="translateZ(0) scale(0.999999)">
 
 			<h1 class="pl-4 text-3xl">XDAG Block Explorer</h1>
 		</a>
