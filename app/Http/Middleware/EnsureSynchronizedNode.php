@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Middleware;
 
-class EnsureXdagSynchronized
+class EnsureSynchronizedNode
 {
 	public function handle($request, \Closure $next)
 	{

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('status', 'App\Http\Controllers\Api\Network\StatusController@show');
 
-Route::group(['middleware' => 'xdag.synchronized'], function () {
+Route::group(['middleware' => 'node.synchronized'], function () {
 	Route::get('supply', 'App\Http\Controllers\Api\SupplyController@show');
 	Route::get('supply/raw', 'App\Http\Controllers\Api\SupplyController@raw');
 	Route::get('supply/coingecko/with-separators', 'App\Http\Controllers\Api\SupplyController@coinGeckoWithSeparators');
