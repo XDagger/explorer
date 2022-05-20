@@ -63,6 +63,6 @@ class Kernel extends HttpKernel
 		'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
 		'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
 		'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-		'xdag.state' => \App\Http\Middleware\XdagStateMiddlware::class,
+		'xdag.synchronized' => \App\Http\Middleware\EnsureXdagSynchronized::class,
 	];
 }

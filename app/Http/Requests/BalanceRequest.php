@@ -3,7 +3,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class BlockSearchRequest extends FormRequest
+class BalanceRequest extends FormRequest
 {
 	public function authorize()
 	{
@@ -15,7 +15,7 @@ class BlockSearchRequest extends FormRequest
 		return [
 			'input' => [
 				'required',
-				'regex:/^([a-zA-Z0-9\/+]{32}|[a-f0-9]{64}|[0-9]{1,10})$/',
+				'regex:/^([a-zA-Z0-9\/+]{32}|[a-f0-9]{64})$/',
 				'not_in:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA',
 			],
 		];

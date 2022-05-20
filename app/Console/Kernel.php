@@ -11,12 +11,7 @@ use App\Modules\LastBlock\Commands\FetchNewLastBlocks;
 
 class Kernel extends ConsoleKernel
 {
-	protected $commands = [
-		LogNetwork::class,
-		FetchNewLastBlocks::class,
-		Commands\ClearXdagCache::class,
-		CheckNodesReachability::class,
-	];
+	protected $commands = [];
 
 	/**
 	 * Define the application's command schedule.
@@ -26,10 +21,8 @@ class Kernel extends ConsoleKernel
 	 */
 	protected function schedule(Schedule $schedule)
 	{
-		$schedule->command('explorer:clear-cache')->everyMinute()->withoutOverlapping();
 		$schedule->command('explorer:log-network')->everyMinute()->withoutOverlapping();
-		$schedule->command('explorer:fetch-new-last-blocks')->everyMinute()->withoutOverlapping();
-		$schedule->command('explorer:check-nodes-reachability')->hourly()->withoutOverlapping();
+		$schedule->command('explorer:clear-cache')->everyMinute()->withoutOverlapping();
 	}
 
 	/**

@@ -1,0 +1,17 @@
+<?php
+namespace App\Http\Middleware;
+
+class EnsureXdagSynchronized
+{
+	public function handle($request, \Closure $next)
+	{
+		if (! TODO) {
+			if (request()->wantsJson() || str_starts_with($request->path(), 'api'))
+				return response()->json(['error' => 'synchronizing', 'message' => 'Block explorer is currently synchronizing.'], 503);
+
+			return response()->view('errors.synchronizing');
+		}
+
+		return $next($request);
+	}
+}
