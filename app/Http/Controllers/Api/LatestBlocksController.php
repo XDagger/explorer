@@ -1,18 +1,20 @@
 <?php namespace App\Http\Controllers\Api;
 
-class LatestBlocksController extends Controller
-{
-	public function show()
-	{
-		$lastBlocks = LastBlock::limited()->get();
+use App\Xdag\Block\MainBlock;
 
-		return $this->response()->make([
-			'limit'	 => LastBlock::LIMIT,
-			'blocks' => $lastBlocks->map(function (LastBlock $block) {
+class MainBlocksController extends Controller
+{
+	public function index()
+	{
+		$mainBlocks = MainBlock::orderBy('height', 'asc')->get(); // legacy API returned last main blocks in asc order
+
+		return response()->json([
+			'limit'	 => 20,
+			'blocks' => $mainBlocks->map(function (MainBlock $block) {
 				return [
 					'height'  => strval($block->height),
 					'address' => $block->address,
-					'time'	  => $block->found_at->toDateTimeString(),
+					'time'	  => $block->created_at->toDateTimeString(),
 					'remark'  => strval($block->remark),
 				];
 			}),

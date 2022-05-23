@@ -2,8 +2,8 @@
 
 class StatusController extends Controller
 {
-	public function show()
+	public function index()
 	{
-		return $this->response()->make(json_decode(file_get_contents(storage_path('cache/status.json')), true));
+		//
 	}
 }

@@ -1,40 +1,20 @@
-<?php
-namespace App\Http\Controllers;
+<?php namespace App\Http\Controllers;
+
+use App\Xdag\Block\Cache;
 
 class BlockController extends Controller
 {
-	public function show($search, ValueChangeCalculator $change)
+	public function index(string $id)
 	{
-		if (strlen($search) < 32 && !ctype_digit($search))
-			$search = str_pad($search, 32, '/');
+		return redirect()->back()->withError('Block was not found. Please make sure you entered correct address, block hash or height.');
 
-		$transaction_paginator = new Paginator(20, 'transactions-page');
-		$address_paginator = new Paginator(20, 'addresses-page');
-
-		$transaction_filters_validation = new TransactionFiltersValidation;
-		$transaction_filters = (new TransactionFiltersBuilder())->fromArray($transaction_filters_validation->data());
-
-		$address_filters_validation = new AddressFiltersValidation();
-		$address_filters = (new AddressFiltersBuilder())->fromArray($address_filters_validation->data());
-
-		$output_parser = new OutputParser($transaction_paginator, $address_paginator, $transaction_filters, $address_filters);
+		if (strlen($id) < 32 && !ctype_digit($id))
+			$id = str_pad($search, 32, '/');
 
 		try {
-			$block = $this->xdag->getBlock($search, $output_parser);
-		} catch (InvalidArgumentException $ex) {
-			$this->notify()->error('Block was not found. Please make sure you entered correct address, block hash or height.');
-			return redirect()->route('home');
-		} catch (XdagBlockNotFoundException $ex) {
-			$this->notify()->error('Block was not found. Please make sure you entered correct address, block hash or height.');
-			return redirect()->route('home');
-		} catch (XdagException $ex) {
-			$this->notify()->error('Unable to retrieve block data, please try again later. Message: ' . $ex->getMessage());
-			return redirect()->route('home');
-		}
-
-		if ($block === null) {
-			$this->notify()->error('Unable to retrieve block data, please try again later.');
-			return redirect()->route('home');
+			Cache::get($id);
+		} catch (\Throwable $ex) {
+			dd($ex);
 		}
 
 		return view('block.index', [

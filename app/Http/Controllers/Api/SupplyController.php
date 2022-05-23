@@ -1,56 +1,57 @@
 <?php namespace App\Http\Controllers\Api;
 
+use App\Xdag\Network\Stat;
+
 class SupplyController extends Controller
 {
-	public function show()
-	{
-		$log = Network::latest()->first();
+	const TOTAL_SUPPLY = 1412000000.000000000;
 
-		return $this->response()->make([
-			'supply' => $log ? $log->supply : 0,
+	public function index()
+	{
+		return response()->json([
+			'supply' => (int) $this->getSupply(),
 		]);
 	}
 
 	public function raw()
 	{
-		$log = Network::latest()->first();
-
-		return response($log ? $log->supply : 0, 200)->header('Content-Type', 'text/plain');
+		return response((int) $this->getSupply(), 200)->header('Content-Type', 'text/plain');
 	}
 
 	public function coinGeckoWithSeparators()
 	{
-		$log = Network::latest()->first();
-
-		return response($log ? number_format($log->supply . '.000000000', 9, '.', ',') : '0.000000000', 200)->header('Content-Type', 'text/plain');
+		return response(number_format($this->getSupply(), 9, '.', ','), 200)->header('Content-Type', 'text/plain');
 	}
 
 	public function coinGeckoWithoutSeparators()
 	{
-		$log = Network::latest()->first();
-
-		return response($log ? number_format($log->supply . '.000000000', 9, '', '') : '0.000000000', 200)->header('Content-Type', 'text/plain');
+		return response(number_format($this->getSupply(), 9, '', ''), 200)->header('Content-Type', 'text/plain');
 	}
 
-	public function showTotal()
+	public function indexTotal()
 	{
-		return $this->response()->make([
-			'total_supply' => 1412000000,
+		return response()->json([
+			'total_supply' => (int) self::TOTAL_SUPPLY,
 		]);
 	}
 
 	public function rawTotal()
 	{
-		return response(1412000000, 200)->header('Content-Type', 'text/plain');
+		return response((int) self::TOTAL_SUPPLY, 200)->header('Content-Type', 'text/plain');
 	}
 
 	public function coinGeckoWithSeparatorsTotal()
 	{
-		return response(number_format('1412000000.000000000', 9, '.', ','), 200)->header('Content-Type', 'text/plain');
+		return response(number_format(self::TOTAL_SUPPLY, 9, '.', ','), 200)->header('Content-Type', 'text/plain');
 	}
 
 	public function coinGeckoWithoutSeparatorsTotal()
 	{
-		return response(number_format('1412000000.000000000', 9, '', ''), 200)->header('Content-Type', 'text/plain');
+		return response(number_format(self::TOTAL_SUPPLY, 9, '', ''), 200)->header('Content-Type', 'text/plain');
+	}
+
+	protected function getSupply()
+	{
+		return Stat::orderBy('id', 'desc')->limit(1)->first()->supply ?? 0;
 	}
 }
