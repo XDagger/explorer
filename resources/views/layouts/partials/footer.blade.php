@@ -6,10 +6,6 @@
 			</div>
 
 			<div class="sm:h-8 flex flex-col sm:flex-row items-center justify-center sm:justify-end">
-				<a href="/text{{ request()->getPathInfo() }}" rel="nofollow" class="mb-4 sm:mb-0 sm:mr-4 text-grey-dark text-sm">
-					Text view
-				</a>
-
 				<a href="{{ route('api docs') }}" class="mb-4 sm:mb-0 sm:mr-4 text-grey-dark text-sm">
 					API Docs
 				</a>

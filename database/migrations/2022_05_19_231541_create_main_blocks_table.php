@@ -9,12 +9,11 @@ return new class extends Migration
 	public function up()
 	{
 		Schema::create('main_blocks', function (Blueprint $table) {
-			$table->bigIncrements('id');
-			$table->bigInteger('height')->unsigned();
-			$table->string('address', 32)->index();
-			$table->timestamp('mined_at');
+			$table->bigInteger('height')->unsigned()->primary();
+			$table->string('address', 32);
 			$table->decimal('balance', 56, 9);
 			$table->string('remark')->nullable();
+			$table->timestamp('created_at');
 		});
 	}
 
@@ -22,4 +21,4 @@ return new class extends Migration
 	{
 		Schema::dropIfExists('main_blocks');
 	}
-}
+};

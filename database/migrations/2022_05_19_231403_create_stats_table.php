@@ -10,12 +10,14 @@ return new class extends Migration
 	{
 		Schema::create('stats', function (Blueprint $table) {
 			$table->bigIncrements('id');
+			$table->string('version')->comment('node version');
+			$table->string('network_type')->comment('mainnet / testnet / devnet');
 			$table->bigInteger('blocks')->unsigned();
 			$table->bigInteger('main_blocks')->unsigned();
 			$table->string('difficulty');
 			$table->decimal('supply', 56, 9);
 			$table->bigInteger('hashrate')->unsigned();
-			$table->timestamps();
+			$table->timestamp('created_at');
 		});
 	}
 
@@ -23,4 +25,4 @@ return new class extends Migration
 	{
 		Schema::dropIfExists('stats');
 	}
-}
+};

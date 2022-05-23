@@ -1,5 +1,7 @@
 <?php namespace App\Xdag;
 
+use App\Xdag\Exceptions\XdagException;
+
 class Node
 {
 	protected $rpcUrl;
@@ -30,11 +32,11 @@ class Node
 			],
 		]));
 
-		$response = @json_decode((string) $response, true);
+		$json = @json_decode((string) $response, true);
 
-		if (!is_array($response) || ($response['jsonrpc'] ?? '') !== '2.0' || ($response['id'] ?? '') !== $callId || !is_array($response['result'] ?? null))
-			return [];
+		if (!is_array($json) || ($json['jsonrpc'] ?? '') !== '2.0' || ($json['id'] ?? '') !== $callId || !is_array($json['result'] ?? null))
+			throw new XdagException("RPC method '$method' returned unexpected response: $response");
 
-		return $response['result'];
+		return $json['result'];
 	}
 }

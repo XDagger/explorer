@@ -12,7 +12,7 @@ class ApiDocsController extends Controller
 	{
 		$apiDocsMarkdown = file_get_contents(base_path('API.md'));
 
-		return view($this->resolveView('api-docs.index', 'api-docs.text-index'), [
+		return view('api-docs.index', [
 			'content' => $parsedown->text($apiDocsMarkdown)
 		]);
 	}

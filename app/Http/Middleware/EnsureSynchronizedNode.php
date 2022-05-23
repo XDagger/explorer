@@ -5,7 +5,7 @@ class EnsureSynchronizedNode
 {
 	public function handle($request, \Closure $next)
 	{
-		if (! TODO) {
+		if (false) { // FIXME
 			if (request()->wantsJson() || str_starts_with($request->path(), 'api'))
 				return response()->json(['error' => 'synchronizing', 'message' => 'Block explorer is currently synchronizing.'], 503);
 

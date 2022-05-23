@@ -37,7 +37,7 @@ class BlockController extends Controller
 			return redirect()->route('home');
 		}
 
-		return view($this->resolveView('block.index', 'block.text-index'), [
+		return view('block.index', [
 			'block' => $block,
 			'addressFiltersValidation' => $address_filters_validation,
 			'addressFilters' => $address_filters,
