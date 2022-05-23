@@ -7,7 +7,7 @@
 				<h1 class="pl-4 text-xl">XDAG Block Explorer</h1>
 			</a>
 
-			<a href="{{ route('mining calculator') }}" :class="{ 'hidden lg:flex': !shown, 'flex': shown }" class="hidden lg:flex w-full lg:w-auto no-underline lg:border-b-2 {{ str_starts_with(request()->path(), '/mining-calculator') ? 'text-white border-blue' : 'text-grey-dark border-transparent' }} hover:text-white tracking-wide font-bold text-sm py-3 lg:mr-8 items-center justify-center">
+			<a href="{{ route('mining calculator') }}" :class="{ 'hidden lg:flex': !shown, 'flex': shown }" class="hidden lg:flex w-full lg:w-auto no-underline lg:border-b-2 {{ str_starts_with(request()->path(), 'mining-calculator') ? 'text-white border-blue' : 'text-grey-dark border-transparent' }} hover:text-white tracking-wide font-bold text-sm py-3 lg:mr-8 items-center justify-center">
 				<span class="mr-2">
 					@svg('calculator')
 				</span>
@@ -15,7 +15,7 @@
 				<span>Mining calculator</span>
 			</a>
 
-			<a href="{{ route('balance') }}" :class="{ 'hidden lg:flex': !shown, 'flex': shown }" class="hidden lg:flex w-full lg:w-auto no-underline lg:border-b-2 {{ str_starts_with(request()->path(), '/balance') ? 'text-white border-blue' : 'text-grey-dark border-transparent' }} hover:text-white tracking-wide font-bold text-sm py-3 items-center justify-center">
+			<a href="{{ route('balance') }}" :class="{ 'hidden lg:flex': !shown, 'flex': shown }" class="hidden lg:flex w-full lg:w-auto no-underline lg:border-b-2 {{ str_starts_with(request()->path(), 'balance') ? 'text-white border-blue' : 'text-grey-dark border-transparent' }} hover:text-white tracking-wide font-bold text-sm py-3 items-center justify-center">
 				<span class="mr-2">
 					@svg('wallet')
 				</span>

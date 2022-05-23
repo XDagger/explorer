@@ -9,6 +9,7 @@ class Block extends Model
 	protected $keyType = 'string';
 	public $timestamps = false;
 	protected $dates = ['created_at', 'expires_at'];
+	protected $guarded = [];
 
 	/* relations */
 	public function transactions()

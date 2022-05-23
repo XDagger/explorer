@@ -58,7 +58,7 @@
 							{{ $address['address'] }}
 						</a>
 						@if ($address['remark'] !== '')
-							<br><span class="text-sm text-grey-darker">{!! clickable_full_links($address['remark']) !!}</span>
+							<br><span class="text-sm text-grey-darker">{!! clickableFullLinks($address['remark']) !!}</span>
 						@endif
 					</td>
 

@@ -13,23 +13,12 @@ class Kernel extends ConsoleKernel
 {
 	protected $commands = [];
 
-	/**
-	 * Define the application's command schedule.
-	 *
-	 * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
-	 * @return void
-	 */
 	protected function schedule(Schedule $schedule)
 	{
-		$schedule->command('explorer:log-network')->everyMinute()->withoutOverlapping();
-		$schedule->command('explorer:clear-cache')->everyMinute()->withoutOverlapping();
+		$schedule->command('network:fetch-stats')->everyMinute()->withoutOverlapping();
+		$schedule->command('blocks:clear-cache')->everyMinute()->withoutOverlapping();
 	}
 
-	/**
-	 * Register the commands for the application.
-	 *
-	 * @return void
-	 */
 	protected function commands()
 	{
 		$this->load(__DIR__.'/Commands');

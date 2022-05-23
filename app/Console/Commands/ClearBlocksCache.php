@@ -1,12 +1,10 @@
-<?php
-
-namespace App\Console\Commands;
+<?php namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
-class ClearCache extends Command
+class ClearBlocksCache extends Command
 {
-	protected $signature = 'explorer:clear-cache';
+	protected $signature = 'blocks:clear-cache';
 	protected $description = 'Clears expired blocks and balances cache.';
 
 	public function handle()

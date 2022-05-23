@@ -93,7 +93,7 @@
 							<span>Main blocks</span>
 						</div>
 						<span class="info-value">
-							<a href="/block/{{ $stat->main_blocks }}" title="Show latest main block" v-tippy>{{ number_format($stat->main_blocks) }}</a>
+							<a href="/block/{{ intval($stat->main_blocks) }}" title="Show latest main block" v-tippy>{{ number_format($stat->main_blocks) }}</a>
 						</span>
 					</div>
 
@@ -156,8 +156,8 @@
 					<div class="w-full md:w-1/2">
 						@foreach($chunk as $mainBlock)
 							<div class="mb-4 {{ $loop->last ? 'sm:mb-0' : '' }} sm:flex items-center">
-								<div class="mb-2 sm:mb-0 w-full sm:w-1/3 block text-center rounded-full bg-grey-lighter uppercase px-2 py-1 text-xs font-medium mr-3 text-grey-dark" v-tippy title="Height {{ $mainBlock->height }}{!! $mainBlock->remark !== null ? '&lt;br&gt;Found by ' . e(e(links_to_domains($mainBlock->remark))) . '" style="background-color: ' . color($mainBlock->remark) : '' !!}">
-									@if (($remarkLink = first_link($mainBlock->remark)) !== null)
+								<div class="mb-2 sm:mb-0 w-full sm:w-1/3 block text-center rounded-full bg-grey-lighter uppercase px-2 py-1 text-xs font-medium mr-3 text-grey-dark" v-tippy title="Height {{ $mainBlock->height }}{!! $mainBlock->remark !== null ? '&lt;br&gt;Found by ' . e(e(linksToDomains($mainBlock->remark))) . '" style="background-color: ' . color($mainBlock->remark) : '' !!}">
+									@if (($remarkLink = firstLink($mainBlock->remark)) !== null)
 										<a href="{{ $remarkLink }}" target="_blank" style="color: inherit">{{ $mainBlock->created_at->format('Y-m-d H:i:s') }} UTC</a>
 									@else
 										{{ $mainBlock->created_at->format('Y-m-d H:i:s') }} UTC

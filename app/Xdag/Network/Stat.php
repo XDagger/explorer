@@ -7,4 +7,5 @@ class Stat extends Model
 	protected $table = 'stats';
 	public $timestamps = false;
 	protected $dates = ['created_at'];
+	protected $guarded = [];
 }

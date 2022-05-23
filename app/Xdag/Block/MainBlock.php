@@ -8,4 +8,5 @@ class MainBlock extends Model
 	public $incrementing = false;
 	public $timestamps = false;
 	protected $dates = ['created_at'];
+	protected $guarded = [];
 }

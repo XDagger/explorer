@@ -1,16 +1,15 @@
-<?php
-namespace App\Http\Controllers;
+<?php namespace App\Http\Controllers;
+
+use App\Xdag\Network\Stat;
+use App\Xdag\Block\MainBlock;
 
 class MiningCalculatorController extends Controller
 {
-	const MAX_BLOCKS_PER_DAY_ON_NETWORK = (3600 * 24) / 64;
-
 	public function index()
 	{
-		$log = Network::orderBy('id', 'desc')->limit(1)->first();
-		$hashrate = $log ? $log->hashrate : 0;
-		$reward = Block::getReward();
-
-		return view('mining-calculator.index', compact('hashrate', 'reward'));
+		return view('mining-calculator.index', [
+			'hashrate' => Stat::orderBy('id', 'desc')->limit(1)->first()->hashrate ?? 0,
+			'reward' => MainBlock::orderBy('height', 'desc')->limit(1)->first()->balance ?? 0,
+		]);
 	}
 }

@@ -1,5 +1,3 @@
-const MAX_BLOCKS_PER_DAY_ON_NETWORK = (3600 * 24) / 64;
-
 export default {
 	props: {
 		networkHashrate: {
@@ -31,10 +29,6 @@ export default {
 	},
 
 	computed: {
-		hashrateInHs() {
-			return Math.abs(this.hashrate * 1024)
-		},
-
 		hasError() {
 			return this.error
 		}
@@ -53,8 +47,9 @@ export default {
 				this.error = true
 				this.result = 0
 			} else {
+				let hashrateKhs = Math.abs(this.hashrate * 1024)
 				this.error = false
-				this.result = (this.hashrateInHs * MAX_BLOCKS_PER_DAY_ON_NETWORK * this.reward / (this.networkHashrate + this.hashrateInHs)).toFixed(9)
+				this.result = (hashrateKhs * 60 * 60 * 24 / 64 * this.reward / (this.networkHashrate + hashrateKhs)).toFixed(9)
 			}
 		},
 

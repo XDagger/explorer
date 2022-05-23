@@ -9,6 +9,7 @@ class Transaction extends Model
 	public $primaryKey = null;
 	public $timestamps = false;
 	protected $dates = ['created_at'];
+	protected $guarded = [];
 
 	/* scopes */
 	public function scopeAsAddress($q)

@@ -11,7 +11,7 @@ return new class extends Migration
 		Schema::create('stats', function (Blueprint $table) {
 			$table->bigIncrements('id');
 			$table->string('version')->comment('node version');
-			$table->string('network_type')->comment('mainnet / testnet / devnet');
+			$table->string('network_type')->comment('main / test / dev');
 			$table->bigInteger('blocks')->unsigned();
 			$table->bigInteger('main_blocks')->unsigned();
 			$table->string('difficulty');

@@ -23,7 +23,7 @@
 
 	@if ((string) $block->getProperties()->get('remark') !== '')
 		<strong>Remark</strong>
-		<span>{!! clickable_full_links($block->getProperties()->get('remark')) !!}</span>
+		<span>{!! clickableFullLinks($block->getProperties()->get('remark')) !!}</span>
 		<br>
 		<br>
 	@endif

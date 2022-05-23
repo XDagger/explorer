@@ -9,4 +9,5 @@ class Block extends Model
 	protected $keyType = 'string';
 	public $timestamps = false;
 	protected $dates = ['expires_at'];
+	protected $guarded = [];
 }
