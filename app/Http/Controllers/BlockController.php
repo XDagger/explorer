@@ -19,16 +19,11 @@ class BlockController extends Controller
 
 		return view('block.index', [
 			'block' => $block,
-			'addressFiltersValidation' => $address_filters_validation,
-			'addressFilters' => $address_filters,
-			'showRemarkFilter' => $this->xdag->versionGreaterThan('0.2.5'),
-			'addressPagination' => $address_paginator,
-			'transactionFiltersValidation' => $transaction_filters_validation,
-			'transactionFilters' => $transaction_filters,
-			'transactionPagination' => $transaction_paginator,
-			'balanceChange' => $block->getBalanceChange(),
-			'earningChange' => $block->getEarningsChange(),
-			'spendingChange' => $block->getSpendingsChange(),
 		]);
+	}
+
+	public function balance()
+	{
+		return view('balance.index');
 	}
 }

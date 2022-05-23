@@ -4,16 +4,16 @@ use App\Xdag\Exceptions\XdagException;
 
 class Node
 {
-	public static function callRpc(string $method, array $parameters = []): array
+	public static function callRpc(string $method, array $parameters = []): mixed
 	{
 		$response = @file_get_contents(self::rpcUrl(), false, self::streamContext($method, $parameters, $callId = rand(1, 10000000), 5));
 
 		$json = @json_decode((string) $response, true);
 
-		if (!is_array($json) || ($json['jsonrpc'] ?? '') !== '2.0' || ($json['id'] ?? '') !== $callId || !is_array($json['result'] ?? null))
-			throw new XdagException("RPC method '$method' returned unexpected response: $response");
+		if (!is_array($json) || ($json['jsonrpc'] ?? '') !== '2.0' || ($json['id'] ?? '') !== $callId)
+			throw new XdagException("RPC method '$method' returned unexpected response: '$response'");
 
-		return $json['result'];
+		return $json;
 	}
 
 	public static function streamRpc(string $method, array $parameters = [])

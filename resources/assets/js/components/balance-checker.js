@@ -29,21 +29,21 @@ export default {
     methods: {
         getBalance() {
             if (! this.wallet) {
-                this.error = false
-                this.loading = false
+                this.error = null
+                this.loading = null
 
                 return
             }
 
             this.loading = true
 
-            axios.post('/balance-checker', { address: this.wallet })
+            axios.get('/api/balance/' + this.wallet)
                 .then((response) => {
                     this.balance = response.data.balance
                     this.loading = false
                 })
-                .catch((response) => {
-                    this.error = true
+                .catch((error) => {
+                    this.error = error.response.data.message
                     this.loading = false
                 })
         }

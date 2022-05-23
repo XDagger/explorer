@@ -22,7 +22,7 @@
 							<p class="font-bold" v-if="wallet && ! balance && loading" v-cloak>Getting your balance...</p>
 
 							<div v-if="! loading && error" v-cloak>
-								<p class="font-bold">Invalid wallet address.</p>
+								<p class="font-bold">@{{ error }}</p>
 							</div>
 
 							<div v-if="wallet && balance && ! loading && ! error" v-cloak>

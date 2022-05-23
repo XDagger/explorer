@@ -37,6 +37,7 @@ return new class extends Migration
 
 		Schema::create('balances', function (Blueprint $table) {
 			$table->string('id')->primary();
+			$table->string('state', 20)->nullable();
 			$table->decimal('balance', 56, 9)->nullable();
 			$table->timestamp('expires_at', 3);
 		});

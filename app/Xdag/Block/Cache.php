@@ -1,6 +1,8 @@
 <?php namespace App\Xdag\Block;
 
 use App\Xdag\Node;
+use App\Xdag\Exceptions\XdagException;
+use Illuminate\Database\QueryException;
 use JsonMachine\Items;
 use JsonMachine\JsonDecoder\ExtJsonDecoder;
 
@@ -44,10 +46,16 @@ class Cache
 		]);
 
 		$basicBlockDataSaved = false;
+		$blockState = null;
 
 		try {
 			foreach ($blockData as $key => $value) {
 				// basic block data
+				if ($key === 'state') {
+					$blockState = $value;
+					continue;
+				}
+
 				if (!is_array($value)) {
 					$block->{$fields[$key]} = $key === 'blockTime' ? timestampToCarbon($value) : $value;
 					continue;
@@ -79,7 +87,7 @@ class Cache
 				}
 			}
 		} catch (\JsonMachine\Exception\PathNotFoundException $ex) {
-			// block does not exist
+			// block does not exist, thrown when *any* of the paths is not found in json stream
 			$block->state = 'not found';
 			$block->expires_at = now()->addSeconds(self::TTL);
 			$block->save();
@@ -92,6 +100,9 @@ class Cache
 			throw $ex;
 		}
 
+		$block->state = $blockState;
+		$block->save();
+
 		return $block;
 	}
 
@@ -102,6 +113,56 @@ class Cache
 
 			if ($block->cacheReady())
 				return $block;
+			else
+				sleep(3);
+		} while (true);
+	}
+
+	public static function getBalance(string $id): Balance
+	{
+		if (strlen($id) < 32 && !ctype_digit($id))
+			$id = str_pad($id, 32, '/');
+
+		if (!preg_match('/^([a-zA-Z0-9\/+]{32}|[a-f0-9]{64}|[0-9]{1,10})$/su', $id)) // FIXME: remove ability to query by main block number if node code is not updated
+			throw new \InvalidArgumentException('Incorrect address, block hash or height.');
+
+		try {
+			$balance = Balance::create([
+				'id' => $id,
+				'expires_at' => now()->addSeconds(self::TTL),
+			]);
+
+			$json = Node::callRpc(strlen($id) < 32 ? 'xdag_getBalanceByNumber' : 'xdag_getBalance', [$id]);
+		} catch (QueryException $ex) {
+			return self::waitForBalance($id);
+		} catch (XdagException $ex) {
+			// error while fetching balance
+			$balance->delete();
+
+			throw $ex;
+		}
+
+		if (!isset($json['result'])) {
+			// block does not exist
+			$balance->state = 'not found';
+			$balance->save();
+			return $balance;
+		}
+
+		$balance->state = 'found';
+		$balance->balance = $json['result'];
+		$balance->save();
+
+		return $balance;
+	}
+
+	protected static function waitForBalance(string $id): Balance
+	{
+		do {
+			$balance = Balance::findOrFail($id);
+
+			if ($balance->cacheReady())
+				return $balance;
 			else
 				sleep(3);
 		} while (true);
