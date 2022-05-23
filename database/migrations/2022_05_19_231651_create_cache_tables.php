@@ -12,24 +12,25 @@ return new class extends Migration
 			$table->string('id')->primary();
 			$table->string('state', 20)->nullable();
 			$table->bigInteger('height')->unsigned()->nullable();
-			$table->string('kind', 20)->nullable();
+			$table->decimal('balance', 56, 9)->nullable();
+			$table->string('type', 20)->nullable();
 			$table->string('hash', 64)->nullable();
 			$table->string('address', 32)->nullable();
 			$table->string('difficulty')->nullable();
 			$table->string('remark')->nullable();
-			$table->timestamp('created_at')->nullable();
-			$table->timestamp('expires_at');
+			$table->timestamp('created_at', 3)->nullable();
+			$table->timestamp('expires_at', 3);
 		});
 
 		Schema::create('block_transactions', function (Blueprint $table) {
 			$table->string('block_id');
-			$table->bigInteger('ordering')->unsigned();
-			$table->enum('view', ['address', 'transaction']);
+			$table->bigInteger('ordering')->unsigned()->index();
+			$table->enum('view', ['wallet', 'transaction']);
 			$table->enum('direction', ['input', 'output', 'earning', 'fee']);
 			$table->string('address', 32);
 			$table->decimal('amount', 56, 9);
 			$table->string('remark')->nullable();
-			$table->timestamp('created_at')->nullable();
+			$table->timestamp('created_at', 3)->nullable();
 
 			$table->foreign('block_id')->references('id')->on('blocks');
 		});
@@ -37,7 +38,7 @@ return new class extends Migration
 		Schema::create('balances', function (Blueprint $table) {
 			$table->string('id')->primary();
 			$table->decimal('balance', 56, 9)->nullable();
-			$table->timestamp('expires_at');
+			$table->timestamp('expires_at', 3);
 		});
 	}
 

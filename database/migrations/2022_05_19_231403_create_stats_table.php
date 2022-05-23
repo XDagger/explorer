@@ -17,7 +17,7 @@ return new class extends Migration
 			$table->string('difficulty');
 			$table->decimal('supply', 56, 9);
 			$table->bigInteger('hashrate')->unsigned();
-			$table->timestamp('created_at');
+			$table->timestamp('created_at', 3);
 		});
 	}
 

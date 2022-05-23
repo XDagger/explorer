@@ -13,7 +13,7 @@ return new class extends Migration
 			$table->string('address', 32);
 			$table->decimal('balance', 56, 9);
 			$table->string('remark')->nullable();
-			$table->timestamp('created_at');
+			$table->timestamp('created_at', 3);
 		});
 	}
 
