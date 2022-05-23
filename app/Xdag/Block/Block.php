@@ -16,4 +16,10 @@ class Block extends Model
 	{
 		return $this->hasMany(Transaction::class)->orderBy('ordering');
 	}
+
+	/* methods */
+	public function cacheReady()
+	{
+		return $this->state !== null;
+	}
 }

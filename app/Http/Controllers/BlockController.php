@@ -6,16 +6,19 @@ class BlockController extends Controller
 {
 	public function index(string $id)
 	{
-		return redirect()->back()->withError('Block was not found. Please make sure you entered correct address, block hash or height.');
+		//return redirect()->back()->withError('Block was not found. Please make sure you entered correct address, block hash or height.');
+		//return redirect()->back()->withError('Unable to retrieve block data, please try again later.');
 
 		if (strlen($id) < 32 && !ctype_digit($id))
 			$id = str_pad($search, 32, '/');
 
 		try {
-			Cache::get($id);
-		} catch (\Throwable $ex) {
-			dd($ex);
+			$block = Cache::getBlock($id);
+		} catch (\Illuminate\Database\Eloquent\ModelNotFoundException $ex) {
+			return redirect()->back()->withError('Unable to retrieve block data, please try again later.');
 		}
+
+		dd($block);
 
 		return view('block.index', [
 			'block' => $block,

@@ -4,7 +4,7 @@ use App\Xdag\Network\Stat;
 
 class SupplyController extends Controller
 {
-	const TOTAL_SUPPLY = 1412000000.000000000;
+	const TOTAL_SUPPLY = 1446294144.000000000;
 
 	public function index()
 	{
