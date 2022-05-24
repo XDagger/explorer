@@ -19,11 +19,33 @@ class BlockController extends Controller
 
 		return view('block.index', [
 			'block' => $block,
+			'balanceGraph' => $balanceGraph = $block->walletGraph('balance'),
+			'earningsGraph' => $earningsGraph = $block->walletGraph('earnings'),
+			'spendingsGraph' => $spendingsGraph = $block->walletGraph('spendings'),
+			'balanceChange' => valueChange($balanceGraph['values'][count($balanceGraph['values']) - 2] ?? 0, $balanceGraph['values'][count($balanceGraph['values']) - 1] ?? 0),
+			'earningsChange' => valueChange($earningsGraph['values'][count($earningsGraph['values']) - 2] ?? 0, $earningsGraph['values'][count($earningsGraph['values']) - 1] ?? 0),
+			'spendingsChange' => valueChange($spendingsGraph['values'][count($spendingsGraph['values']) - 2] ?? 0, $spendingsGraph['values'][count($spendingsGraph['values']) - 1] ?? 0),
+			'wallet' => $this->filteredWallet(),
+			'transactions' => $this->filteredTransactions(),
 		]);
 	}
 
 	public function balance()
 	{
 		return view('balance.index');
+	}
+
+	protected function filteredWallet($block)
+	{
+		$builder = $block->transactions()->wallet();
+
+		return $builder->paginate(20);
+	}
+
+	protected function filteredTransactions($block)
+	{
+		$builder = $block->transactions()->transaction();
+
+		return $builder->paginate(20);
 	}
 }

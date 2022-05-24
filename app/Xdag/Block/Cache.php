@@ -72,7 +72,7 @@ class Cache
 						'view' => 'transaction',
 						'direction' => ['input', 'output', 'fee'][$value['direction']],
 						'address' => $value['address'],
-						'amount' => $value['amount'],
+						'amount' => $value['amount'] * ($value['direction'] === 'input' ? 1 : -1),
 					]);
 				} else { // "block as address" listing for now (update after node code change)
 					$block->transactions()->create([
@@ -80,7 +80,7 @@ class Cache
 						'view' => 'wallet',
 						'direction' => ['input', 'output', 'earning'][$value['direction']],
 						'address' => $value['address'],
-						'amount' => $value['amount'],
+						'amount' => $value['amount'] * ($value['direction'] === 'input' ? 1 : -1),
 						'remark' => $value['remark'],
 						'created_at' => timestampToCarbon($value['time']),
 					]);

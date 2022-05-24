@@ -9,8 +9,8 @@
 				chart-name="Balance"
 				color="blue"
 				:class="'w-full h-48'"
-				:labels='{!! $block->getBalances()->keys()->toJson(JSON_HEX_APOS) !!}'
-				:chart-data='{!! $block->getBalances()->values()->toJson(JSON_HEX_APOS) !!}'
+				:labels='{{ json_encode($balanceGraph['labels']) }}'
+				:chart-data='{{ json_encode($balanceGraph['labels']) }}'
 				integers="true"
 			>
 			</single-bar-chart>

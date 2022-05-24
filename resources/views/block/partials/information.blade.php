@@ -1,113 +1,75 @@
 <div class="flex flex-wrap">
 	<div class="w-full md:w-2/3 md:pr-4">
-		<tabs inline-template>
-			<div class="box">
-				<div class="flex flex-wrap items-start justify-between mb-8">
+		<div class="box">
+			<div class="flex flex-wrap items-start justify-between mb-8">
+				<div class="w-full md:w-1/2">
+					<h2 class="box-title mb-0">Block Information</h2>
+				</div>
+			</div>
+
+			<div class="mb-4">
+				<div class="flex flex-wrap justify-between items-start">
+					<div class="mb-4 md:mb-0 w-full md:w-1/2">
+						<strong class="info-label">Date and time (UTC)</strong>
+						<span class="info-value">{{ $block->created_at->format('Y-m-d H:i.s.v') }}</span>
+					</div>
+
 					<div class="w-full md:w-1/2">
-						<h2 class="box-title mb-0">Block Information</h2>
-					</div>
-
-					<div class="w-full md:w-auto mt-4 md:mt-0 flex items-center md:justify-end text-blue-dark font-medium cursor-pointer tracking-wide text-center" @click="toggleTab(true)">
-						<div v-if="current != true" class="h-4 mr-2">
-							@svg('arrow-down', 'stroke-current')
-						</div>
-
-						<span v-if="current != true">Show more</span>
-
-						<div v-if="current == true" class="h-4 mr-2" v-cloak>
-							@svg('arrow-up', 'stroke-current')
-						</div>
-
-						<span v-if="current == true" v-cloak>Show less</span>
-					</div>
-				</div>
-
-				<div class="mb-4">
-					<div class="flex flex-wrap justify-between items-start">
-						<div class="mb-4 md:mb-0 w-full md:w-1/2">
-							<strong class="info-label">Date and time (UTC)</strong>
-							<span class="info-value">{{ $block->getProperties()->get('time') }}</span>
-						</div>
-
-						<div class="w-full md:w-1/2">
-							<strong class="info-label">State</strong>
-							<span class="info-value">{{ ucfirst($block->getProperties()->get('state')) }}</span>
-						</div>
-					</div>
-				</div>
-
-				<div class="mb-4">
-					<strong class="info-label">Hash</strong>
-					<a href="{{ route('block', ['search' => $block->getProperties()->get('hash')]) }}" rel="nofollow" class="leading-normal opacity-75 block break-words">{{ $block->getProperties()->get('hash') }}</a>
-				</div>
-
-				<div class="mb-4">
-					@if ((string) $block->getProperties()->get('remark') !== '')
-						<div class="flex flex-wrap justify-between items-start">
-							<div class="mb-4 md:mb-0 w-full md:w-1/2">
-								<strong class="info-label">Address</strong>
-								<a href="/block/{{ $block->getProperties()->get('balance_address') }}" rel="nofollow" class="leading-normal opacity-75 block break-words">{{ $block->getProperties()->get('balance_address') }}</a>
-							</div>
-
-							<div class="w-full md:w-1/2">
-								<strong class="info-label">Remark</strong>
-								<span class="info-value">{!! clickableFullLinks($block->getProperties()->get('remark')) !!}</span>
-							</div>
-						</div>
-					@else
-						<strong class="info-label">Address</strong>
-						<a href="/block/{{ $block->getProperties()->get('balance_address') }}" rel="nofollow" class="leading-normal opacity-75 block break-words">{{ $block->getProperties()->get('balance_address') }}</a>
-					@endif
-				</div>
-
-				<div class="mb-4">
-					<div class="flex flex-wrap justify-between items-start">
-						<div class="mb-4 md:mb-0 w-full md:w-1/2">
-							<strong class="info-label">Difficulty</strong>
-						<span class="info-value block break-words">{{ $block->getProperties()->get('difficulty') }}</span>
-						</div>
-
-						<div class="w-full md:w-1/2">
-							<strong class="info-label">Kind</strong>
-							@if ($block->isMainBlock())
-								@if ($height = $block->getProperties()->get('height'))
-									<div class="flex items-center justify-between">
-										<a href="/block/{{ $height }}" rel="nofollow" class="leading-normal opacity-75 break-words text-grey-darkest">Main block {{ $height }}</a>
-
-										<div class="flex items-center">
-											@if ($height > 1)
-												<a href="/block/{{ $height - 1 }}" rel="nofollow" class="mr-2" title="Previous main block" v-tippy>@svg('arrow-left', 'stroke-current')</a>
-											@endif
-											<a href="/block/{{ $height + 1 }}" rel="nofollow" title="Next main block" v-tippy>@svg('arrow-right', 'stroke-current')</a>
-										</div>
-									</div>
-								@else
-									<span class="info-value">Main block</span>
-								@endif
-							@else
-								<span class="info-value">{{ $block->isTransactionBlock() ? 'Transaction block' : 'Wallet' }}</span>
-							@endif
-						</div>
-					</div>
-				</div>
-
-				<div v-if="current == true" v-cloak>
-					<div class="mb-4">
-						<div class="flex flex-wrap justify-between items-start">
-							<div class="mb-4 md:mb-0 w-full md:w-1/2">
-								<strong class="info-label">Timestamp</strong>
-							<span class="info-value block break-words">{{ $block->getProperties()->get('timestamp') }}</span>
-							</div>
-
-							<div class="w-full md:w-1/2">
-								<strong class="info-label">Flags, file pos{{ $block->getProperties()->get('file') ? ', file' : '' }}</strong>
-								<span class="info-value">{{ $block->getProperties()->get('flags') }}, {{ $block->getProperties()->get('file_pos') }}{{ $block->getProperties()->get('file') ? ', ' . $block->getProperties()->get('file') : '' }}</span>
-							</div>
-						</div>
+						<strong class="info-label">State</strong>
+						<span class="info-value">{{ $block->state }}</span>
 					</div>
 				</div>
 			</div>
-		</tabs>
+
+			<div class="mb-4">
+				<strong class="info-label">Hash</strong>
+				<a href="{{ route('block', ['id' => $block->hash]) }}" rel="nofollow" class="leading-normal opacity-75 block break-words">{{ $block->hash }}</a>
+			</div>
+
+			<div class="mb-4">
+				@if ((string) $block->remark !== '')
+					<div class="flex flex-wrap justify-between items-start">
+						<div class="mb-4 md:mb-0 w-full md:w-1/2">
+							<strong class="info-label">Address</strong>
+							<a href="/block/{{ $block->address }}" rel="nofollow" class="leading-normal opacity-75 block break-words">{{ $block->address }}</a>
+						</div>
+
+						<div class="w-full md:w-1/2">
+							<strong class="info-label">Remark</strong>
+							<span class="info-value">{!! clickableFullLinks($block->remark) !!}</span>
+						</div>
+					</div>
+				@else
+					<strong class="info-label">Address</strong>
+					<a href="/block/{{ $block->address }}" rel="nofollow" class="leading-normal opacity-75 block break-words">{{ $block->address }}</a>
+				@endif
+			</div>
+
+			<div class="flex flex-wrap justify-between items-start">
+				<div class="mb-4 md:mb-0 w-full md:w-1/2">
+					<strong class="info-label">Difficulty</strong>
+				<span class="info-value block break-words">{{ $block->difficulty }}</span>
+				</div>
+
+				<div class="w-full md:w-1/2">
+					<strong class="info-label">Type</strong>
+					@if ($block->isMainBlock())
+						<div class="flex items-center justify-between">
+							<a href="/block/{{ $block->height }}" rel="nofollow" class="leading-normal opacity-75 break-words text-grey-darkest">Main block {{ $block->height }}</a>
+
+							<div class="flex items-center">
+								@if ($block->height > 1)
+									<a href="/block/{{ $block->height - 1 }}" rel="nofollow" class="mr-2" title="Previous main block" v-tippy>@svg('arrow-left', 'stroke-current')</a>
+								@endif
+								<a href="/block/{{ $block->height + 1 }}" rel="nofollow" title="Next main block" v-tippy>@svg('arrow-right', 'stroke-current')</a>
+							</div>
+						</div>
+					@else
+						<span class="info-value">{{ $block->isTransactionBlock() ? 'Transaction' : 'Wallet' }}</span>
+					@endif
+				</div>
+			</div>
+		</div>
 	</div>
 
 	@if ($block->isTransactionBlock())
@@ -119,7 +81,7 @@
 					<div class="flex items-center justify-between">
 						<div class="mr-4">
 							<div class="info-label">Total fees</div>
-							<span class="info-value">{{ number_format($block->getTotalFees(), 9) }}</span>
+							<span class="info-value">{{ $block->transactions()->transaction()->whereDirection('fee')->sum(DB::raw('ABS(amount)')) }}</span>
 						</div>
 					</div>
 				</div>
@@ -127,8 +89,8 @@
 				<div class="mb-4">
 					<div class="flex items-center justify-between">
 						<div class="mr-4">
-							<div class="info-label">{{ $count = $block->getTotalInputsCount() }} input{{ $count > 1 ? 's' : '' }}</div>
-							<span class="info-value">{{ number_format($block->getTotalInputs(), 9) }}</span>
+							<div class="info-label">{{ $count = $block->transactions()->transaction()->whereDirection('input')->count() }} input{{ $count > 1 ? 's' : '' }}</div>
+							<span class="info-value">{{ $block->transactions()->transaction()->whereDirection('input')->sum('amount') }}</span>
 						</div>
 					</div>
 				</div>
@@ -136,8 +98,8 @@
 				<div class="mb-4">
 					<div class="flex items-center justify-between">
 						<div class="mr-4">
-							<div class="info-label">{{ $count = $block->getTotalOutputsCount() }} output{{ $count > 1 ? 's' : '' }}</div>
-							<span class="info-value">{{ number_format($block->getTotalOutputs(), 9) }}</span>
+							<div class="info-label">{{ $count = $block->transactions()->transaction()->whereDirection('output')->count() }} output{{ $count > 1 ? 's' : '' }}</div>
+							<span class="info-value">{{ $block->transactions()->transaction()->whereDirection('output')->sum(DB::raw('ABS(amount)')) }}</span>
 						</div>
 					</div>
 				</div>
@@ -152,7 +114,7 @@
 					<div class="flex items-center justify-between">
 						<div class="mr-4">
 							<div class="info-label">Balance</div>
-							<span class="info-value">{{ number_format($block->getBalance(), 9) }}</span>
+							<span class="info-value">{{ $block->balance }}</span>
 						</div>
 
 						@include('support.value-change', ['valueChange' => $balanceChange, 'name' => 'Balance', 'change' => 'since 24 hours ago', 'type' => 'value'])
@@ -177,10 +139,10 @@
 					<div class="flex items-center justify-between">
 						<div class="mr-4">
 							<div class="info-label">Total Earnings</div>
-							<span class="info-value">{{ number_format($block->getTotalEarnings(), 9) }}</span>
+							<span class="info-value">{{ $block->transactions()->wallet()->earnings()->sum('amount') }}</span>
 						</div>
 
-						@include('support.value-change', ['valueChange' => $earningChange, 'name' => 'Earnings', 'change' => 'since 24 hours ago', 'type' => 'value'])
+						@include('support.value-change', ['valueChange' => $earningsChange, 'name' => 'Earnings', 'change' => 'since 24 hours ago', 'type' => 'value'])
 					</div>
 
 					<modal inline-template>
@@ -202,10 +164,10 @@
 					<div class="flex items-center justify-between">
 						<div class="mr-4">
 							<div class="info-label">Total Spendings</div>
-							<span class="info-value">{{ number_format($block->getTotalSpendings(), 9) }}</span>
+							<span class="info-value">{{ $block->transactions()->wallet()->spendings()->sum(DB::raw('ABS(amount)')) }}</span>
 						</div>
 
-						@include('support.value-change', ['valueChange' => $spendingChange, 'name' => 'Spendings', 'change' => 'since 24 hours ago', 'type' => 'value'])
+						@include('support.value-change', ['valueChange' => $spendingsChange, 'name' => 'Spendings', 'change' => 'since 24 hours ago', 'type' => 'value'])
 					</div>
 
 					<modal inline-template>

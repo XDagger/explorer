@@ -13,13 +13,23 @@ class Transaction extends Model
 	protected $guarded = [];
 
 	/* scopes */
-	public function scopeBlockAsWallet($q)
+	public function scopeWallet($q)
 	{
 		return $q->whereView('wallet');
 	}
 
-	public function scopeBlockAsTransaction($q)
+	public function scopeTransaction($q)
 	{
 		return $q->whereView('transaction');
+	}
+
+	public function scopeEarnings($q)
+	{
+		return $q->whereIn('direction', ['input', 'earning']);
+	}
+
+	public function scopeSpendings($q)
+	{
+		return $q->whereIn('direction', ['output', 'fee']);
 	}
 }

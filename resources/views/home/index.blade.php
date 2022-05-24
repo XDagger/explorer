@@ -29,8 +29,8 @@
 										<single-line-chart chart-name="Network Hashrate Mh/s"
 											color="blue"
 											:class="'w-full h-32 md:h-48'"
-											:labels='{!! json_encode($hashrateChartData['labels']) !!}'
-											:chart-data='{!! json_encode($hashrateChartData['values']) !!}'>
+											:labels='{{ json_encode($hashrateChartData['labels']) }}'
+											:chart-data='{{ json_encode($hashrateChartData['values']) }}'>
 										</single-line-chart>
 
 
@@ -40,8 +40,8 @@
 										<single-bar-chart chart-name="New blocks"
 											color="indigo"
 											:class="'w-full h-32 md:h-48'"
-											:labels='{!! json_encode($newBlocksChartData['labels']) !!}'
-											:chart-data='{!! json_encode($newBlocksChartData['values']) !!}'>
+											:labels='{{ json_encode($newBlocksChartData['labels']) }}'
+											:chart-data='{{ json_encode($newBlocksChartData['values']) }}'>
 										</single-bar-chart>
 									</div>
 

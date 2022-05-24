@@ -9,8 +9,8 @@
 				chart-name="Spendings"
 				color="red"
 				:class="'w-full h-48'"
-				:labels='{!! $block->getSpendings()->keys()->toJson(JSON_HEX_APOS) !!}'
-				:chart-data='{!! $block->getSpendings()->values()->toJson(JSON_HEX_APOS) !!}'
+				:labels='{{ json_encode($spendingsGraph['labels']) }}'
+				:chart-data='{{ json_encode($spendingsGraph['values']) }}'
 				integers="true"
 			>
 			</single-bar-chart>

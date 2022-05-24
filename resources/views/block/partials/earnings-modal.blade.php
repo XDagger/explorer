@@ -9,8 +9,8 @@
 				chart-name="Earnings"
 				color="green"
 				:class="'w-full h-48'"
-				:labels='{!! $block->getEarnings()->keys()->toJson(JSON_HEX_APOS) !!}'
-				:chart-data='{!! $block->getEarnings()->values()->toJson(JSON_HEX_APOS) !!}'
+				:labels='{{ json_encode($earningsGraph['labels']) }}'
+				:chart-data='{{ json_encode($earningsGraph['values']) }}'
 				integers="true"
 			>
 			</single-bar-chart>
