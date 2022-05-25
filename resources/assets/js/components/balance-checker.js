@@ -1,34 +1,34 @@
 export default {
     data() {
         return {
-            wallet: null,
+            input: null,
             balance: null,
             loading: false,
             error: false
         }
     },
     watch: {
-        wallet: function () {
+        input: function () {
             this.balance = null
             this.error = null
-            this.debouncedGetWalletBalance()
+            this.debouncedGetBlockBalance()
         }
     },
     created: function () {
-        this.debouncedGetWalletBalance = _.debounce(this.getBalance, 500)
+        this.debouncedGetBlockBalance = _.debounce(this.getBalance, 500)
     },
     computed: {
         hasError() {
             return ! this.loading && this.error
         },
 
-        addressLink() {
-            return '/block/' + this.wallet.trim()
+        detailsLink() {
+            return '/block/' + this.input.trim()
         }
     },
     methods: {
         getBalance() {
-            if (! this.wallet) {
+            if (! this.input) {
                 this.error = null
                 this.loading = null
 
@@ -37,7 +37,7 @@ export default {
 
             this.loading = true
 
-            axios.get('/api/balance/' + this.wallet)
+            axios.get('/api/balance/' + this.input)
                 .then((response) => {
                     this.balance = response.data.balance
                     this.loading = false

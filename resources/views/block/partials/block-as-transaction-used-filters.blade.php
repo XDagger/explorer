@@ -2,37 +2,16 @@
 	<strong class="text-lg block mb-4">Applied filters</strong>
 
 	<div class="flex flex-wrap -mx-4">
-		@if ($transactionFilters->hasUsedFilter('address'))
+		@foreach ($filters as $filterKey => $filter)
 			<div class="w-full md:w-auto md:min-w-xs p-4 pt-0">
-				<strong class="block uppercase leading-normal text-sm">Address</strong>
-				<span class="block text-sm break-words">{{ $transactionFilters->address }}</span>
+				<strong class="block uppercase leading-normal text-sm">{{ $filter['name'] }}</strong>
+				<span class="block text-sm break-words">{{ is_array($filter['value']) ? implode(', ', $filter['value']) : (str_contains($filterKey, '_amount_') ? number_format($filter['value'], 9) : $filter['value']) }}</span>
 			</div>
-		@endif
-
-		@if ($transactionFilters->hasUsedFilter('amount_from'))
-			<div class="w-full md:w-auto md:min-w-xs p-4 pt-0">
-				<strong class="block uppercase leading-normal text-sm">Amount from</strong>
-				<span class="block text-sm break-words">{{ $transactionFilters->amountFrom }}</span>
-			</div>
-		@endif
-
-		@if ($transactionFilters->hasUsedFilter('amount_to'))
-			<div class="w-full md:w-auto md:min-w-xs p-4 pt-0">
-				<strong class="block uppercase leading-normal text-sm">Amount to</strong>
-				<span class="block text-sm break-words">{{ $transactionFilters->amountTo }}</span>
-			</div>
-		@endif
-
-		@if ($transactionFilters->hasUsedFilter('directions'))
-			<div class="w-full md:w-auto md:min-w-xs p-4 pt-0">
-				<strong class="block uppercase leading-normal text-sm">Directions</strong>
-				<span class="block text-sm break-words">{{ implode(', ', $transactionFilters->directions) }}</span>
-			</div>
-		@endif
+		@endforeach
 	</div>
 
 	<div class="text-right float-right">
-		<a href="/block/{{ $block->getProperties()->get('balance_address') }}#block-as-transaction" rel="nofollow" class="bg-transparent border border-blue text-blue hover:text-blue-dark hover:border-blue-dark text-sm font-medium py-2 px-4 rounded tracking-wide cursor-pointer inline-flex items-center justify-center">
+		<a href="/block/{{ $block->address }}#block-as-transaction" rel="nofollow" class="bg-transparent border border-blue text-blue hover:text-blue-dark hover:border-blue-dark text-sm font-medium py-2 px-4 rounded tracking-wide cursor-pointer inline-flex items-center justify-center">
 			<span class="h-4 mr-2">
 				@svg('x', 'fill-current')
 			</span>
@@ -41,20 +20,20 @@
 		</a>
 	</div>
 
-	@php($filtered_fees = $block->getFilteredFees())
-	@php($filtered_inputs = $block->getFilteredInputs())
-	@php($filtered_outputs = $block->getFilteredOutputs())
+	@php($filteredInputs = $transactionsListing->inputsSum())
+	@php($filteredOutputs = $transactionsListing->outputsSum())
+	@php($filteredFees = $transactionsListing->feesSum())
 
-	@if (bccomp($filtered_fees, '0.000000000') > 0 || bccomp($filtered_inputs, '0.000000000') > 0|| bccomp($filtered_outputs, '0.000000000') > 0)
+	@if (bccomp($filteredInputs, '0.000000000') > 0|| bccomp($filteredOutputs, '0.000000000') > 0 || bccomp($filteredFees, '0.000000000') > 0)
 		<strong class="text-lg block mb-4">Filtered totals</strong>
-		@if (bccomp($filtered_inputs, '0.000000000') > 0)
-			<span class="rounded bg-green uppercase px-3 py-1 text-xs mr-3 text-white text-center mx-auto" title="Total inputs in filtered data" v-tippy>+{{ $filtered_inputs }}</span>
+		@if (bccomp($filteredInputs, '0.000000000') > 0)
+			<span class="rounded bg-green uppercase px-3 py-1 text-xs mr-3 text-white text-center mx-auto" title="Total inputs in filtered data" v-tippy>+{{ number_format($filteredInputs, 9) }}</span>
 		@endif
-		@if (bccomp($filtered_outputs, '0.000000000') > 0)
-			<span class="rounded bg-red uppercase px-3 py-1 text-xs mr-3 text-white text-center mx-auto" title="Total outputs in filtered data" v-tippy>-{{ $filtered_outputs }}</span>
+		@if (bccomp($filteredOutputs, '0.000000000') > 0)
+			<span class="rounded bg-red uppercase px-3 py-1 text-xs mr-3 text-white text-center mx-auto" title="Total outputs in filtered data" v-tippy>-{{ number_format($filteredOutputs, 9) }}</span>
 		@endif
-		@if (bccomp($filtered_fees, '0.000000000') > 0)
-			<span class="rounded bg-grey-darker uppercase px-3 py-1 text-xs mr-3 text-white text-center mx-auto" title="Total fees in filtered data" v-tippy>-{{ $filtered_fees }}</span>
+		@if (bccomp($filteredFees, '0.000000000') > 0)
+			<span class="rounded bg-grey-darker uppercase px-3 py-1 text-xs mr-3 text-white text-center mx-auto" title="Total fees in filtered data" v-tippy>-{{ number_format($filteredFees, 9) }}</span>
 		@endif
 	@endif
 

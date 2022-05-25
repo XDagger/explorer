@@ -3,40 +3,40 @@
 		<div class="fixed shadow-inner max-w-md max-h-screen overflow-auto md:relative pin-b pin-x align-top m-auto justify-end md:justify-center bg-white md:rounded w-full md:h-auto md:shadow flex flex-col">
 
 			<form action="{{ request()->getPathInfo() }}#block-as-transaction" method="GET" class="overflow-auto">
-				<input type="hidden" name="transaction-filter" value="1">
+				<input type="hidden" name="r" value="{{ rand(1, 1000000) }}">
 
 				<div class="p-8">
 					<div class="form-group">
-						<label for="transaction_address" class="form-label">Address</label>
+						<label for="transactions_address" class="form-label">Address</label>
 
-						<input class="form-input {{ $transactionFiltersValidation->errors()->has('address') ? 'has-error' : '' }}" type="text" placeholder="Enter address" name="transaction_address" id="transaction_address" value="{{ $transactionFilters->address }}">
+						<input class="form-input {{ isset($errors['transactions_address']) ? 'has-error' : '' }}" type="text" placeholder="Enter address" name="transactions_address" id="transactions_address" value="{{ $filters['transactions_address']['value'] ?? '' }}">
 
-						@if ($transactionFiltersValidation->errors()->has('transaction_address'))
-							<p class="error-text">{{ $transactionFiltersValidation->firstError('transaction_address') }}</p>
+						@if (isset($errors['transactions_address']))
+							<p class="error-text">{{ $errors['transactions_address'] }}</p>
 						@endif
 					</div>
 
 					<div class="flex flex-wrap">
 						<div class="w-full md:w-1/2 md:pr-2">
 							<div class="form-group">
-								<label for="transaction_amount_from" class="form-label">Amount from</label>
+								<label for="transactions_amount_from" class="form-label">Amount from</label>
 
-								<input class="form-input {{ $transactionFiltersValidation->errors()->has('transaction_amount.from') ? 'has-error' : '' }}" type="text" placeholder="Enter amount" name="transaction_amount[from]" id="transaction_amount_from" value="{{ $transactionFilters->amountFrom }}">
+								<input class="form-input {{ isset($errors['transactions_amount_from']) ? 'has-error' : '' }}" type="text" placeholder="Enter amount" name="transactions_amount_from" id="transactions_amount_from" value="{{ $filters['transactions_amount_from']['value'] ?? '' }}">
 
-								@if ($transactionFiltersValidation->errors()->has('transaction_amount.from'))
-									<p class="error-text">{{ $transactionFiltersValidation->firstError('transaction_amount.from') }}</p>
+								@if (isset($errors['transactions_amount_from']))
+									<p class="error-text">{{ $errors['transactions_amount_from'] }}</p>
 								@endif
 							</div>
 						</div>
 
 						<div class="w-full md:w-1/2 md:pl-2">
 							<div class="form-group">
-								<label for="transaction_amount_to" class="form-label">Amount to</label>
+								<label for="transactions_amount_to" class="form-label">Amount to</label>
 
-								<input class="form-input {{ $transactionFiltersValidation->errors()->has('transaction_amount.to') ? 'has-error' : '' }}" type="text" placeholder="Enter amount" name="transaction_amount[to]" id="transaction_amount_to" value="{{ $transactionFilters->amountTo }}">
+								<input class="form-input {{ isset($errors['transactions_amount_to']) ? 'has-error' : '' }}" type="text" placeholder="Enter amount" name="transactions_amount_to" id="transactions_amount_to" value="{{ $filters['transactions_amount_to']['value'] ?? '' }}">
 
-								@if ($transactionFiltersValidation->errors()->has('transaction_amount.to'))
-									<p class="error-text">{{ $transactionFiltersValidation->firstError('transaction_amount.to') }}</p>
+								@if (isset($errors['transactions_amount_to']))
+									<p class="error-text">{{ $errors['transactions_amount_to'] }}</p>
 								@endif
 							</div>
 						</div>
@@ -46,7 +46,7 @@
 						<div class="form-label">Direction</div>
 
 						<div class="flex flex-wrap">
-							<checkbox inline-template :checked="{{ in_array('fee', $transactionFilters->directions) ? 1 : 0 }}">
+							<checkbox inline-template :checked="{{ in_array('fee', $filters['transactions_directions']['value'] ?? []) ? 'true' : 'false' }}">
 								<div class="mb-4 md:mb-0 w-full md:w-1/4">
 									<input type="checkbox" class="checkbox-input hidden" name="transaction_directions[]" value="fee">
 
@@ -60,7 +60,7 @@
 								</div>
 							</checkbox>
 
-							<checkbox inline-template :checked="{{ in_array('input', $transactionFilters->directions) ? 1 : 0 }}">
+							<checkbox inline-template :checked="{{ in_array('input', $filters['transactions_directions']['value'] ?? []) ? 'true' : 'false' }}">
 								<div class="mb-4 md:mb-0 w-full md:w-1/4">
 									<input type="checkbox" class="checkbox-input hidden" name="transaction_directions[]" value="input">
 
@@ -74,7 +74,7 @@
 								</div>
 							</checkbox>
 
-							<checkbox inline-template :checked="{{ in_array('output', $transactionFilters->directions) ? 1 : 0 }}">
+							<checkbox inline-template :checked="{{ in_array('output', $filters['transactions_directions']['value'] ?? []) ? 'true' : 'false' }}">
 								<div class="w-full md:w-1/4">
 									<input type="checkbox" class="checkbox-input hidden" name="transaction_directions[]" value="output">
 
@@ -89,8 +89,8 @@
 							</checkbox>
 						</div>
 
-						@if ($transactionFiltersValidation->errors()->has('transaction_directions'))
-							<p class="error-text">{{ $transactionFiltersValidation->firstError('transaction_directions') }}</p>
+						@if (isset($errors['transactions_directions']))
+							<p class="error-text">{{ $errors['transactions_directions'] }}</p>
 						@endif
 					</div>
 				</div>

@@ -3,65 +3,65 @@
 		<div class="fixed shadow-inner max-w-md max-h-screen md:relative pin-b pin-x align-top m-auto justify-end md:justify-center bg-white md:rounded w-full md:h-auto md:shadow flex flex-col overflow-auto md:overflow-visible">
 
 			<form action="{{ request()->getPathInfo() }}#block-as-address" method="GET" class="overflow-auto md:overflow-visible">
-				<input type="hidden" name="address-filter" value="1">
+				<input type="hidden" name="r" value="{{ rand(1, 1000000) }}">
 
 				<div class="p-8 pb-0">
 					<div class="flex flex-wrap">
 						<div class="w-full">
 							<div class="form-group">
-								<label for="address" class="form-label">Address</label>
+								<label for="addresses_address" class="form-label">Address</label>
 
-								<input class="form-input {{ $addressFiltersValidation->errors()->has('address') ? 'has-error' : '' }}" type="text" placeholder="Enter address" name="address" id="address" value="{{ $addressFilters->address }}">
+								<input class="form-input {{ isset($errors['addresses_address']) ? 'has-error' : '' }}" type="text" placeholder="Enter address" name="addresses_address" id="addresses_address" value="{{ $filters['addresses_address']['value'] ?? '' }}">
 
-								@if ($addressFiltersValidation->errors()->has('address'))
-									<p class="error-text">{{ $addressFiltersValidation->firstError('address') }}</p>
+								@if (isset($errors['addresses_address']))
+									<p class="error-text">{{ $errors['addresses_address'] }}</p>
 								@endif
 							</div>
 						</div>
 
 						<date-range inline-template
-									@if (! is_null($addressFilters->dateFrom))
-									default-from="{{ $addressFilters->dateFrom }}"
-									@endif
+							@if (isset($filters['addresses_date_from']['value']))
+								default-from="{{ $filters['addresses_date_from']['value'] }}"
+							@endif
 
-									@if (! is_null($addressFilters->dateTo))
-									default-to="{{ $addressFilters->dateTo }}"
-									@endif
+							@if (isset($filters['addresses_date_to']['value']))
+								default-to="{{ $filters['addresses_date_to']['value'] }}"
+							@endif
 						>
 							<div class="w-full">
 								<div class="flex flex-wrap">
 									<div class="w-full md:w-1/2 md:pr-1">
 										<div class="form-group">
-											<label for="date_from" class="form-label">Date from</label>
+											<label for="addresses_date_from" class="form-label">Date from</label>
 
 											<calendar-dropdown inline-template :value="from" v-on:change="updateFrom">
 												<div class="form-group relative" v-click-outside="hideCalendar" @click.stop>
-													<input class="form-input {{ $addressFiltersValidation->errors()->has('date.from') ? 'has-error' : '' }}" type="text" placeholder="Enter date from" name="date[from]" id="date_from" v-model="inputValue" @focus="showCalendar">
+													<input class="form-input {{ isset($errors['addresses_date_from']) ? 'has-error' : '' }}" type="text" placeholder="Enter date from" name="addresses_date_from" id="addresses_date_from" v-model="inputValue" @focus="showCalendar">
 
 													<calendar class="absolute mt-2" v-if="shown" :default="value" v-on:change="updateValue"></calendar>
 												</div>
 											</calendar-dropdown>
 
-											@if ($addressFiltersValidation->errors()->has('date.from'))
-												<p class="error-text">{{ $addressFiltersValidation->firstError('date.from') }}</p>
+											@if (isset($errors['addresses_date_from']))
+												<p class="error-text">{{ $errors['addresses_date_from'] }}</p>
 											@endif
 										</div>
 									</div>
 
 									<div class="w-full md:w-1/2 pl-1">
 										<div class="form-group">
-											<label for="date_to" class="form-label">Date to</label>
+											<label for="addresses_date_to" class="form-label">Date to</label>
 
 											<calendar-dropdown inline-template :value="to" v-on:change="updateTo">
 												<div class="form-group relative" v-click-outside="hideCalendar" @click.stop>
-													<input class="form-input {{ $addressFiltersValidation->errors()->has('date.to') ? 'has-error' : '' }}" type="text" placeholder="Enter date to" name="date[to]" id="date_to" v-model="inputValue" @focus="showCalendar">
+													<input class="form-input {{ isset($errors['addresses_date_to']) ? 'has-error' : '' }}" type="text" placeholder="Enter date to" name="addresses_date_to" id="addresses_date_to" v-model="inputValue" @focus="showCalendar">
 
 													<calendar class="absolute mt-2" v-if="shown" :default="value" v-on:change="updateValue"></calendar>
 												</div>
 											</calendar-dropdown>
 
-											@if ($addressFiltersValidation->errors()->has('date.to'))
-												<p class="error-text">{{ $addressFiltersValidation->firstError('date.to') }}</p>
+											@if (isset($errors['addresses_date_to']))
+												<p class="error-text">{{ $errors['addresses_date_to'] }}</p>
 											@endif
 										</div>
 									</div>
@@ -90,24 +90,24 @@
 							<div class="flex flex-wrap">
 								<div class="w-full md:w-1/2 md:pr-1">
 									<div class="form-group">
-										<label for="amount_from" class="form-label">Amount from</label>
+										<label for="addresses_amount_from" class="form-label">Amount from</label>
 
-										<input class="form-input {{ $addressFiltersValidation->errors()->has('amount.from') ? 'has-error' : '' }}" type="text" placeholder="Enter amount" name="amount[from]" id="amount_from" value="{{ $addressFilters->amountFrom }}">
+										<input class="form-input {{ isset($errors['addresses_amount_from']) ? 'has-error' : '' }}" type="text" placeholder="Enter amount" name="addresses_amount_from" id="addresses_amount_from" value="{{ $filters['addresses_amount_from']['value'] ?? '' }}">
 
-										@if ($addressFiltersValidation->errors()->has('amount.from'))
-											<p class="error-text">{{ $addressFiltersValidation->firstError('amount.from') }}</p>
+										@if (isset($errors['addresses_amount_from']))
+											<p class="error-text">{{ $errors['addresses_amount_from'] }}</p>
 										@endif
 									</div>
 								</div>
 
 								<div class="w-full md:w-1/2 md:pl-1">
 									<div class="form-group">
-										<label for="amount_to" class="form-label">Amount to</label>
+										<label for="addresses_amount_to" class="form-label">Amount to</label>
 
-										<input class="form-input {{ $addressFiltersValidation->errors()->has('amount.to') ? 'has-error' : '' }}" type="text" placeholder="Enter amount" name="amount[to]" id="amount_to" value="{{ $addressFilters->amountTo }}">
+										<input class="form-input {{ isset($errors['addresses_amount_to']) ? 'has-error' : '' }}" type="text" placeholder="Enter amount" name="addresses_amount_to" id="addresses_amount_to" value="{{ $filters['addresses_amount_to']['value'] ?? '' }}">
 
-										@if ($addressFiltersValidation->errors()->has('amount.to'))
-											<p class="error-text">{{ $addressFiltersValidation->firstError('amount.to') }}</p>
+										@if (isset($errors['addresses_amount_to']))
+											<p class="error-text">{{ $errors['addresses_amount_to'] }}</p>
 										@endif
 									</div>
 								</div>
@@ -119,9 +119,9 @@
 						<div class="form-label">Direction</div>
 
 						<div class="flex flex-wrap w-full">
-							<checkbox inline-template :checked="{{ in_array('input', $addressFilters->directions) ? 1 : 0 }}">
+							<checkbox inline-template :checked="{{ in_array('input', $filters['addresses_directions']['value'] ?? []) ? 'true' : 'false' }}">
 								<div class="mb-4 w-full sm:w-1/2 md:w-1/4">
-									<input type="checkbox" class="checkbox-input hidden" name="directions[]" value="input">
+									<input type="checkbox" class="checkbox-input hidden" name="addresses_directions[]" value="input">
 
 									<div class="cursor-pointer w-full flex items-center" @click="toggle()" :class="{ 'text-blue': isChecked }">
 										<div class="form-checkbox flex items-center justify-center mr-2" :class="{ 'text-blue': isChecked, 'text-transparent': !isChecked }">
@@ -133,9 +133,9 @@
 								</div>
 							</checkbox>
 
-							<checkbox inline-template :checked="{{ in_array('output', $addressFilters->directions) ? 1 : 0 }}">
+							<checkbox inline-template :checked="{{ in_array('output', $filters['addresses_directions']['value'] ?? []) ? 'true' : 'false' }}">
 								<div class="mb-4 w-full sm:w-1/2 md:w-1/4">
-									<input type="checkbox" class="checkbox-input hidden" name="directions[]" value="output">
+									<input type="checkbox" class="checkbox-input hidden" name="addresses_directions[]" value="output">
 
 									<div class="cursor-pointer w-full flex items-center" @click="toggle()" :class="{ 'text-blue': isChecked }">
 										<div class="form-checkbox flex items-center justify-center mr-2" :class="{ 'text-blue': isChecked, 'text-transparent': !isChecked }">
@@ -147,9 +147,9 @@
 								</div>
 							</checkbox>
 
-							<checkbox inline-template :checked="{{ in_array('earning', $addressFilters->directions) ? 1 : 0 }}">
+							<checkbox inline-template :checked="{{ in_array('earning', $filters['addresses_directions']['value'] ?? []) ? 'true' : 'false' }}">
 								<div class="sm:mb-4 w-full sm:w-1/2 md:w-1/4">
-									<input type="checkbox" class="checkbox-input hidden" name="directions[]" value="earning">
+									<input type="checkbox" class="checkbox-input hidden" name="addresses_directions[]" value="earning">
 
 									<div class="cursor-pointer w-full flex items-center" @click="toggle()" :class="{ 'text-blue': isChecked }">
 										<div class="form-checkbox flex items-center justify-center mr-2" :class="{ 'text-blue': isChecked, 'text-transparent': !isChecked }">
@@ -162,23 +162,21 @@
 							</checkbox>
 						</div>
 
-						@if ($addressFiltersValidation->errors()->has('directions'))
-							<p class="error-text">{{ $addressFiltersValidation->firstError('directions') }}</p>
+						@if (isset($errors['addresses_directions']))
+							<p class="error-text">{{ $errors['addresses_directions'] }}</p>
 						@endif
 
-						@if ($showRemarkFilter)
-							<div class="w-full">
-								<div class="form-group">
-									<label for="address" class="form-label">Remark</label>
+						<div class="w-full">
+							<div class="form-group">
+								<label for="addresses_remark" class="form-label">Remark</label>
 
-									<input class="form-input {{ $addressFiltersValidation->errors()->has('remark') ? 'has-error' : '' }}" type="text" placeholder="Remark" name="remark" id="remark" value="{{ $addressFilters->remark }}">
+								<input class="form-input {{ isset($errors['addresses_remark']) ? 'has-error' : '' }}" type="text" placeholder="Remark" name="addresses_remark" id="addresses_remark" value="{{ $filters['addresses_remark']['value'] ?? '' }}">
 
-									@if ($addressFiltersValidation->errors()->has('remark'))
-										<p class="error-text">{{ $addressFiltersValidation->firstError('remark') }}</p>
-									@endif
-								</div>
+								@if (isset($errors['addresses_remark']))
+									<p class="error-text">{{ $errors['addresses_remark'] }}</p>
+								@endif
 							</div>
-						@endif
+						</div>
 					</div>
 				</div>
 

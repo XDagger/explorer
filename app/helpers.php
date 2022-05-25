@@ -65,3 +65,8 @@ function timestampToCarbon(int $timestamp): Carbon\Carbon
 {
 	return Carbon\Carbon::createFromFormat('U.u', intval(floor($timestamp / 1000)) . '.' . str_pad(($timestamp % 1000) * 1000, 6, '0', STR_PAD_LEFT));
 }
+
+function escapeLike(string $expression): string
+{
+	return str_replace(['\\', '_', '%'], ['\\\\', '\\_', '\\%'], $expression);
+}

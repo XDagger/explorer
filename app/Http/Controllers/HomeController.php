@@ -17,7 +17,7 @@ class HomeController extends Controller
 			'hashrateChartData' => $this->hashrateChartData(),
 			'newBlocksChartData' => $this->newBlocksChartData(),
 			'hashrateChange' => valueChange((float) Stat::orderBy('id', 'desc')->offset(60)->limit(60)->avg('hashrate'), (float) Stat::orderBy('id', 'desc')->limit(60)->avg('hashrate')),
-			'mainBlocks' => MainBlock::orderBy('height', 'desc')->get(),
+			'mainBlocks' => MainBlock::orderBy('height', 'desc')->limit(20)->get(),
 			'numberOfNewBlocksLastMinute' => $numberOfNewBlocksLastMinute,
 		]);
 	}

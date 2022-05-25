@@ -81,7 +81,7 @@
 					<div class="flex items-center justify-between">
 						<div class="mr-4">
 							<div class="info-label">Total fees</div>
-							<span class="info-value">{{ $block->transactions()->transaction()->whereDirection('fee')->sum(DB::raw('ABS(amount)')) }}</span>
+							<span class="info-value">{{ number_format($block->transactions()->transaction()->whereDirection('fee')->sum(DB::raw('ABS(amount)')), 9) }}</span>
 						</div>
 					</div>
 				</div>
@@ -90,7 +90,7 @@
 					<div class="flex items-center justify-between">
 						<div class="mr-4">
 							<div class="info-label">{{ $count = $block->transactions()->transaction()->whereDirection('input')->count() }} input{{ $count > 1 ? 's' : '' }}</div>
-							<span class="info-value">{{ $block->transactions()->transaction()->whereDirection('input')->sum('amount') }}</span>
+							<span class="info-value">{{ number_format($block->transactions()->transaction()->whereDirection('input')->sum('amount'), 9) }}</span>
 						</div>
 					</div>
 				</div>
@@ -99,7 +99,7 @@
 					<div class="flex items-center justify-between">
 						<div class="mr-4">
 							<div class="info-label">{{ $count = $block->transactions()->transaction()->whereDirection('output')->count() }} output{{ $count > 1 ? 's' : '' }}</div>
-							<span class="info-value">{{ $block->transactions()->transaction()->whereDirection('output')->sum(DB::raw('ABS(amount)')) }}</span>
+							<span class="info-value">{{ number_format($block->transactions()->transaction()->whereDirection('output')->sum(DB::raw('ABS(amount)')), 9) }}</span>
 						</div>
 					</div>
 				</div>
@@ -114,7 +114,7 @@
 					<div class="flex items-center justify-between">
 						<div class="mr-4">
 							<div class="info-label">Balance</div>
-							<span class="info-value">{{ $block->balance }}</span>
+							<span class="info-value">{{ number_format($block->balance, 9) }}</span>
 						</div>
 
 						@include('support.value-change', ['valueChange' => $balanceChange, 'name' => 'Balance', 'change' => 'since 24 hours ago', 'type' => 'value'])
@@ -139,7 +139,7 @@
 					<div class="flex items-center justify-between">
 						<div class="mr-4">
 							<div class="info-label">Total Earnings</div>
-							<span class="info-value">{{ $block->transactions()->wallet()->earnings()->sum('amount') }}</span>
+							<span class="info-value">{{ number_format($block->transactions()->wallet()->earnings()->sum('amount'), 9) }}</span>
 						</div>
 
 						@include('support.value-change', ['valueChange' => $earningsChange, 'name' => 'Earnings', 'change' => 'since 24 hours ago', 'type' => 'value'])
@@ -164,7 +164,7 @@
 					<div class="flex items-center justify-between">
 						<div class="mr-4">
 							<div class="info-label">Total Spendings</div>
-							<span class="info-value">{{ $block->transactions()->wallet()->spendings()->sum(DB::raw('ABS(amount)')) }}</span>
+							<span class="info-value">{{ number_format($block->transactions()->wallet()->spendings()->sum(DB::raw('ABS(amount)')), 9) }}</span>
 						</div>
 
 						@include('support.value-change', ['valueChange' => $spendingsChange, 'name' => 'Spendings', 'change' => 'since 24 hours ago', 'type' => 'value'])

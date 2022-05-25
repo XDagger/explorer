@@ -10,13 +10,20 @@ return new class extends Migration
 	{
 		Schema::create('stats', function (Blueprint $table) {
 			$table->bigIncrements('id');
+			$table->boolean('synchronized');
 			$table->string('version')->comment('node version');
 			$table->string('network_type')->comment('main / test / dev');
 			$table->bigInteger('blocks')->unsigned();
+			$table->bigInteger('network_blocks')->unsigned();
 			$table->bigInteger('main_blocks')->unsigned();
+			$table->bigInteger('network_main_blocks')->unsigned();
 			$table->string('difficulty');
+			$table->string('network_difficulty');
 			$table->decimal('supply', 56, 9);
+			$table->decimal('network_supply', 56, 9);
+			$table->decimal('block_reward', 56, 9);
 			$table->bigInteger('hashrate')->unsigned();
+			$table->bigInteger('network_hashrate')->unsigned();
 			$table->timestamp('created_at', 3);
 		});
 	}

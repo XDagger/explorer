@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
 use App\Xdag\Block\Cache;
+use App\Xdag\Block\Listing\{WalletListing, TransactionsListing};
 
 class BlockController extends Controller
 {
@@ -25,27 +26,13 @@ class BlockController extends Controller
 			'balanceChange' => valueChange($balanceGraph['values'][count($balanceGraph['values']) - 2] ?? 0, $balanceGraph['values'][count($balanceGraph['values']) - 1] ?? 0),
 			'earningsChange' => valueChange($earningsGraph['values'][count($earningsGraph['values']) - 2] ?? 0, $earningsGraph['values'][count($earningsGraph['values']) - 1] ?? 0),
 			'spendingsChange' => valueChange($spendingsGraph['values'][count($spendingsGraph['values']) - 2] ?? 0, $spendingsGraph['values'][count($spendingsGraph['values']) - 1] ?? 0),
-			'wallet' => $this->filteredWallet(),
-			'transactions' => $this->filteredTransactions(),
+			'walletListing' => app(WalletListing::class, ['block' => $block]),
+			'transactionsListing' => app(TransactionsListing::class, ['block' => $block]),
 		]);
 	}
 
 	public function balance()
 	{
 		return view('balance.index');
-	}
-
-	protected function filteredWallet($block)
-	{
-		$builder = $block->transactions()->wallet();
-
-		return $builder->paginate(20);
-	}
-
-	protected function filteredTransactions($block)
-	{
-		$builder = $block->transactions()->transaction();
-
-		return $builder->paginate(20);
 	}
 }

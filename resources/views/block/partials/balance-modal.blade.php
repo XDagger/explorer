@@ -10,7 +10,7 @@
 				color="blue"
 				:class="'w-full h-48'"
 				:labels='{{ json_encode($balanceGraph['labels']) }}'
-				:chart-data='{{ json_encode($balanceGraph['labels']) }}'
+				:chart-data='{{ json_encode($balanceGraph['values']) }}'
 				integers="true"
 			>
 			</single-bar-chart>
