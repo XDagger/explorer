@@ -10,118 +10,118 @@ $calendarBorderRadius: config('borderRadius.default');
 $calendarFontSize: config('textSizes.sm');
 
 .calendar {
-    width: 100%;
-    min-width: 260px;
-    position: relative;
-    z-index: 10;
-    cursor: default;
-    border-radius: $calendarBorderRadius;
-    font-size: $calendarFontSize;
+	width: 100%;
+	min-width: 260px;
+	position: relative;
+	z-index: 10;
+	cursor: default;
+	border-radius: $calendarBorderRadius;
+	font-size: $calendarFontSize;
 
-    &, * {
-        box-sizing: border-box;
-    }
+	&, * {
+		box-sizing: border-box;
+	}
 
-    &.calendarDropDown {
-        margin-top: 7px;
+	&.calendarDropDown {
+		margin-top: 7px;
 
-        &:before {
-            content: ' ';
-            background: $calendarPrimaryColor;
-            width: 10px;
-            height: 10px;
-            top: -5px;
-            left: 5px;
-            transform: rotate(45deg);
-            position: absolute;
-            z-index: 99;
-        }
-    }
+		&:before {
+			content: ' ';
+			background: $calendarPrimaryColor;
+			width: 10px;
+			height: 10px;
+			top: -5px;
+			left: 5px;
+			transform: rotate(45deg);
+			position: absolute;
+			z-index: 99;
+		}
+	}
 
-    .calendar-header {
-        background: $calendarPrimaryColor;
-        color: $calendarHeaderColor;
-        border-top: 1px solid $calendarPrimaryColor;
-        border-right: 1px solid $calendarPrimaryColor;
-        border-left: 1px solid $calendarPrimaryColor;
-        border-top-left-radius: $calendarBorderRadius;
-        border-top-right-radius: $calendarBorderRadius;
+	.calendar-header {
+		background: $calendarPrimaryColor;
+		color: $calendarHeaderColor;
+		border-top: 1px solid $calendarPrimaryColor;
+		border-right: 1px solid $calendarPrimaryColor;
+		border-left: 1px solid $calendarPrimaryColor;
+		border-top-left-radius: $calendarBorderRadius;
+		border-top-right-radius: $calendarBorderRadius;
 
-        .top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 6px 20px;
+		.top {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 6px 20px;
 
-            .prev-month, .next-month {
-                font-size: 12px;
-                cursor: pointer;
-            }
+			.prev-month, .next-month {
+				font-size: 12px;
+				cursor: pointer;
+			}
 
-            .calendar-title {
-                text-transform: capitalize;
-            }
-        }
-    }
+			.calendar-title {
+				text-transform: capitalize;
+			}
+		}
+	}
 
-    .day-names td {
-        text-transform: capitalize;
-    }
+	.day-names td {
+		text-transform: capitalize;
+	}
 
-    table {
-        width: 100%;
+	table {
+		width: 100%;
 
-        td {
-            width: calc(100% / 7);
-            height: 35px;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-        }
-    }
+		td {
+			width: calc(100% / 7);
+			height: 35px;
+			display: inline-flex;
+			justify-content: center;
+			align-items: center;
+		}
+	}
 
-    .days {
-        border-right: 1px solid $calendarBorder;
-        border-left: 1px solid $calendarBorder;
-        border-bottom: 1px solid $calendarBorder;
-        border-bottom-left-radius: $calendarBorderRadius;
-        border-bottom-right-radius: $calendarBorderRadius;
+	.days {
+		border-right: 1px solid $calendarBorder;
+		border-left: 1px solid $calendarBorder;
+		border-bottom: 1px solid $calendarBorder;
+		border-bottom-left-radius: $calendarBorderRadius;
+		border-bottom-right-radius: $calendarBorderRadius;
 
-        tr:last-child td:first-child {
-            border-bottom-left-radius: $calendarBorderRadius;
-        }
+		tr:last-child td:first-child {
+			border-bottom-left-radius: $calendarBorderRadius;
+		}
 
-        tr:last-child td:last-child {
-            border-bottom-right-radius: $calendarBorderRadius;
-        }
+		tr:last-child td:last-child {
+			border-bottom-right-radius: $calendarBorderRadius;
+		}
 
-        td {
-            background: $calendarDayBackground;
-            color: $calendarDayColor;
-            border-right: 1px solid $calendarDayBorderColor;
-            border-bottom: 1px solid $calendarDayBorderColor;
-            cursor: pointer;
+		td {
+			background: $calendarDayBackground;
+			color: $calendarDayColor;
+			border-right: 1px solid $calendarDayBorderColor;
+			border-bottom: 1px solid $calendarDayBorderColor;
+			cursor: pointer;
 
-            &:last-child {
-                border-right: none;
-            }
+			&:last-child {
+				border-right: none;
+			}
 
-            &.today {
-                background: $calendarTodayColor;
-            }
+			&.today {
+				background: $calendarTodayColor;
+			}
 
-            &.selected {
-                background: $calendarPrimaryColor !important;
-                color: $calendarHeaderColor !important;
-            }
+			&.selected {
+				background: $calendarPrimaryColor !important;
+				color: $calendarHeaderColor !important;
+			}
 
-            &.gray, &.disabled {
-                color: $calendarGrayColor;
-            }
-        }
+			&.gray, &.disabled {
+				color: $calendarGrayColor;
+			}
+		}
 
-        tr:last-child td {
-            border-bottom: none;
-        }
-    }
+		tr:last-child td {
+			border-bottom: none;
+		}
+	}
 }

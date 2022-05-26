@@ -8,4 +8,5 @@ class Stat extends Model
 	public $timestamps = false;
 	protected $dates = ['created_at'];
 	protected $guarded = [];
+	protected $casts = ['connections' => 'array'];
 }

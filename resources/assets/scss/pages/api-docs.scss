@@ -1,29 +1,49 @@
 .api-docs {
-    h1 {
-        @apply .text-black .text-xl .font-bold .-mb-8;
-    }
+	h1 {
+		@apply .text-black .text-xl .font-bold;
+	}
 
-    h2 {
-        @apply .text-grey-darkest .text-lg .font-bold .mb-2 .mt-16 .bg-blue-lightest .border-l-4 .border-blue .px-4 .py-2;
-    }
+	h2 {
+		@apply .text-grey-darkest .text-lg .font-bold .bg-blue-lightest .border-l-4 .border-blue .p-4 .my-6;
 
-    h3 {
-        @apply .text-grey-darkest .text-base .font-bold .mb-4 .mt-8;
-    }
+		a {
+			@apply .float-right .text-sm .text-grey-darkest;
 
-    p, ul {
-        @apply .text-sm .text-grey-darkest .py-4 .leading-loose;
+			&:hover {
+				@apply .underline;
+			}
+		}
 
-        code {
-            @apply .bg-blue-lightest .px-3 .py-1 .rounded .text-black;
-        }
-    }
+		&::after {
+			clear: right;
+		}
+	}
 
-    pre {
-        @apply .p-4 .bg-grey-lightest;
+	h3 {
+		@apply .text-grey-darkest .text-base .font-bold;
 
-        code {
-            @apply .bg-grey-lightest .text-black .text-sm;
-        }
-    }
+		code {
+			@apply .float-right .text-sm .text-grey-darkest .bg-transparent;
+		}
+
+		&::after {
+			clear: right;
+		}
+	}
+
+	p, ul {
+		@apply .text-sm .text-grey-darkest .leading-loose .mb-6;
+
+		code {
+			@apply .bg-blue-lightest .rounded .text-black .p-1;
+		}
+	}
+
+	pre {
+		@apply .bg-grey-lightest .p-4;
+	}
+
+	code {
+		@apply .bg-grey-lightest .text-black .text-sm ;
+	}
 }

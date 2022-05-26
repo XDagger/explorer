@@ -10,5 +10,5 @@ Components.install(Vue)
 Utilities.install(Vue)
 
 const app = new Vue({
-    el: '#app'
+	el: '#app'
 })

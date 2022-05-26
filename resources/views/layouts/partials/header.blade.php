@@ -4,7 +4,7 @@
 			<a href="{{ route('home') }}" class="w-full lg:w-auto no-underline flex items-center lg:justify-center text-white hover:text-blue-lighter scale transition mb-2 mr-8 tracking-wide">
 				<img src="/images/xdag.png" class="w-8 h-8" style="transform: translateZ(0) scale(0.999999)">
 
-				<h1 class="pl-4 text-xl">XDAG Block Explorer</h1>
+				<h1 class="pl-4 text-xl">{{ $appName }}</h1>
 			</a>
 
 			<a href="{{ route('mining calculator') }}" :class="{ 'hidden lg:flex': !shown, 'flex': shown }" class="hidden lg:flex w-full lg:w-auto no-underline lg:border-b-2 {{ str_starts_with(request()->path(), 'mining-calculator') ? 'text-white border-blue' : 'text-grey-dark border-transparent' }} hover:text-white tracking-wide font-bold text-sm py-3 lg:mr-8 items-center justify-center">

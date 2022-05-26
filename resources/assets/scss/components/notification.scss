@@ -1,27 +1,27 @@
 .notification {
-    @apply .p-4 .rounded .flex .items-center;
+	@apply .p-4 .rounded .flex .items-center;
 
 	a, a:hover {
 		@apply .text-white .underline;
 	}
 
-    &.error {
-        @apply .bg-red .text-white;
-    }
+	&.error {
+		@apply .bg-red .text-white;
+	}
 
-    &.warning {
-        @apply .bg-yellow .text-black;
+	&.warning {
+		@apply .bg-yellow .text-black;
 
 		a, a:hover {
 			@apply .text-black .underline;
 		}
-    }
+	}
 
-    &.info {
-        @apply .bg-blue .text-white;
-    }
+	&.info {
+		@apply .bg-blue .text-white;
+	}
 
-    &.success {
-        @apply .bg-green .text-white;
-    }
+	&.success {
+		@apply .bg-green .text-white;
+	}
 }

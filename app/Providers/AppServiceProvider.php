@@ -1,9 +1,9 @@
-<?php
+<?php namespace App\Providers;
 
-namespace App\Providers;
-
+use App\Xdag\Network\Stat;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -41,5 +41,9 @@ class AppServiceProvider extends ServiceProvider
 
 			return str_replace('<svg', '<svg class="' . $class . '"', file_get_contents($path));
 		});
+
+		$stat = Stat::orderBy('id', 'desc')->limit(1)->first();
+
+		View::share('appName', optional($stat)->network_type !== 'mainnet' ? 'XDAG ' . ucfirst($stat->network_type) . ' Explorer' : 'XDAG Block Explorer');
 	}
 }

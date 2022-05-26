@@ -17,24 +17,25 @@ class FetchNetworkStats extends Command
 		Stat::create([
 			'synchronized' => Node::callRpc('xdag_syncing')['result']['isSyncDone'],
 			'version' => Node::callRpc('xdag_protocolVersion')['result'],
-			'network_type' => 'dev', // TODO
+			'network_type' => Node::callRpc('xdag_netType')['result'],
 
 			'blocks' => $status['nblock'],
 			'network_blocks' => $status['totalNblocks'],
 
 			'main_blocks' => $status['nmain'],
-			'network_main_blocks' => $status['totalNnmain'], // FIXME (double N)
+			'network_main_blocks' => $status['totalNmain'],
 
 			'difficulty' => $status['curDiff'],
 			'network_difficulty' => $status['netDiff'],
 
-			'supply' => $status['supply'],
-			'network_supply' => $status['supply'], // FIXME
+			'supply' => $status['ourSupply'],
+			'network_supply' => $status['netSupply'],
 
 			'block_reward' => Node::callRpc('xdag_getRewardByNumber', [(int) $status['nmain']])['result'],
 
 			'hashrate' => $status['hashRateOurs'],
 			'network_hashrate' => $status['hashRateTotal'],
+			'connections' => [], // FIXME
 
 			'created_at' => now(),
 		]);

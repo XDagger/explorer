@@ -1,27 +1,27 @@
 export default {
-    props: {
-        shown: {
-            default: false
-        }
-    },
+	props: {
+		shown: {
+			default: false
+		}
+	},
 
-    data() {
-        return {
-            modal: false
-        }
-    },
+	data() {
+		return {
+			modal: false
+		}
+	},
 
-    mounted() {
-        if (this.shown) {
-            this.toggleModal()
-        }
-    },
+	mounted() {
+		if (this.shown) {
+			this.toggleModal()
+		}
+	},
 
-    methods: {
-        toggleModal() {
-            this.modal = ! this.modal
+	methods: {
+		toggleModal() {
+			this.modal = ! this.modal
 
-            document.body.classList.toggle('overflow-hidden')
-        }
-    }
+			document.body.classList.toggle('overflow-hidden')
+		}
+	}
 }

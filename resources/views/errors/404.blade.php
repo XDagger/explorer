@@ -16,7 +16,7 @@
 		<a href="{{ route('home') }}" rel="nofollow" class="no-underline flex items-center justify-center text-white hover:text-blue-lighter scale transition tracking-wide">
 			<img src="/images/xdag.png" class="w-16 h-16" style="transform: translateZ(0) scale(0.999999)">
 
-			<h1 class="pl-4 text-3xl">XDAG Block Explorer</h1>
+			<h1 class="pl-4 text-3xl">{{ $appName }}</h1>
 		</a>
 
 		<div class="box border-red mt-8 text-center">

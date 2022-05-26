@@ -7,23 +7,23 @@ const Moment = require('moment')
 const MomentRange = require('moment-range')
 
 export default {
-    install(Vue) {
-        Vue.use(VueTippy)
+	install(Vue) {
+		Vue.use(VueTippy)
 
-        window._ = Vue.prototype._ = lodash
-        window.axios = Vue.prototype.axios = axios
+		window._ = Vue.prototype._ = lodash
+		window.axios = Vue.prototype.axios = axios
 
-        const moment = MomentRange.extendMoment(Moment)
+		const moment = MomentRange.extendMoment(Moment)
 
-        // Set Monday as start of week
-        moment.updateLocale('en', {
-            week: {
-                dow: 1
-            }
-        });
+		// Set Monday as start of week
+		moment.updateLocale('en', {
+			week: {
+				dow: 1
+			}
+		});
 
-        window.moment = Vue.prototype.moment = moment
+		window.moment = Vue.prototype.moment = moment
 
-        require('es6-promise').polyfill()
-    }
+		require('es6-promise').polyfill()
+	}
 }

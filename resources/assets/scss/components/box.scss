@@ -1,19 +1,19 @@
 .box {
-    @apply .bg-white .p-8 .shadow .rounded-lg .border-t-4 .border-blue .text-grey-darkest .mb-12;
+	@apply .bg-white .p-8 .shadow .rounded-lg .border-t-4 .border-blue .text-grey-darkest .mb-12;
 
-    .box-title {
-        @apply .text-black .text-xl .font-bold .mb-8;
+	.box-title {
+		@apply .text-black .text-xl .font-bold .mb-8;
 
-        &.mb-0 {
-            @apply .mb-0;
-        }
-    }
+		&.mb-0 {
+			@apply .mb-0;
+		}
+	}
 
-    .box-sub-title {
-        @apply .text-grey-dark .text-base .font-normal .mb-8 .-mt-8;
+	.box-sub-title {
+		@apply .text-grey-dark .text-base .font-normal .mb-8 .-mt-8;
 
-        &.mb-0 {
-            @apply .mb-0;
-        }
-    }
+		&.mb-0 {
+			@apply .mb-0;
+		}
+	}
 }

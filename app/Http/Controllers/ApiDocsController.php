@@ -1,19 +1,13 @@
-<?php
-namespace App\Http\Controllers;
+<?php namespace App\Http\Controllers;
 
-use Parsedown;
+use App\Xdag\Block\MainBlock;
 
 class ApiDocsController extends Controller
 {
-	/**
-	 * @return \Illuminate\View\View
-	 */
-	public function index(Parsedown $parsedown)
+	public function index(\Parsedown $parsedown)
 	{
-		$apiDocsMarkdown = file_get_contents(base_path('API.md'));
-
 		return view('api-docs.index', [
-			'content' => $parsedown->text($apiDocsMarkdown)
+			'content' => str_replace('~LATEST_MAIN_BLOCK_ADDRESS~', optional(MainBlock::orderBy('height', 'desc')->limit(1)->first())->address ?? '1', $parsedown->text(file_get_contents(base_path('API.md'))))
 		]);
 	}
 }

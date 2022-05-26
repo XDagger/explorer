@@ -1,11 +1,12 @@
-<?php
-namespace App\Http\Middleware;
+<?php namespace App\Http\Middleware;
+
+use App\Xdag\Network\Stat;
 
 class EnsureSynchronizedNode
 {
 	public function handle($request, \Closure $next)
 	{
-		if (false) { // FIXME
+		if (!optional(Stat::orderBy('id', 'desc')->limit(1)->first())->synchronized) {
 			if (request()->wantsJson() || str_starts_with($request->path(), 'api'))
 				return response()->json(['error' => 'synchronizing', 'message' => 'Block explorer is currently synchronizing.'], 503);
 

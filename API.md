@@ -1,15 +1,10 @@
 # XDAG Block Explorer API
 
----
-
-## Node statistics
-You can view nodes listing with uptime statistics at [Node statistics page](/node-statistics).
-
 ## Synchronizing error response
 
-All API requests except `/api/status` check current daemon state. If the daemon is currently synchronizing, retry your API request later.
+All API requests except `/api/status` check current node status. If the node is currently synchronizing, retry your API request later.
 
-**Response status code:** `503`
+### Error response `HTTP 503`
 
 ```json
 {
@@ -18,9 +13,11 @@ All API requests except `/api/status` check current daemon state. If the daemon 
 }
 ```
 
-## GET /api/status
-### Successful response
-**Response status code:** `200`
+## GET /api/status <a href="/api/status" target="_blank">Try it</a>
+
+Retrieves current node status and information.
+
+### Successful response `HTTP 200`
 
 ```json
 {
@@ -71,9 +68,11 @@ All API requests except `/api/status` check current daemon state. If the daemon 
 }
 ```
 
-## GET /api/supply
-### Successful response
-**Response status code:** `200`
+## GET /api/supply <a href="/api/supply" target="_blank">Try it</a>
+
+Retrieves current supply of XDAG.
+
+### Successful response `HTTP 200`
 
 ```json
 {
@@ -81,33 +80,41 @@ All API requests except `/api/status` check current daemon state. If the daemon 
 }
 ```
 
-## GET /api/supply/raw
-### Successful response
-**Response status code:** `200`
+## GET /api/supply/raw <a href="/api/supply/raw" target="_blank">Try it</a>
+
+Retrieves current supply of XDAG as `text/plain`.
+
+### Successful response `HTTP 200`
 
 ```
 232990720
 ```
 
-## GET /api/supply/coingecko/with-separators
-### Successful response
-**Response status code:** `200`
+## GET /api/supply/coingecko/with-separators <a href="/api/supply/coingecko/with-separators" target="_blank">Try it</a>
+
+Coingecko specific API, retrieves current supply of XDAG as `text/plain` with formatting separators.
+
+### Successful response `HTTP 200`
 
 ```
 232,990,720.000000000
 ```
 
-## GET /api/supply/coingecko/without-separators
-### Successful response
-**Response status code:** `200`
+## GET /api/supply/coingecko/without-separators <a href="/api/supply/coingecko/without-separators" target="_blank">Try it</a>
+
+Coingecko specific API, retrieves current supply of XDAG as `text/plain` without any formatting separators.
+
+### Successful response `HTTP 200`
 
 ```
 232990720000000000
 ```
 
-## GET /api/total-supply
-### Successful response
-**Response status code:** `200`
+## GET /api/total-supply <a href="/api/total-supply" target="_blank">Try it</a>
+
+Retrieves total (maximum) supply of XDAG.
+
+### Successful response `HTTP 200`
 
 ```json
 {
@@ -115,34 +122,42 @@ All API requests except `/api/status` check current daemon state. If the daemon 
 }
 ```
 
-## GET /api/total-supply/raw
-### Successful response
-**Response status code:** `200`
+## GET /api/total-supply/raw <a href="/api/total-supply/raw" target="_blank">Try it</a>
+
+Retrieves total (maximum) supply of XDAG as `text/plain`.
+
+### Successful response `HTTP 200`
 
 ```
 1412000000
 ```
 
-## GET /api/total-supply/coingecko/with-separators
-### Successful response
-**Response status code:** `200`
+## GET /api/total-supply/coingecko/with-separators <a href="/api/total-supply/coingecko/with-separators" target="_blank">Try it</a>
+
+Coingecko specific API, retrieves total (maximum) supply of XDAG as `text/plain` with formatting separators.
+
+### Successful response `HTTP 200`
 
 ```
 1,412,000,000.000000000
 ```
 
-## GET /api/total-supply/coingecko/without-separators
-### Successful response
-**Response status code:** `200`
+## GET /api/total-supply/coingecko/without-separators <a href="/api/total-supply/coingecko/without-separators" target="_blank">Try it</a>
+
+Coingecko specific API, retrieves total (maximum) supply of XDAG as `text/plain` without any formatting separators.
+
+### Successful response `HTTP 200`
 
 ```
 1412000000000000000
 ```
 
-## GET /api/last-blocks
+## GET /api/last-blocks <a href="/api/last-blocks" target="_blank">Try it</a>
 
-### Successful response
-**Response status code:** `200`
+Retrieves latest 20 main blocks.
+
+### Successful response `HTTP 200`
+
 ```json
 {
     "limit": 20,
@@ -158,7 +173,7 @@ All API requests except `/api/status` check current daemon state. If the daemon 
 }
 ```
 
-## GET /api/balance/{address}
+## GET /api/balance/{input} <a href="/api/balance/~LATEST_MAIN_BLOCK_ADDRESS~" target="_blank">Try it</a>
 ### Invalid input error
 
 **Response status code:** `422`
@@ -179,7 +194,7 @@ All API requests except `/api/status` check current daemon state. If the daemon 
 }
 ```
 
-## GET /api/block/{search}
+## GET /api/block/{input} <a href="/api/block/~LATEST_MAIN_BLOCK_ADDRESS~" target="_blank">Try it</a>
 
 Search parameter may be either address, block hash or main block height.
 

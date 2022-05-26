@@ -12,7 +12,7 @@ return new class extends Migration
 			$table->bigIncrements('id');
 			$table->boolean('synchronized');
 			$table->string('version')->comment('node version');
-			$table->string('network_type')->comment('main / test / dev');
+			$table->string('network_type')->comment('mainnet / testnet / devnet');
 			$table->bigInteger('blocks')->unsigned();
 			$table->bigInteger('network_blocks')->unsigned();
 			$table->bigInteger('main_blocks')->unsigned();
@@ -24,6 +24,7 @@ return new class extends Migration
 			$table->decimal('block_reward', 56, 9);
 			$table->bigInteger('hashrate')->unsigned();
 			$table->bigInteger('network_hashrate')->unsigned();
+			$table->text('connections');
 			$table->timestamp('created_at', 3);
 		});
 	}
