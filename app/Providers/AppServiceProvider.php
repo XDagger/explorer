@@ -44,6 +44,6 @@ class AppServiceProvider extends ServiceProvider
 
 		$stat = Stat::orderBy('id', 'desc')->limit(1)->first();
 
-		View::share('appName', optional($stat)->network_type !== 'mainnet' ? 'XDAG ' . ucfirst($stat->network_type) . ' Explorer' : 'XDAG Block Explorer');
+		View::share('appName', (isset($stat) && $stat->network_type !== 'mainnet') ? 'XDAG ' . ucfirst($stat->network_type) . ' Explorer' : 'XDAG Block Explorer');
 	}
 }

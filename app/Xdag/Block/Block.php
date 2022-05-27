@@ -34,6 +34,11 @@ class Block extends Model
 		return $this->ensureCacheReady() || $this->type === 'Main';
 	}
 
+	public function isWalletBlock(): bool
+	{
+		return $this->ensureCacheReady() || $this->type === 'Wallet';
+	}
+
 	public function isTransactionBlock(): bool
 	{
 		return $this->ensureCacheReady() || $this->type === 'Transaction';

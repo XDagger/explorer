@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('status', 'App\Http\Controllers\Api\Network\StatusController@index');
+Route::get('status', 'App\Http\Controllers\Api\StatusController@index');
 
 Route::group(['middleware' => 'node.synchronized'], function () {
 	Route::get('supply', 'App\Http\Controllers\Api\SupplyController@index');

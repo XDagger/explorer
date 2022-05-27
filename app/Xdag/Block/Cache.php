@@ -16,7 +16,7 @@ class Cache
 			$id = str_pad($id, 32, '/');
 
 		if (!preg_match('/^([a-zA-Z0-9\/+]{32}|[a-f0-9]{64}|[0-9]{1,10})$/u', $id))
-			throw new \InvalidArgumentException('Incorrect address, block hash or height.');
+			throw new \InvalidArgumentException('Incorrect address, block hash or main block height.');
 
 		try {
 			$block = Block::create([
@@ -57,7 +57,13 @@ class Cache
 				}
 
 				if (!is_array($value)) {
-					$block->{$fields[$key]} = $key === 'blockTime' ? timestampToCarbon($value) : $value;
+					if ($key === 'blockTime')
+						$block->{$fields[$key]} = timestampToCarbon($value);
+					else if ($key === 'diff')
+						$block->{$fields[$key]} = substr($value, 2);
+					else
+						$block->{$fields[$key]} = $value;
+
 					continue;
 				}
 
@@ -124,7 +130,7 @@ class Cache
 			$id = str_pad($id, 32, '/');
 
 		if (!preg_match('/^([a-zA-Z0-9\/+]{32}|[a-f0-9]{64}|[0-9]{1,10})$/u', $id))
-			throw new \InvalidArgumentException('Incorrect address, block hash or height.');
+			throw new \InvalidArgumentException('Incorrect address, block hash or main block height.');
 
 		try {
 			$balance = Balance::create([

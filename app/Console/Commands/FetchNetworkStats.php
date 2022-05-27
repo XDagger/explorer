@@ -4,6 +4,7 @@ use App\Xdag\Node;
 use App\Xdag\Network\Stat;
 use App\Xdag\Block\MainBlock;
 use Illuminate\Console\Command;
+use Illuminate\Database\QueryException;
 
 class FetchNetworkStats extends Command
 {
@@ -25,8 +26,8 @@ class FetchNetworkStats extends Command
 			'main_blocks' => $status['nmain'],
 			'network_main_blocks' => $status['totalNmain'],
 
-			'difficulty' => $status['curDiff'],
-			'network_difficulty' => $status['netDiff'],
+			'difficulty' => substr($status['curDiff'], 2),
+			'network_difficulty' => substr($status['netDiff'], 2),
 
 			'supply' => $status['ourSupply'],
 			'network_supply' => $status['netSupply'],
@@ -47,13 +48,15 @@ class FetchNetworkStats extends Command
 
 		if ($mainBlocks) {
 			foreach ($mainBlocks as $mainBlock) {
-				MainBlock::create([
-					'height' => $mainBlock['height'],
-					'address' => $mainBlock['address'],
-					'balance' => $mainBlock['balance'],
-					'remark' => $mainBlock['remark'],
-					'created_at' => timestampToCarbon($mainBlock['blockTime']),
-				]);
+				try {
+					MainBlock::create([
+						'height' => $mainBlock['height'],
+						'address' => $mainBlock['address'],
+						'balance' => $mainBlock['balance'],
+						'remark' => $mainBlock['remark'],
+						'created_at' => timestampToCarbon($mainBlock['blockTime']),
+					]);
+				} catch (QueryException $ex) {} // block already imported
 			}
 
 			MainBlock::where('height', '<', $mainBlock['height'])->delete();

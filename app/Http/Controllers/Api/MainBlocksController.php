@@ -6,7 +6,7 @@ class MainBlocksController extends Controller
 {
 	public function index()
 	{
-		$mainBlocks = MainBlock::orderBy('height', 'asc')->get(); // legacy API returned last main blocks in asc order
+		$mainBlocks = MainBlock::orderBy('height', 'asc')->limit(20)->get(); // legacy API returned last main blocks in asc order
 
 		return response()->json([
 			'limit'	 => 20,

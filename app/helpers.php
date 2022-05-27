@@ -31,20 +31,20 @@ function color($text)
 	return "hsl({$hue}, 50%, {$lightness}%)";
 }
 
-function valueChange($previousValue, $currentValue)
+function valueChange(string $previousValue, string $currentValue)
 {
-	$difference	 = $currentValue - $previousValue;
-	$valueChange = abs($difference);
-	$increased	 = $difference > 0;
+	$difference	= bcsub($currentValue, $previousValue, 9);
+	$valueChange = ltrim($difference, '-');
+	$increased = bccomp($difference, '0.000000000', 9) > 0;
 
-	if ($previousValue == 0 && $currentValue == 0)
-		$percentageChange = 0.0;
-	else if ($previousValue == 0)
-		$percentageChange = 100;
+	if (bccomp($previousValue, '0.000000000', 9) === 0 && bccomp($currentValue, '0.000000000', 9) === 0)
+		$percentageChange = '0.00';
+	else if (bccomp($previousValue, '0.000000000', 9) === 0)
+		$percentageChange = '100.00';
 	else
-		$percentageChange = round(($difference / $previousValue) * 100, 2);
+		$percentageChange = bcmul(bcdiv($difference, $previousValue, 9), '100.00', 2);
 
-	$isSame = $percentageChange === 0.0;
+	$isSame = bccomp($percentageChange, '0.00', 2) === 0;
 
 	return compact('increased', 'percentageChange', 'isSame', 'valueChange', 'currentValue', 'previousValue');
 }

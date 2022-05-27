@@ -9,12 +9,14 @@ abstract class Listing
 {
 	protected $block, $request;
 	protected $pagination = ['page', 'per_page'];
+	protected $defaultPageSize = 20;
 	protected $usedFilters = [], $errors = [];
 
-	public function __construct(Block $block, Request $request)
+	public function __construct(Block $block, Request $request, int $defaultPageSize = 20)
 	{
 		$this->block = $block;
 		$this->request = $request;
+		$this->defaultPageSize = $defaultPageSize;
 		$this->buildFilters();
 	}
 
@@ -35,10 +37,27 @@ abstract class Listing
 
 	public function get(): AbstractPaginator
 	{
-		$page = max(1, (int) $this->request->input($this->pagination[0], 1));
-		$perPage = max(1, (int) $this->request->input($this->pagination[1], 10000000000));
+		return $this->buildQuery()->paginate($this->perPage(), ['*'] /* columns */, $this->pagination[0] /* page name */, $this->page())->withQueryString();
+	}
 
-		return $this->buildQuery()->paginate($perPage, ['*'] /* columns */, $this->pagination[0] /* page name */, $page)->withQueryString();
+	public function getWithCallback(callable $callback): void
+	{
+		$callback($this, $this->buildQuery(), $this->page(), $this->perPage());
+	}
+
+	public function page(): int
+	{
+		return max(1, (int) $this->request->input($this->pagination[0], 1));
+	}
+
+	public function perPage(): int
+	{
+		return max(1, (int) $this->request->input($this->pagination[1], $this->defaultPageSize));
+	}
+
+	public function paginationParameterNames(): array
+	{
+		return $this->pagination;
 	}
 
 	public function earningsSum(): string

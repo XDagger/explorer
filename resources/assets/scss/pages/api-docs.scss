@@ -1,10 +1,10 @@
 .api-docs {
 	h1 {
-		@apply .text-black .text-xl .font-bold;
+		@apply .text-black .text-xl .font-bold .mb-6;
 	}
 
 	h2 {
-		@apply .text-grey-darkest .text-lg .font-bold .bg-blue-lightest .border-l-4 .border-blue .p-4 .my-6;
+		@apply .text-grey-darkest .text-lg .font-bold .bg-blue-lightest .border-l-4 .border-blue .p-4 .mb-6;
 
 		a {
 			@apply .float-right .text-sm .text-grey-darkest;
@@ -40,10 +40,10 @@
 	}
 
 	pre {
-		@apply .bg-grey-lightest .p-4;
+		@apply .bg-grey-lightest .p-4 .mb-6 .overflow-x-auto;
 	}
 
 	code {
-		@apply .bg-grey-lightest .text-black .text-sm ;
+		@apply .bg-grey-lightest .text-black .text-sm;
 	}
 }

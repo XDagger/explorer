@@ -16,7 +16,7 @@ class BlockController extends Controller
 		}
 
 		if (!$block->existsOnBlockchain())
-			return redirect()->route('home')->withError('Block was not found. Please make sure you entered correct address, block hash or height.');
+			return redirect()->route('home')->withError('Block was not found. Please make sure you entered correct address, block hash or main block height.');
 
 		return view('block.index', [
 			'block' => $block,
