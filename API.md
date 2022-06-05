@@ -14,7 +14,7 @@ All API requests except `/api/status` check current node status. If the node is 
 
 ## GET /api/status <a href="/api/status" target="_blank">Try it</a>
 
-Retrieves current node status and information. Data keys `extra_blocks`, `orphan_blocks`, `wait_sync_blocks` are not present in newest versions of XDAG and should not be used. Timezone is UTC.
+Retrieves current node status and information. Data keys `extra_blocks`, `orphan_blocks`, `wait_sync_blocks`, `in_out_packets` and `in_out_dropped` are not present in newest versions of XDAG and should not be used. Timezone is UTC.
 
 ### Successful response `HTTP 200`
 ```json
@@ -235,7 +235,7 @@ Retrieves balance of any block. Input can be either an address, block hash or ma
 ```json
 {
 	"error":"invalid_input",
-	"message":"Incorrect address, block hash or height."
+	"message":"Incorrect address, block hash or main block height."
 }
 ```
 

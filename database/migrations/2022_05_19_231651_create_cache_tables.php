@@ -17,6 +17,8 @@ return new class extends Migration
 			$table->string('hash', 64)->nullable();
 			$table->string('address', 32)->nullable();
 			$table->string('difficulty')->nullable();
+			$table->string('timestamp')->nullable();
+			$table->string('flags')->nullable();
 			$table->string('remark')->nullable();
 			$table->timestamp('created_at', 3)->nullable();
 			$table->timestamp('expires_at', 3);

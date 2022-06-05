@@ -36,7 +36,7 @@ class FetchNetworkStats extends Command
 
 			'hashrate' => $status['hashRateOurs'],
 			'network_hashrate' => $status['hashRateTotal'],
-			'connections' => [], // FIXME
+			'connections' => Node::callRpc('xdag_netConnectionList')['result'],
 
 			'created_at' => now(),
 		]);

@@ -15,7 +15,7 @@ class StatusController extends Controller
 			'version' => $stat->version,
 			'state' => $stat->synchronized ? 'Synchronized with the main network. Normal operation.' : 'Connected to the main network. Synchronizing.',
 			'stats' => [
-				'hosts' => [0, 0], // FIXME
+				'hosts' => [count($stat->connections), count($stat->connections)],
 				'blocks' => [$stat->blocks, $stat->network_blocks],
 				'main_blocks' => [$stat->main_blocks, $stat->network_main_blocks],
 				'extra_blocks' => 0,
@@ -24,9 +24,17 @@ class StatusController extends Controller
 				'chain_difficulty' => [$stat->difficulty, $stat->network_difficulty],
 				'xdag_supply' => [(int) $stat->supply, (int) $stat->network_supply],
 				'4_hr_hashrate_mhs' => [round($stat->hashrate / 1024 / 1024, 2), round($stat->network_hashrate / 1024 / 1024, 2)],
-				'hashrate' => [$stat->hashrate / 1024 / 1024, $stat->network_hashrate / 1024 / 1024],
+				'hashrate' => [$stat->hashrate, $stat->network_hashrate],
 			],
-			'net_conn' => [], // FIXME
+			'net_conn' => array_map(function ($connection) {
+				return [
+					'host' => $connection['nodeAddress'],
+					'seconds' => floor($connection['connectTime'] / 1000) - time(),
+					'in_out_bytes' => [$connection['inBound'], $connection['outBound']],
+					'in_out_packets' => [0, 0],
+					'in_out_dropped' => [0, 0],
+				];
+			}, $stat->connections),
 			'date' => $stat->created_at->format('Y-m-d H:i:s'),
 		]);
 	}

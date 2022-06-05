@@ -38,6 +38,8 @@ class Cache
 			'remark' => 'remark',
 			'diff' => 'difficulty',
 			'type' => 'type',
+			'timeStamp' => 'timestamp',
+			'flags' => 'flags',
 		];
 
 		$blockData = Items::fromStream(Node::streamRpc(strlen($id) < 32 ? 'xdag_getBlockByNumber' : 'xdag_getBlockByHash', [$id]), [
@@ -61,6 +63,8 @@ class Cache
 						$block->{$fields[$key]} = timestampToCarbon($value);
 					else if ($key === 'diff')
 						$block->{$fields[$key]} = substr($value, 2);
+					else if ($key === 'timeStamp')
+						$block->{$fields[$key]} = dechex($value);
 					else
 						$block->{$fields[$key]} = $value;
 

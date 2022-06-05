@@ -29,7 +29,8 @@ class BlockController extends Controller
 				$writer->write('height', $block->height);
 
 			$writer->write('time', $block->created_at->format('Y-m-d H:i:s.v'));
-			$writer->write('flags', 'x'); // FIXME
+			$writer->write('timestamp', $block->timestamp);
+			$writer->write('flags', $block->flags);
 			$writer->write('state', $block->state);
 			$writer->write('file_pos', '');
 			$writer->write('file', '');
@@ -169,7 +170,7 @@ class BlockController extends Controller
 		}
 
 		if (!$balance->blockExists())
-			return response()->json(['error' => 'invalid_input', 'message' => 'Incorrect address, block hash or height.'], 422);
+			return response()->json(['error' => 'invalid_input', 'message' => 'Incorrect address, block hash or main block height.'], 422);
 
 		return response()->json(['balance' => $balance->balance]);
 	}
