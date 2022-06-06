@@ -30,8 +30,8 @@ class StatusController extends Controller
 				return [
 					'host' => $connection['nodeAddress'],
 					'seconds' => floor($connection['connectTime'] / 1000) - time(),
-					'in_out_bytes' => [$connection['inBound'], $connection['outBound']],
-					'in_out_packets' => [0, 0],
+					'in_out_bytes' => [$connection['inBound'] * 512, $connection['outBound'] * 512],
+					'in_out_packets' => [$connection['inBound'], $connection['outBound']],
 					'in_out_dropped' => [0, 0],
 				];
 			}, $stat->connections),
