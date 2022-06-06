@@ -13,7 +13,9 @@ This software provides a detailed view of the xdag network presented in a nice U
 # Installation on Ubuntu 20.04
 1. install, configure and run [XdagJ](https://github.com/XDagger/xdagj)
 2. `adduser explorer` - explorer runs as regular user, sudo premissions should not be given. Continue as root or as regular user with sudo permissions.
-3. install [PHP8.1](https://computingforgeeks.com/how-to-install-php-on-ubuntu-linux-system/)
+3. install PHP8.1
+- `sudo apt install lsb-release ca-certificates apt-transport-https software-properties-common`
+- `sudo add-apt-repository ppa:ondrej/php`
 - `sudo apt install php8.1-fpm php8.1-cli php8.1-bcmath php8.1-bz2 php8.1-curl php8.1-gd php8.1-gmp php8.1-imap php8.1-intl php8.1-ldap php8.1-mbstring php8.1-mysql php8.1-opcache php8.1-pgsql php8.1-readline php8.1-soap php8.1-sqlite3 php8.1-xml php8.1-zip php8.1-imagick php8.1-redis`
 - create PHP-FPM pool: `nano /etc/php/8.1/fpm/pool.d/explorer.conf`
 ```
