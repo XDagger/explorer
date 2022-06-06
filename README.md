@@ -68,7 +68,7 @@ server {
 	}
 
 	location ~ /\.ht {
-			deny all;
+		deny all;
 	}
 
 	location ~ \.php$ {
@@ -81,7 +81,7 @@ server {
 	}
 
 	location ~ /\.git {
-			deny all;
+		deny all;
 	}
 }
 ```
