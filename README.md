@@ -89,4 +89,11 @@ server {
 ```
 - `sudo systemctl enable nginx`
 - `sudo systemctl restart nginx`
-9. optionally install Let's Encrypt certificate, configure https redirects, ...
+9. optionally install Let's Encrypt certificate, configure https redirects
+
+# Updating to latest version
+As `explorer` user, change into `/var/www/explorer` folder
+- `git pull`
+- `php artisan migrate`
+- `npm ci`
+- `npm run prod`
