@@ -38,17 +38,24 @@ pm.max_spare_servers = 4
 4. install MySQL 8.0+
 - `sudo apt install mysql-server mysql-client`
 - `sudo mysql_secure_installation`
-- create database user and database for explorer app
-5. install [composer](https://getcomposer.org/download/)
-6. install NojdeJS 14
+5. create database and MySQL user for explorer app
+- `sudo mysql`
+- `CREATE USER explorer@'%' IDENTIFIED BY '...............';` - choose a strong password
+- `CREATE DATABASE explorer CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`
+- `GRANT ALL ON explorer.* TO explorer@'%';`
+- `FLUSH PRIVILEGES;`
+- `exit`
+6. install [composer](https://getcomposer.org/download/)
+7. install NojdeJS 14
 - `curl -fsSL https://deb.nodesource.com/setup_14.x | sudo -E bash -`
 - `sudo apt install -y nodejs`
-7. prepare explorer app
+8. prepare explorer app
 - as `explorer` user, clone this repository into `/var/www/explorer`, change to this folder. Update any folder permissions if required.
 - execute `composer install`, `npm ci`, `npm run prod`, `cp .env.example .env`, `php artisan key:generate`
 - edit `.env` and supply MySQL connection parameters and XdagJ RPC URL
+- execute `php artisan migrate`
 - add crontab entry: `* * * * * /usr/bin/php /var/www/explorer/artisan schedule:run >> /dev/null 2>&1`
-8. install and configure nginx
+9. install and configure nginx
 - `sudo apt install nginx`
 - replace default server: `truncate -s 0 /etc/nginx/sites-available/default`, `nano /etc/nginx/sites-available/default`
 ```
@@ -89,7 +96,7 @@ server {
 ```
 - `sudo systemctl enable nginx`
 - `sudo systemctl restart nginx`
-9. optionally install Let's Encrypt certificate, configure https redirects
+10. optionally install Let's Encrypt certificate, configure https redirects
 
 # Updating to latest version
 As `explorer` user, change into `/var/www/explorer` folder
