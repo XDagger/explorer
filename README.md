@@ -50,7 +50,9 @@ pm.max_spare_servers = 4
 - `curl -fsSL https://deb.nodesource.com/setup_14.x | sudo -E bash -`
 - `sudo apt install -y nodejs`
 8. prepare explorer app
-- as `explorer` user, clone this repository into `/var/www/explorer`, change to this folder. Update any folder permissions if required.
+- `sudo mkdir /var/www/explorer && sudo chown explorer:explorer /var/www/explorer`
+- as `explorer` user, change into `/var/www/explorer` folder
+- execute `git clone git@github.com:XDagger/explorer.git .`
 - execute `composer install`, `npm ci`, `npm run prod`, `cp .env.example .env`, `php artisan key:generate`
 - edit `.env` and supply MySQL connection parameters and XdagJ RPC URL
 - execute `php artisan migrate`
