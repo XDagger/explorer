@@ -21,7 +21,7 @@ return new class extends Migration
 			$table->string('flags')->nullable();
 			$table->string('remark')->nullable();
 			$table->timestamp('created_at', 3)->nullable();
-			$table->timestamp('expires_at', 3);
+			$table->timestamp('expires_at', 3)->nullable();
 		});
 
 		Schema::create('block_transactions', function (Blueprint $table) {
@@ -41,7 +41,7 @@ return new class extends Migration
 			$table->string('id')->primary();
 			$table->string('state', 20)->nullable();
 			$table->decimal('balance', 56, 9)->nullable();
-			$table->timestamp('expires_at', 3);
+			$table->timestamp('expires_at', 3)->nullable();
 		});
 	}
 

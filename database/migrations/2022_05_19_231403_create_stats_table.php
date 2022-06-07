@@ -25,7 +25,7 @@ return new class extends Migration
 			$table->bigInteger('hashrate')->unsigned();
 			$table->bigInteger('network_hashrate')->unsigned();
 			$table->text('connections');
-			$table->timestamp('created_at', 3);
+			$table->timestamp('created_at', 3)->nullable();
 		});
 	}
 
