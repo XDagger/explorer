@@ -42,7 +42,11 @@ class AppServiceProvider extends ServiceProvider
 			return str_replace('<svg', '<svg class="' . $class . '"', file_get_contents($path));
 		});
 
-		$stat = Stat::orderBy('id', 'desc')->limit(1)->first();
+		try {
+			$stat = Stat::orderBy('id', 'desc')->limit(1)->first();
+		} catch (\Illuminate\Database\QueryException $ex) {
+			$stat = null;
+		}
 
 		View::share('appName', (isset($stat) && $stat->network_type !== 'mainnet') ? 'XDAG ' . ucfirst($stat->network_type) . ' Explorer' : 'XDAG Block Explorer');
 	}
