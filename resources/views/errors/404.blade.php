@@ -21,8 +21,7 @@
 
 		<div class="box border-red mt-8 text-center">
 			<h2 class="text-xl font-medium leading-loose">Page not found</h2>
-			<p class="leading-loose">We could not find page you are looking for.</p>
-			<p class="mb-8 text-grey text-sm">Current time {{ now()->toDateTimeString() }}</p>
+			<p class="leading-loose mb-8">We could not find page you are looking for.</p>
 
 			<a class="button primary inline-flex items-center" href="{{ route('home') }}" rel="nofollow">
 				<span class="h-4 w-4 mr-2">

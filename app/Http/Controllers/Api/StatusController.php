@@ -11,9 +11,11 @@ class StatusController extends Controller
 		if (!$stat)
 			return response()->json(['error' => 'synchronizing', 'message' => 'Block explorer is currently synchronizing.'], 503);
 
+		$networkType = substr($stat->network_type, 0, -3);
+
 		return response()->json([
 			'version' => $stat->version,
-			'state' => $stat->synchronized ? 'Synchronized with the main network. Normal operation.' : 'Connected to the main network. Synchronizing.',
+			'state' => $stat->synchronized ? "Synchronized with the $networkType network. Normal operation." : "Connected to the $networkType network. Synchronizing.",
 			'stats' => [
 				'hosts' => [count($stat->connections), count($stat->connections)],
 				'blocks' => [$stat->blocks, $stat->network_blocks],

@@ -22,7 +22,7 @@
 		<div class="box border-red mt-8 text-center">
 			<h2 class="text-xl font-medium leading-loose">Block explorer is currently synchronizing...</h2>
 			<p class="leading-loose">Synchronization process should be finished shortly. Please wait a bit and refresh the page.</p>
-			<p class="mb-8 text-grey text-sm">Current time {{ now()->toDateTimeString() }}</p>
+			<p class="mb-8 text-grey text-sm">Current time: {{ now()->toDateTimeString() }} UTC</p>
 
 			<a class="button primary inline-flex items-center" href="javascript:location.reload()" rel="nofollow">
 				<span class="h-4 w-4 mr-2">
