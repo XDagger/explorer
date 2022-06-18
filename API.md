@@ -83,7 +83,7 @@ Retrieves current node status and information. Data keys `extra_blocks`, `orphan
 				495801206
 			],
 			"in_out_dropped":[
-				18,
+				0,
 				0
 			]
 		},
@@ -115,7 +115,7 @@ Retrieves current node status and information. Data keys `extra_blocks`, `orphan
 				496434572
 			],
 			"in_out_dropped":[
-				1,
+				0,
 				0
 			]
 		}
