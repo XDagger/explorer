@@ -13,7 +13,7 @@ class ClearBlocksCache extends Command
 	{
 		Block::where('expires_at', '<', now())->chunk(20, function ($blocks) {
 			foreach ($blocks as $block) {
-				DB::transaction(function () {
+				DB::transaction(function () use ($block) {
 					$block->transactions()->delete();
 					$block->delete();
 				}, 50);
