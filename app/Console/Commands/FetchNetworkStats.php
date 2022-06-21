@@ -53,7 +53,7 @@ class FetchNetworkStats extends Command
 						'height' => $mainBlock['height'],
 						'address' => $mainBlock['address'],
 						'balance' => $mainBlock['balance'],
-						'remark' => $mainBlock['remark'],
+						'remark' => $mainBlock['remark'] === '' ? null : $mainBlock['remark'],
 						'created_at' => timestampToCarbon($mainBlock['blockTime']),
 					]);
 				} catch (QueryException $ex) {} // block already imported
