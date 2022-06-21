@@ -19,7 +19,7 @@ mix.js('resources/assets/js/app.js', 'public/dist/app.js')
             }),
         ],
     })
-    .purgeCss()
+    .purgeCss({whitelist: ['h1', 'h2', 'h3', 'p', 'ul', 'code', 'pre']})
 
 if (mix.inProduction()) {
     mix.version()

@@ -24,7 +24,7 @@ class HomeController extends Controller
 
 	protected function hashrateChartData(): array
 	{
-		$stats = Stat::selectRaw('AVG(hashrate) hashrate, DATE_FORMAT(created_at, "%Y-%m-%d %H:00:00") created_at')->groupBy('created_at')->orderBy('created_at')->get();
+		$stats = Stat::selectRaw('AVG(hashrate) hashrate, DATE_FORMAT(created_at, "%Y-%m-%d %H:00:00") created_at')->groupByRaw('DATE_FORMAT(created_at, "%Y-%m-%d %H:00:00")')->orderByRaw('DATE_FORMAT(created_at, "%Y-%m-%d %H:00:00")')->get();
 
 		$data = [
 			'labels' => [],
