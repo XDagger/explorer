@@ -31,7 +31,7 @@ class StatusController extends Controller
 			'net_conn' => array_map(function ($connection) {
 				return [
 					'host' => $connection['nodeAddress'],
-					'seconds' => floor($connection['connectTime'] / 1000) - time(),
+					'seconds' => time() - floor($connection['connectTime'] / 1000),
 					'in_out_bytes' => [$connection['inBound'] * 512, $connection['outBound'] * 512],
 					'in_out_packets' => [$connection['inBound'], $connection['outBound']],
 					'in_out_dropped' => [0, 0],
