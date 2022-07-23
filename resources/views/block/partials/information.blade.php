@@ -65,7 +65,7 @@
 							</div>
 						</div>
 					@else
-						<span class="info-value">{{ $block->isTransactionBlock() ? 'Transaction' : 'Wallet' }}</span>
+						<span class="info-value">{{ $block->type }}</span>
 					@endif
 				</div>
 			</div>

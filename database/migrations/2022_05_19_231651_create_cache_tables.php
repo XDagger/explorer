@@ -28,7 +28,7 @@ return new class extends Migration
 			$table->string('block_id');
 			$table->bigInteger('ordering')->unsigned()->index();
 			$table->enum('view', ['wallet', 'transaction']);
-			$table->enum('direction', ['input', 'output', 'earning', 'fee']);
+			$table->enum('direction', ['input', 'output', 'earning', 'fee', 'snapshot']);
 			$table->string('address', 32);
 			$table->decimal('amount', 56, 9);
 			$table->string('remark')->nullable();

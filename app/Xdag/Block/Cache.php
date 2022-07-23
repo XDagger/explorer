@@ -58,11 +58,19 @@ class Cache
 					continue;
 				}
 
+				if ($key === 'type' && $value === 'Snapshot') {
+					$blockState = $value;
+				}
+
+				if ($blockState === 'Snapshot' && $key === 'refs') {
+					continue;
+				}
+
 				if (!is_array($value)) {
 					if ($key === 'blockTime')
-						$block->{$fields[$key]} = timestampToCarbon($value);
+						$block->{$fields[$key]} = $value ? timestampToCarbon($value) : now();
 					else if ($key === 'diff')
-						$block->{$fields[$key]} = substr($value, 2);
+						$block->{$fields[$key]} = substr((string) $value, 2);
 					else if ($key === 'timeStamp')
 						$block->{$fields[$key]} = dechex($value);
 					else
@@ -88,7 +96,7 @@ class Cache
 					$block->transactions()->create([
 						'ordering' => $key,
 						'view' => 'wallet',
-						'direction' => $direction = ['input', 'output', 'earning'][$value['direction']],
+						'direction' => $direction = ['input', 'output', 'earning', 'snapshot'][$value['direction']],
 						'address' => $value['address'],
 						'amount' => $value['amount'] * ($direction === 'output' ? -1 : 1),
 						'remark' => $value['remark'],

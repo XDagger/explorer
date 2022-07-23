@@ -46,8 +46,8 @@ pm.max_spare_servers = 4
 - `FLUSH PRIVILEGES;`
 - `exit`
 6. install [composer](https://getcomposer.org/download/)
-7. install NojdeJS 14
-- `curl -fsSL https://deb.nodesource.com/setup_14.x | sudo -E bash -`
+7. install NojdeJS 16
+- `curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -`
 - `sudo apt install -y nodejs`
 8. prepare explorer app
 - `sudo mkdir /var/www/explorer && sudo chown explorer:explorer /var/www/explorer`
