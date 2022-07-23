@@ -55,6 +55,9 @@
 							@elseif ($entry->direction == 'earning')
 								@php($earnings = bcadd($earnings, $entry->amount, 9))
 								<span class="rounded bg-yellow uppercase px-3 py-1 text-xs font-bold mr-3 text-black block w-auto sm:w-2/3 text-center mx-auto">Earning</span>
+							@elseif ($entry->direction == 'snapshot')
+								@php($earnings = bcadd($earnings, $entry->amount, 9))
+								<span class="rounded bg-smoke uppercase px-3 py-1 text-xs font-bold mr-3 text-white block w-auto sm:w-2/3 text-center mx-auto">Snapshot</span>
 							@endif
 						</td>
 
@@ -62,7 +65,7 @@
 							<a href="/block/{{ $entry->address }}" class="leading-normal text-sm" rel="nofollow">
 								{{ $entry->address }}
 							</a>
-							@if ((string) $entry->remark !== '')
+							@if ($entry->remark !== null)
 								<br><span class="text-sm text-grey-darker">{!! clickableFullLinks($entry->remark) !!}</span>
 							@endif
 						</td>

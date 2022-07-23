@@ -250,7 +250,7 @@ Retrieves details of any block. Input can be either an address, block hash or ma
 - `addresses_date_to` - filter date to, format: `Y-m-d`, for example `2018-06-30`. Always assumes `23:59:59.999` as the time part. Timezone is always UTC. Filter is inclusive.
 - `addresses_amount_from` - filter amount from
 - `addresses_amount_to` - filter amount to
-- `addresses_directions[]` - filter directions, available directions: `input`, `output`, `earning`. You can specify multiple directions, for example `addresses_directions[]=input&addresses_directions[]=output`
+- `addresses_directions[]` - filter directions, available directions: `input`, `output`, `earning`, `snapshot`. You can specify multiple directions, for example `addresses_directions[]=input&addresses_directions[]=output`
 - `addresses_remark` - filter remark, any part of the remark string can be specified
 - `transactions_per_page` - integer, number of transactions per page (default `10000000000000`)
 - `transactions_page` - integer, transactions page to show (default `1`)
@@ -277,13 +277,13 @@ Data keys `file_pos` and `file` are not present in newest versions of XDAG and s
 	"height":"2157788", // height is only present for main blocks
 	"time":"2022-05-26 20:56:31.999",
 	"timestamp":"18a3fa5ffff",
-	"flags":"9f",
+	"flags":"9f", // null for snapshot blocks
 	"state":"Main",
 	"file_pos":"",
 	"file":"",
 	"hash":"50ebdf53514bf145ea7d86fd5a60bca24bea384c73b95b6a673a8dcfab9910f1",
-	"remark":"...",
-	"difficulty":"cdf6de302338a33dd3ed8cc3dd7",
+	"remark":"...", // null for snapshot blocks
+	"difficulty":"cdf6de302338a33dd3ed8cc3dd7", // null for snapshot blocks
 	"balance_address":"8RCZq8+NOmdqW7lzTDjqS6K8YFr9hn3q",
 	"balance":"0.000000013",
 	"block_as_transaction":[
@@ -305,7 +305,7 @@ Data keys `file_pos` and `file` are not present in newest versions of XDAG and s
 			"address":"MoxnmiB1aTqnijjwSWhuuAxD1p4v8m0w",
 			"amount":"1.279999999",
 			"time":"2022-05-26 21:11:36.680",
-			"remark":""
+			"remark":null
 		},
 		...
 		{
@@ -313,7 +313,7 @@ Data keys `file_pos` and `file` are not present in newest versions of XDAG and s
 			"address":"8RCZq8+NOmdqW7lzTDjqS6K8YFr9hn3q",
 			"amount":"64.000000000",
 			"time":"2022-05-26 20:56:31.999",
-			"remark":""
+			"remark":"..."
 		}
 	],
 	"balances_last_week":{
@@ -390,7 +390,7 @@ Data keys `file_pos` and `file` are not present in newest versions of XDAG and s
 	"file_pos":"",
 	"file":"",
 	"hash":"4ee22e5da5b979140ba1eb3058add7faff1d75c757b6b38a3d0887b7ba4e2604",
-	"remark":"",
+	"remark":null,
 	"difficulty":"6a5a22b4abf81b1ec9679b64dce",
 	"balance_address":"BCZOureHCD2Ks7ZXx3Ud//rXrVgw66EL",
 	"balance":"0.000000000",

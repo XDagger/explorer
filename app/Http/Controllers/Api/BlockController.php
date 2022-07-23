@@ -25,7 +25,7 @@ class BlockController extends Controller
 			$writer = new JsonWriter($fileHandle);
 			$writer->enter(JsonWriter::TYPE_OBJECT);
 
-			if ($block->isMainBlock())
+			if ($block->height > 0)
 				$writer->write('height', $block->height);
 
 			$writer->write('time', $block->created_at->format('Y-m-d H:i:s.v'));
@@ -35,7 +35,7 @@ class BlockController extends Controller
 			$writer->write('file_pos', '');
 			$writer->write('file', '');
 			$writer->write('hash', $block->hash);
-			$writer->write('remark', (string) $block->remark);
+			$writer->write('remark', $block->remark);
 			$writer->write('difficulty', $block->difficulty);
 			$writer->write('balance_address', $block->address);
 			$writer->write('balance', $block->balance);
@@ -62,7 +62,7 @@ class BlockController extends Controller
 							'address' => $transaction->address,
 							'amount' => ltrim($transaction->amount, '-'),
 							'time' => optional($transaction->created_at)->format('Y-m-d H:i:s.v'),
-							'remark' => (string) $transaction->remark,
+							'remark' => $transaction->remark,
 						];
 
 						if ($listing instanceof TransactionsListing)
@@ -90,7 +90,7 @@ class BlockController extends Controller
 			$writer->leave();
 
 			if (!$block->isTransactionBlock()) {
-				// wallet or main block
+				// wallet, main or snapshot block
 				$balanceGraph = $block->walletGraph('balance');
 				$earningsGraph = $block->walletGraph('earnings');
 				$spendingsGraph = $block->walletGraph('spendings');

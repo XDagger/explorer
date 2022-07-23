@@ -58,21 +58,21 @@ class Cache
 					continue;
 				}
 
-				if ($key === 'type' && $value === 'Snapshot') {
+				if ($key === 'type' && $value === 'Snapshot')
 					$blockState = $value;
-				}
 
-				if ($blockState === 'Snapshot' && $key === 'refs') {
+				if ($key === 'refs' && $blockState === 'Snapshot')
 					continue;
-				}
 
 				if (!is_array($value)) {
 					if ($key === 'blockTime')
-						$block->{$fields[$key]} = $value ? timestampToCarbon($value) : now();
+						$block->{$fields[$key]} = $value ? timestampToCarbon($value) : now(); // FIXME: will return correct timestamp in next node version
 					else if ($key === 'diff')
-						$block->{$fields[$key]} = substr((string) $value, 2);
+						$block->{$fields[$key]} = $value !== null ? substr($value, 2) : null;
 					else if ($key === 'timeStamp')
-						$block->{$fields[$key]} = dechex($value);
+						$block->{$fields[$key]} = $value ? dechex($value) : null; // FIXME: will return correct timestamp in next node version
+					else if ($key === 'remark')
+						$block->{$fields[$key]} = $value === '' ? null : $value;
 					else
 						$block->{$fields[$key]} = $value;
 
@@ -99,10 +99,25 @@ class Cache
 						'direction' => $direction = ['input', 'output', 'earning', 'snapshot'][$value['direction']],
 						'address' => $value['address'],
 						'amount' => $value['amount'] * ($direction === 'output' ? -1 : 1),
-						'remark' => $value['remark'],
+						'remark' => $value['remark'] === '' ? null : $value['remark'],
 						'created_at' => timestampToCarbon($value['time']),
 					]);
 				}
+			}
+
+			// FIXME: remove once node returns correct data
+			if ($block->type === 'Snapshot') {
+				$block->transactions()->delete(); // remove possible earning transaction for snapshotted main blocks
+
+				$block->transactions()->create([
+					'ordering' => 0,
+					'view' => 'wallet',
+					'direction' => 'snapshot',
+					'address' => $block->address,
+					'amount' => $block->balance,
+					'remark' => null,
+					'created_at' => $block->created_at,
+				]);
 			}
 		} catch (\JsonMachine\Exception\PathNotFoundException $ex) {
 			// block does not exist, thrown when *any* of the paths is not found in json stream

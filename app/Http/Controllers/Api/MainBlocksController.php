@@ -15,7 +15,7 @@ class MainBlocksController extends Controller
 					'height'  => strval($block->height),
 					'address' => $block->address,
 					'time'	  => $block->created_at->toDateTimeString(),
-					'remark'  => strval($block->remark),
+					'remark'  => $block->remark,
 				];
 			}),
 		]);

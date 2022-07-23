@@ -46,7 +46,7 @@ class WalletListing extends Listing
 				'name' => 'Directions',
 				'validation' => [
 					'addresses_directions' => 'nullable|array',
-					'addresses_directions.*' => 'in:input,output,earning',
+					'addresses_directions.*' => 'in:input,output,earning,snapshot',
 				],
 				'apply' => fn($builder, array $value) => $builder->whereIn('direction', $value),
 			],

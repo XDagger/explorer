@@ -44,6 +44,11 @@ class Block extends Model
 		return $this->ensureCacheReady() || $this->type === 'Transaction';
 	}
 
+	public function isSnapshotBlock(): bool
+	{
+		return $this->ensureCacheReady() || $this->type === 'Snapshot';
+	}
+
 	public function walletGraph(string $type): array
 	{
 		$builder = $this->transactions()->wallet()

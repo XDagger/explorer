@@ -27,7 +27,7 @@
 			</div>
 
 			<div class="mb-4">
-				@if ((string) $block->remark !== '')
+				@if ($block->remark !== null)
 					<div class="flex flex-wrap justify-between items-start">
 						<div class="mb-4 md:mb-0 w-full md:w-1/2">
 							<strong class="info-label">Address</strong>
@@ -48,12 +48,12 @@
 			<div class="flex flex-wrap justify-between items-start">
 				<div class="mb-4 md:mb-0 w-full md:w-1/2">
 					<strong class="info-label">Difficulty</strong>
-				<span class="info-value block break-words">{{ $block->difficulty }}</span>
+				<span class="info-value block break-words">{{ $block->difficulty ?? '-' }}</span>
 				</div>
 
 				<div class="w-full md:w-1/2">
 					<strong class="info-label">Type</strong>
-					@if ($block->isMainBlock())
+					@if ($block->height > 0)
 						<div class="flex items-center justify-between">
 							<a href="/block/{{ $block->height }}" rel="nofollow" class="leading-normal opacity-75 break-words text-grey-darkest">Main block {{ $block->height }}</a>
 

@@ -25,7 +25,7 @@ class Transaction extends Model
 
 	public function scopeEarnings($q)
 	{
-		return $q->whereIn('direction', ['input', 'earning']);
+		return $q->whereIn('direction', ['input', 'earning', 'snapshot']);
 	}
 
 	public function scopeSpendings($q)

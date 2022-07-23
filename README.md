@@ -53,7 +53,7 @@ pm.max_spare_servers = 4
 - `sudo mkdir /var/www/explorer && sudo chown explorer:explorer /var/www/explorer`
 - as `explorer` user, change into `/var/www/explorer` folder
 - execute `git clone git@github.com:XDagger/explorer.git .`
-- execute `composer install`, `npm ci`, `npm run prod`, `cp .env.example .env`, `php artisan key:generate`
+- execute `composer install`, `npm ci`, `npm run production`, `cp .env.example .env`, `php artisan key:generate`
 - edit `.env` and supply MySQL connection parameters and XdagJ RPC URL
 - execute `php artisan migrate`
 - add crontab entry: `* * * * * /usr/bin/php /var/www/explorer/artisan schedule:run >> /dev/null 2>&1`
@@ -105,4 +105,4 @@ As `explorer` user, change into `/var/www/explorer` folder
 - `git pull`
 - `php artisan migrate`
 - `npm ci`
-- `npm run prod`
+- `npm run production`
