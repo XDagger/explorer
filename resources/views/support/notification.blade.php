@@ -1,4 +1,4 @@
-<notification inline-template>
+<notification inline-template :delay="{{ $delay ?? 5000 }}">
 	<transition name="fade">
 		<div class="container p-8 pb-0" v-if="showNotification">
 			<div class="notification {{ $type }}">

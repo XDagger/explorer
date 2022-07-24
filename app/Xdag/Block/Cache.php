@@ -66,11 +66,11 @@ class Cache
 
 				if (!is_array($value)) {
 					if ($key === 'blockTime')
-						$block->{$fields[$key]} = $value ? timestampToCarbon($value) : now(); // FIXME: will return correct timestamp in next node version
+						$block->{$fields[$key]} = timestampToCarbon($value);
 					else if ($key === 'diff')
 						$block->{$fields[$key]} = $value !== null ? substr($value, 2) : null;
 					else if ($key === 'timeStamp')
-						$block->{$fields[$key]} = $value ? dechex($value) : null; // FIXME: will return correct timestamp in next node version
+						$block->{$fields[$key]} = dechex($value);
 					else if ($key === 'remark')
 						$block->{$fields[$key]} = $value === '' ? null : $value;
 					else
@@ -103,21 +103,6 @@ class Cache
 						'created_at' => timestampToCarbon($value['time']),
 					]);
 				}
-			}
-
-			// FIXME: remove once node returns correct data
-			if ($block->type === 'Snapshot') {
-				$block->transactions()->delete(); // remove possible earning transaction for snapshotted main blocks
-
-				$block->transactions()->create([
-					'ordering' => 0,
-					'view' => 'wallet',
-					'direction' => 'snapshot',
-					'address' => $block->address,
-					'amount' => $block->balance,
-					'remark' => null,
-					'created_at' => $block->created_at,
-				]);
 			}
 		} catch (\JsonMachine\Exception\PathNotFoundException $ex) {
 			// block does not exist, thrown when *any* of the paths is not found in json stream
@@ -158,6 +143,10 @@ class Cache
 
 		if (!preg_match('/^([a-zA-Z0-9\/+]{32}|[a-f0-9]{64}|[0-9]{1,10})$/u', $id))
 			throw new \InvalidArgumentException('Incorrect address, block hash or main block height.');
+
+		// if we already have a block stored with this id, return it's balance
+		if ($block = Block::whereId($id)->whereNotNull('balance')->first())
+			return $block->balance;
 
 		try {
 			$balance = Balance::create([

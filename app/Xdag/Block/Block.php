@@ -94,8 +94,8 @@ class Block extends Model
 		}
 
 		return [
-			'labels' => $labels,
-			'values' => $values,
+			'labels' => array_slice($labels, count($labels) - 7),
+			'values' => array_slice($values, count($values) - 7),
 		];
 	}
 
