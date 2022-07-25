@@ -9,8 +9,8 @@ return new class extends Migration
 	public function up()
 	{
 		Schema::create('main_blocks', function (Blueprint $table) {
-			$table->bigInteger('height')->unsigned()->primary();
-			$table->string('address', 32);
+			$table->string('address', 32)->primary();
+			$table->bigInteger('height')->unsigned();
 			$table->decimal('balance', 56, 9);
 			$table->string('remark')->nullable();
 			$table->timestamp('created_at', 3)->nullable();
