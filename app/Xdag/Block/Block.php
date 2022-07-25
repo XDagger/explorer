@@ -15,7 +15,7 @@ class Block extends Model
 	/* relations */
 	public function transactions()
 	{
-		return $this->hasMany(Transaction::class)->orderBy('ordering', 'desc'); // newest transactions first
+		return $this->hasMany(Transaction::class);
 	}
 
 	/* methods */

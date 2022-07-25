@@ -55,7 +55,7 @@ class BlockController extends Controller
 						if (!isset($directionsAmount[$transaction->direction]))
 							$directionsAmount[$transaction->direction] = ltrim($transaction->amount, '-');
 						else
-							$directionsAmount[$transaction->direction] += bcadd($directionsAmount[$transaction->direction], ltrim($transaction->amount, '-'), 9);
+							$directionsAmount[$transaction->direction] = bcadd($directionsAmount[$transaction->direction], ltrim($transaction->amount, '-'), 9);
 
 						$data = [
 							'direction' => $transaction->direction,

@@ -15,12 +15,12 @@ class Transaction extends Model
 	/* scopes */
 	public function scopeWallet($q)
 	{
-		return $q->whereView('wallet');
+		return $q->whereView('wallet')->orderBy('created_at', 'desc')->orderBy('ordering');
 	}
 
 	public function scopeTransaction($q)
 	{
-		return $q->whereView('transaction');
+		return $q->whereView('transaction')->orderBy('ordering');
 	}
 
 	public function scopeEarnings($q)
