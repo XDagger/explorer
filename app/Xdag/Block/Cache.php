@@ -146,7 +146,10 @@ class Cache
 
 		// if we already have a block stored with this id, return it's balance
 		if ($block = Block::whereId($id)->whereNotNull('balance')->first())
-			return $block->balance;
+			return new Balance([
+				'state' => 'found',
+				'balance' => $block->balance
+			]);
 
 		try {
 			$balance = Balance::create([
