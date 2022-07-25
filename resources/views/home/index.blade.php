@@ -63,7 +63,7 @@
 								@svg('arrow-right')
 							</span>
 
-							<span>Blocks</span>
+							<span>{{ $stat->blocks < $stat->main_blocks? 'Created blocks' : 'Blocks' }}</span>
 						</div>
 						<span class="info-value">
 						</span>
