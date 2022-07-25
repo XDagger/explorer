@@ -59,7 +59,7 @@ class FetchNetworkStats extends Command
 				} catch (QueryException $ex) {} // block already imported
 			}
 
-			MainBlock::whereNotIn('height', collect($mainBlocks)->map(fn($mainBlock) => $mainBlock['height']))->delete();
+			MainBlock::whereNotIn('address', collect($mainBlocks)->map(fn($mainBlock) => $mainBlock['address']))->delete();
 		}
 
 		$this->info('Completed successfully.');
