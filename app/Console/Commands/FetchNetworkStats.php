@@ -50,8 +50,8 @@ class FetchNetworkStats extends Command
 			foreach ($mainBlocks as $mainBlock) {
 				try {
 					MainBlock::create([
-						'height' => $mainBlock['height'],
 						'address' => $mainBlock['address'],
+						'height' => $mainBlock['height'],
 						'balance' => $mainBlock['balance'],
 						'remark' => $mainBlock['remark'] === '' ? null : $mainBlock['remark'],
 						'created_at' => timestampToCarbon($mainBlock['blockTime']),
