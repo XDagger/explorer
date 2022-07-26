@@ -41,7 +41,7 @@ class HomeController extends Controller
 
 	protected function newBlocksChartData(): array
 	{
-		$stats = Stat::orderBy('id', 'desc')->limit(61)->get();
+		$stats = Stat::orderBy('id', 'desc')->limit(61)->get()->toBase()->reverse()->values();
 
 		$data = [
 			'labels' => [],

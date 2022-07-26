@@ -34,8 +34,8 @@ class FetchNetworkStats extends Command
 
 			'block_reward' => Node::callRpc('xdag_getRewardByNumber', [(int) $status['nmain']])['result'],
 
-			'hashrate' => intval($status['hashRateOurs'] * 1024 * 1024),
-			'network_hashrate' => intval($status['hashRateTotal'] * 1024 * 1024),
+			'hashrate' => intval($status['hashRateOurs'] * 1024),
+			'network_hashrate' => intval($status['hashRateTotal'] * 1024),
 			'connections' => Node::callRpc('xdag_netConnectionList')['result'],
 
 			'created_at' => now(),
