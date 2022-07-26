@@ -3,6 +3,7 @@
 use App\Xdag\Node;
 use App\Xdag\Network\Stat;
 use App\Xdag\Block\MainBlock;
+use App\Xdag\Exceptions\XdagException;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 
@@ -13,38 +14,53 @@ class FetchNetworkStats extends Command
 
 	public function handle()
 	{
-		$status = Node::callRpc('xdag_getStatus')['result'];
+		$mainBlocks = null;
 
-		Stat::create([
-			'synchronized' => Node::callRpc('xdag_syncing')['result']['isSyncDone'],
-			'version' => Node::callRpc('xdag_protocolVersion')['result'],
-			'network_type' => Node::callRpc('xdag_netType')['result'],
+		try {
+			$status = Node::callRpc('xdag_getStatus')['result'];
+			$mainBlocks = Node::callRpc('xdag_getBlocksByNumber', [20]);
+			$mainBlocks = $mainBlocks['result'];
 
-			'blocks' => $status['nblock'],
-			'network_blocks' => $status['totalNblocks'],
+			Stat::create([
+				'synchronized' => Node::callRpc('xdag_syncing')['result']['isSyncDone'],
+				'version' => Node::callRpc('xdag_protocolVersion')['result'],
+				'network_type' => Node::callRpc('xdag_netType')['result'],
 
-			'main_blocks' => $status['nmain'],
-			'network_main_blocks' => $status['totalNmain'],
+				'blocks' => $status['nblock'],
+				'network_blocks' => $status['totalNblocks'],
 
-			'difficulty' => substr($status['curDiff'], 2),
-			'network_difficulty' => substr($status['netDiff'], 2),
+				'main_blocks' => $status['nmain'],
+				'network_main_blocks' => $status['totalNmain'],
 
-			'supply' => $status['ourSupply'],
-			'network_supply' => $status['netSupply'],
+				'difficulty' => substr($status['curDiff'], 2),
+				'network_difficulty' => substr($status['netDiff'], 2),
 
-			'block_reward' => Node::callRpc('xdag_getRewardByNumber', [(int) $status['nmain']])['result'],
+				'supply' => $status['ourSupply'],
+				'network_supply' => $status['netSupply'],
 
-			'hashrate' => intval($status['hashRateOurs'] * 1024),
-			'network_hashrate' => intval($status['hashRateTotal'] * 1024),
-			'connections' => Node::callRpc('xdag_netConnectionList')['result'],
+				'block_reward' => Node::callRpc('xdag_getRewardByNumber', [(int) $status['nmain']])['result'],
 
-			'created_at' => now(),
-		]);
+				'hashrate' => intval($status['hashRateOurs'] * 1024),
+				'network_hashrate' => intval($status['hashRateTotal'] * 1024),
+				'connections' => Node::callRpc('xdag_netConnectionList')['result'],
+
+				'created_at' => now(),
+			]);
+		} catch (XdagException $ex) {
+			// if latest stat exists, reuse most of the values
+			if ($stat = Stat::orderBy('id')->first()) {
+				$data = [
+					'synchronized' => false,
+					'created_at' => now(),
+				] + $stat->toArray();
+
+				unset($data['id']);
+
+				Stat::create($data);
+			}
+		}
 
 		Stat::where('created_at', '<', now()->subDays(3))->delete();
-
-		$mainBlocks = Node::callRpc('xdag_getBlocksByNumber', [20]);
-		$mainBlocks = $mainBlocks['result'];
 
 		if ($mainBlocks) {
 			foreach ($mainBlocks as $mainBlock) {

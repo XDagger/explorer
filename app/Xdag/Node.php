@@ -18,7 +18,7 @@ class Node
 
 	public static function streamRpc(string $method, array $parameters = [])
 	{
-		return @fopen(self::rpcUrl(), 'r', false, self::streamContext($method, $parameters, rand(1, 10000000), 60 * 60));
+		return @fopen(self::rpcUrl(), 'r', false, self::streamContext($method, $parameters, rand(1, 10000000), 60));
 	}
 
 	protected static function streamContext(string $method, array $parameters, int $callId, int $timeout)
