@@ -64,15 +64,12 @@ class FetchNetworkStats extends Command
 
 		if ($mainBlocks) {
 			foreach ($mainBlocks as $mainBlock) {
-				try {
-					MainBlock::create([
-						'address' => $mainBlock['address'],
-						'height' => $mainBlock['height'],
-						'balance' => $mainBlock['balance'],
-						'remark' => $mainBlock['remark'] === '' ? null : $mainBlock['remark'],
-						'created_at' => timestampToCarbon($mainBlock['blockTime']),
-					]);
-				} catch (QueryException $ex) {} // block already imported
+				MainBlock::updateOrCreate(['address' => $mainBlock['address']], [
+					'height' => $mainBlock['height'],
+					'balance' => $mainBlock['balance'],
+					'remark' => $mainBlock['remark'] === '' ? null : $mainBlock['remark'],
+					'created_at' => timestampToCarbon($mainBlock['blockTime']),
+				]);
 			}
 
 			MainBlock::whereNotIn('address', collect($mainBlocks)->map(fn($mainBlock) => $mainBlock['address']))->delete();
