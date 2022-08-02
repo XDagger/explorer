@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 class MainBlock extends Model
 {
 	protected $table = 'main_blocks';
+	protected $primaryKey = 'address';
 	public $incrementing = false;
 	public $timestamps = false;
 	protected $dates = ['created_at'];
