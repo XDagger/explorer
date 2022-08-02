@@ -9,7 +9,7 @@ return new class extends Migration
 	public function up()
 	{
 		Schema::create('blocks', function (Blueprint $table) {
-			$table->string('id')->primary();
+			$table->string('id', 64)->primary();
 			$table->string('state', 20)->nullable();
 			$table->bigInteger('height')->unsigned()->nullable();
 			$table->decimal('balance', 56, 9)->nullable();
@@ -25,7 +25,7 @@ return new class extends Migration
 		});
 
 		Schema::create('block_transactions', function (Blueprint $table) {
-			$table->string('block_id');
+			$table->string('block_id', 64);
 			$table->bigInteger('ordering')->unsigned()->index();
 			$table->enum('view', ['wallet', 'transaction']);
 			$table->enum('direction', ['input', 'output', 'earning', 'fee', 'snapshot']);
@@ -38,7 +38,7 @@ return new class extends Migration
 		});
 
 		Schema::create('balances', function (Blueprint $table) {
-			$table->string('id')->primary();
+			$table->string('id', 64)->primary();
 			$table->string('state', 20)->nullable();
 			$table->decimal('balance', 56, 9)->nullable();
 			$table->timestamp('expires_at', 3)->nullable();
