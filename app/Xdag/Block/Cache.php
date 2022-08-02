@@ -3,8 +3,6 @@
 use App\Xdag\Node;
 use App\Xdag\Exceptions\XdagException;
 use Illuminate\Database\QueryException;
-use JsonMachine\Items;
-use JsonMachine\JsonDecoder\ExtJsonDecoder;
 
 class Cache
 {
@@ -27,98 +25,88 @@ class Cache
 			return self::waitForBlock($id);
 		}
 
-		// node RPC => our DB field name
-		$fields = [
-			'height' => 'height',
-			'balance' => 'balance',
-			'blockTime' => 'created_at',
-			'state' => 'state',
-			'hash' => 'hash',
-			'address' => 'address',
-			'remark' => 'remark',
-			'diff' => 'difficulty',
-			'type' => 'type',
-			'timeStamp' => 'timestamp',
-			'flags' => 'flags',
-		];
-
-		$blockData = Items::fromStream(Node::streamRpc(strlen($id) < 32 ? 'xdag_getBlockByNumber' : 'xdag_getBlockByHash', [$id]), [
-			'pointer' => collect(array_keys($fields))->merge(['refs', 'transactions'])->map(fn($i) => "/result/$i")->toArray(),
-			'decoder' => new ExtJsonDecoder(true),
-		]);
-
-		$basicBlockDataSaved = false;
-		$blockState = null;
-
 		try {
-			foreach ($blockData as $key => $value) {
-				// basic block data
-				if ($key === 'state') {
-					$blockState = $value;
-					continue;
-				}
+			$stream = Node::streamRpc(strlen($id) < 32 ? 'xdag_getBlockByNumber' : 'xdag_getBlockByHash', [$id]);
 
-				if ($key === 'type' && $value === 'Snapshot')
-					$blockState = $value;
+			// read until we get all base block data
+			$buffer = stream_get_line($stream, 512, ',"refs":');
 
-				if ($key === 'refs' && $blockState === 'Snapshot')
-					continue;
+			if (strpos($buffer, '"result":null') !== false) {
+				$block->state = 'not found';
+				$block->expires_at = now()->addSeconds(self::TTL);
+				$block->save();
 
-				if (!is_array($value)) {
-					if ($key === 'blockTime')
-						$block->{$fields[$key]} = timestampToCarbon($value);
-					else if ($key === 'diff')
-						$block->{$fields[$key]} = $value !== null ? substr($value, 2) : null;
-					else if ($key === 'timeStamp')
-						$block->{$fields[$key]} = dechex($value);
-					else if ($key === 'remark')
-						$block->{$fields[$key]} = $value === '' ? null : $value;
-					else
-						$block->{$fields[$key]} = $value;
+				return $block;
+			}
 
-					continue;
-				}
+			// construct base block data valid json and decode it
+			$baseBlockData = json_decode("$buffer}}", true, 16, JSON_THROW_ON_ERROR)['result'];
 
-				if (!$basicBlockDataSaved) {
-					$block->save();
-					$basicBlockDataSaved = true;
-				}
+			$block->fill([
+				'height' => $baseBlockData['height'],
+				'balance' => $baseBlockData['balance'],
+				'created_at' => timestampToCarbon($baseBlockData['blockTime']),
+				'state' => $baseBlockData['type'] === 'Snapshot' ? $baseBlockData['type'] : $baseBlockData['state'],
+				'hash' => $baseBlockData['hash'],
+				'address' => $baseBlockData['address'],
+				'remark' => $baseBlockData['remark'] === '' ? null : $baseBlockData['remark'],
+				'difficulty' => $baseBlockData['diff'] !== null ? substr($baseBlockData['diff'], 2) : null,
+				'type' => $baseBlockData['type'],
+				'timestamp' => dechex($baseBlockData['timeStamp']),
+				'flags' => $baseBlockData['flags'],
+			]);
 
-				if (str_ends_with($blockData->getCurrentJsonPointer(), 'refs')) { // "block as transaction"
+			unset($baseBlockData);
+
+			//  there are maximally 12 "refs" in a block, read all into memory and decode
+			$refs = json_decode(stream_get_line($stream, 2560, ',"transactions":'), true, JSON_THROW_ON_ERROR);
+
+			if (is_array($refs)) {
+				foreach ($refs as $key => $ref) {
 					$block->transactions()->create([
 						'ordering' => $key,
 						'view' => 'transaction',
-						'direction' => $direction = ['input', 'output', 'fee'][$value['direction']],
-						'address' => $value['address'],
-						'amount' => $value['amount'] * ($direction === 'input' ? 1 : -1),
-					]);
-				} else { // "block as address"
-					$block->transactions()->create([
-						'ordering' => $key,
-						'view' => 'wallet',
-						'direction' => $direction = ['input', 'output', 'earning', 'snapshot'][$value['direction']],
-						'address' => $value['address'],
-						'amount' => $value['amount'] * ($direction === 'output' ? -1 : 1),
-						'remark' => $value['remark'] === '' ? null : $value['remark'],
-						'created_at' => timestampToCarbon($value['time']),
+						'direction' => $direction = ['input', 'output', 'fee'][$ref['direction']],
+						'address' => $ref['address'],
+						'amount' => $ref['amount'] * ($direction === 'input' ? 1 : -1),
 					]);
 				}
 			}
-		} catch (\JsonMachine\Exception\PathNotFoundException $ex) {
-			// block does not exist, thrown when *any* of the paths is not found in json stream
-			$block->state = 'not found';
-			$block->expires_at = now()->addSeconds(self::TTL);
-			$block->save();
 
-			return $block;
+			unset($refs);
+
+			// read every transaction one by one
+			// we have to split by direction json part as remark can contain \, " and } characters so we can't easily read until "}
+			$i = 0;
+			while (($buffer = stream_get_line($stream, 512, '{"direction":')) !== false) {
+				if (strlen($buffer) < 96) // address and hashlow are 96 bytes, plus any json markup, so 96 is a safe minimal buffer length value
+					continue;
+
+				// strip leftover json markup
+				$buffer = rtrim($buffer, ",]}\n\r");
+
+				// decode and insert the transaction
+				$transaction = json_decode("{\"direction\":$buffer}", true, 16, JSON_THROW_ON_ERROR);
+
+				$block->transactions()->create([
+					'ordering' => $i++,
+					'view' => 'wallet',
+					'direction' => $direction = ['input', 'output', 'earning', 'snapshot'][$transaction['direction']],
+					'address' => $transaction['address'],
+					'amount' => $transaction['amount'] * ($direction === 'output' ? -1 : 1),
+					'remark' => $transaction['remark'] === '' ? null : $transaction['remark'],
+					'created_at' => timestampToCarbon($transaction['time']),
+				]);
+			}
 		} catch (\Throwable $ex) {
 			// error while processing block data
+			$block->transactions()->delete();
 			$block->delete();
 
 			throw $ex;
 		}
 
-		$block->state = $blockState;
+		// save late to persist block details as last operation (marks cache fill is complete)
 		$block->save();
 
 		return $block;
