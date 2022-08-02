@@ -42,7 +42,7 @@ class FetchNetworkStats extends Command
 
 				'hashrate' => intval($status['hashRateOurs'] * 1024),
 				'network_hashrate' => intval($status['hashRateTotal'] * 1024),
-				'connections' => Node::callRpc('xdag_netConnectionList')['result'],
+				'connections' => Node::callRpc('xdag_netConnectionList')['result'] ?? [],
 
 				'created_at' => now(),
 			]);
