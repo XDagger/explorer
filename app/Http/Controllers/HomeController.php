@@ -33,7 +33,7 @@ class HomeController extends Controller
 
 		foreach ($stats as $stat) {
 			$data['labels'][] = $stat->created_at->format('m-d H:00');
-			$data['values'][] = round($stat->hashrate / 1024 / 1024, 2); // Mh/s
+			$data['values'][] = round($stat->network_hashrate / 1024 / 1024, 2); // Mh/s
 		}
 
 		return $data;

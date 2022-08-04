@@ -47,9 +47,9 @@ export default {
 				this.error = true
 				this.result = 0
 			} else {
-				let hashrateKhs = Math.abs(this.hashrate * 1024)
+				let hashrate = Math.abs(this.hashrate * 1024)
 				this.error = false
-				this.result = (hashrateKhs * 60 * 60 * 24 / 64 * this.reward / (this.networkHashrate + hashrateKhs)).toFixed(9)
+				this.result = (hashrate * 60 * 60 * 24 / 64 * this.reward / (this.networkHashrate + hashrate)).toFixed(9)
 			}
 		},
 

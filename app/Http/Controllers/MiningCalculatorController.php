@@ -9,7 +9,7 @@ class MiningCalculatorController extends Controller
 		$stat = Stat::orderBy('id', 'desc')->limit(1)->first();
 
 		return view('mining-calculator.index', [
-			'hashrate' => $stat->hashrate ?? 0,
+			'hashrate' => $stat->network_hashrate ?? 0,
 			'reward' => $stat->block_reward ?? 0,
 		]);
 	}

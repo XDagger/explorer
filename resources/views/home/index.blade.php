@@ -123,7 +123,7 @@
 
 						<div class="flex items-center">
 							<span class="info-value mr-4">
-								{{ hashrate($stat->hashrate) }}
+								{{ hashrate($stat->network_hashrate) }}
 							</span>
 
 							@include('support.value-change', ['valueChange' => $hashrateChange, 'name' => 'Network hashrate', 'change' => 'in last hour'])
