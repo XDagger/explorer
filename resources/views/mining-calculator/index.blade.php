@@ -5,7 +5,7 @@
 		<div class="box">
 			<h2 class="box-title">Mining calculator</h2>
 
-			<mining-calculator inline-template :network-hashrate="{{ $hashrate }}" :reward="{{ intval($reward) }}">
+			<mining-calculator inline-template :network-hashrate="{{ $network_hashrate }}" :reward="{{ intval($block_reward) }}">
 				<div class="flex flex-wrap">
 					<div class="w-full md:w-1/2 md:pr-6 mb-4 md:mb-0">
 						<div class="form-group">

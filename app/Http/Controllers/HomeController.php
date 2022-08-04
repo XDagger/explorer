@@ -16,7 +16,7 @@ class HomeController extends Controller
 			'stat' => $stat ?? new Stat,
 			'hashrateChartData' => $this->hashrateChartData(),
 			'newBlocksChartData' => $this->newBlocksChartData(),
-			'hashrateChange' => valueChange((float) Stat::orderBy('id', 'desc')->offset(60)->limit(60)->avg('hashrate'), (float) Stat::orderBy('id', 'desc')->limit(60)->avg('hashrate')),
+			'hashrateChange' => valueChange((float) Stat::orderBy('id', 'desc')->offset(60)->limit(60)->avg('network_hashrate'), (float) Stat::orderBy('id', 'desc')->limit(60)->avg('network_hashrate')),
 			'mainBlocks' => MainBlock::orderBy('height', 'desc')->limit(20)->get(),
 			'numberOfNewBlocksLastMinute' => $numberOfNewBlocksLastMinute,
 		]);
@@ -24,7 +24,7 @@ class HomeController extends Controller
 
 	protected function hashrateChartData(): array
 	{
-		$stats = Stat::selectRaw('AVG(hashrate) hashrate, DATE_FORMAT(created_at, "%Y-%m-%d %H:00:00") created_at')->groupByRaw('DATE_FORMAT(created_at, "%Y-%m-%d %H:00:00")')->orderByRaw('DATE_FORMAT(created_at, "%Y-%m-%d %H:00:00")')->get();
+		$stats = Stat::selectRaw('AVG(network_hashrate) network_hashrate, DATE_FORMAT(created_at, "%Y-%m-%d %H:00:00") created_at')->groupByRaw('DATE_FORMAT(created_at, "%Y-%m-%d %H:00:00")')->orderByRaw('DATE_FORMAT(created_at, "%Y-%m-%d %H:00:00")')->get();
 
 		$data = [
 			'labels' => [],
