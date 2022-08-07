@@ -8,7 +8,7 @@ class HomeController extends Controller
 	public function index()
 	{
 		if (($stat = Stat::orderBy('id', 'desc')->limit(1)->first()) && ($previousStat = Stat::where('id', '<', $stat->id)->orderBy('id', 'desc')->limit(1)->first()))
-			$numberOfNewBlocksLastMinute = $stat->blocks - $previousStat->blocks;
+			$numberOfNewBlocksLastMinute = max(0, $stat->blocks - $previousStat->blocks);
 		else
 			$numberOfNewBlocksLastMinute = 0;
 
@@ -16,7 +16,7 @@ class HomeController extends Controller
 			'stat' => $stat ?? new Stat,
 			'hashrateChartData' => $this->hashrateChartData(),
 			'newBlocksChartData' => $this->newBlocksChartData(),
-			'hashrateChange' => valueChange((float) Stat::orderBy('id', 'desc')->offset(60)->limit(60)->avg('network_hashrate'), (float) Stat::orderBy('id', 'desc')->limit(60)->avg('network_hashrate')),
+			'hashrateChange' => valueChange((float) Stat::orderBy('id', 'desc')->offset(60)->limit(60)->get()->avg('network_hashrate'), (float) Stat::orderBy('id', 'desc')->limit(60)->get()->avg('network_hashrate')),
 			'mainBlocks' => MainBlock::orderBy('height', 'desc')->limit(20)->get(),
 			'numberOfNewBlocksLastMinute' => $numberOfNewBlocksLastMinute,
 		]);
