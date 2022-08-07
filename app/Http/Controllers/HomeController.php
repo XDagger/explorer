@@ -55,7 +55,7 @@ class HomeController extends Controller
 
 		foreach ($stats as $stat) {
 			$data['labels'][] = $stat->created_at->format('H:i');
-			$data['values'][] = $stat->blocks - $lastNumberOfBlocks;
+			$data['values'][] = max(0, $stat->blocks - $lastNumberOfBlocks);
 
 			$lastNumberOfBlocks = $stat->blocks;
 		}
