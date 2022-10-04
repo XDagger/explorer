@@ -38,18 +38,24 @@ pm.max_spare_servers = 4
 4. install MySQL 8.0+
 - `sudo apt install mysql-server mysql-client`
 - `sudo mysql_secure_installation`
-5. create database and MySQL user for explorer app
+5. configure MySQL 8.0+
+- `sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf`
+- add `disable_log_bin` at end of file
+- add `tmp_table_size = 2G` at end of file
+- add `max_heap_table_size = 2G` at end of file
+- `sudo systemctl restart mysql`
+6. create database and MySQL user for explorer app
 - `sudo mysql`
 - `CREATE USER explorer@'%' IDENTIFIED BY '...............';` - choose a strong password
 - `CREATE DATABASE explorer CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`
 - `GRANT ALL ON explorer.* TO explorer@'%';`
 - `FLUSH PRIVILEGES;`
 - `exit`
-6. install [composer](https://getcomposer.org/download/)
-7. install NojdeJS 16
+7. install [composer](https://getcomposer.org/download/)
+8. install NojdeJS 16
 - `curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -`
 - `sudo apt install -y nodejs`
-8. prepare explorer app
+9. prepare explorer app
 - `sudo mkdir /var/www/explorer && sudo chown explorer:explorer /var/www/explorer`
 - as `explorer` user, change into `/var/www/explorer` folder
 - execute `git clone git@github.com:XDagger/explorer.git .`
@@ -57,7 +63,7 @@ pm.max_spare_servers = 4
 - edit `.env` and supply MySQL connection parameters and XdagJ RPC URL
 - execute `php artisan migrate`
 - add crontab entry: `* * * * * /usr/bin/php /var/www/explorer/artisan schedule:run >> /dev/null 2>&1`
-9. install and configure nginx
+10. install and configure nginx
 - `sudo apt install nginx`
 - replace default server: `truncate -s 0 /etc/nginx/sites-available/default`, `nano /etc/nginx/sites-available/default`
 ```
