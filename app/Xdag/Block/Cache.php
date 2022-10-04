@@ -62,13 +62,13 @@ class Cache
 			$refs = json_decode(stream_get_line($stream, 2560, ',"transactions":'), true, JSON_THROW_ON_ERROR);
 
 			if (is_array($refs)) {
-				foreach ($refs as $key => $ref) {
-					$block->transactions()->create([
-						'ordering' => $key,
-						'view' => 'transaction',
-						'direction' => $direction = ['input', 'output', 'fee'][$ref['direction']],
-						'address' => $ref['address'],
-						'amount' => $ref['amount'] * ($direction === 'input' ? 1 : -1),
+				foreach ($refs as $ref) {
+					\DB::insert('INSERT INTO block_transactions (block_id, view, direction, address, amount) VALUES (?, ?, ?, ?, ?)', [
+						$id,
+						'transaction',
+						$direction = ['input', 'output', 'fee'][$ref['direction']],
+						$ref['address'],
+						($direction === 'input' ? '' : '-') . $ref['amount'],
 					]);
 				}
 			}
@@ -77,7 +77,6 @@ class Cache
 
 			// read every transaction one by one
 			// we have to split by direction json part as remark can contain \, " and } characters so we can't easily read until "}
-			$i = 0;
 			while (($buffer = stream_get_line($stream, 512, '{"direction":')) !== false) {
 				if (strlen($buffer) < 96) // address and hashlow are 96 bytes, plus any json markup, so 96 is a safe minimal buffer length value
 					continue;
@@ -88,14 +87,14 @@ class Cache
 				// decode and insert the transaction
 				$transaction = json_decode("{\"direction\":$buffer}", true, 16, JSON_THROW_ON_ERROR);
 
-				$block->transactions()->create([
-					'ordering' => $i++,
-					'view' => 'wallet',
-					'direction' => $direction = ['input', 'output', 'earning', 'snapshot'][$transaction['direction']],
-					'address' => $transaction['address'],
-					'amount' => $transaction['amount'] * ($direction === 'output' ? -1 : 1),
-					'remark' => $transaction['remark'] === '' ? null : $transaction['remark'],
-					'created_at' => timestampToCarbon($transaction['time']),
+				\DB::insert('INSERT INTO block_transactions (block_id, view, direction, address, amount, remark, created_at) VALUES (?, ?, ?, ?, ?, ?, FROM_UNIXTIME(? / 1000))', [
+					$id,
+					'wallet',
+					$direction = ['input', 'output', 'earning', 'snapshot'][$transaction['direction']],
+					$transaction['address'],
+					($direction === 'output' ? '-' : '') . $transaction['amount'],
+					$transaction['remark'] === '' ? null : $transaction['remark'],
+					$transaction['time'],
 				]);
 			}
 		} catch (\Throwable $ex) {

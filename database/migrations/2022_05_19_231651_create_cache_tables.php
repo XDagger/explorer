@@ -29,15 +29,16 @@ return new class extends Migration
 		Schema::create('block_transactions', function (Blueprint $table) {
 			$table->engine = 'Memory';
 
+			$table->id();
 			$table->string('block_id', 64);
-			$table->bigInteger('ordering')->unsigned()->index();
 			$table->enum('view', ['wallet', 'transaction']);
 			$table->enum('direction', ['input', 'output', 'earning', 'fee', 'snapshot']);
 			$table->string('address', 32);
 			$table->decimal('amount', 56, 9);
 			$table->string('remark')->nullable();
-			$table->timestamp('created_at', 3)->nullable();
+			$table->timestamp('created_at', 3)->nullable()->index();
 
+			// not necessary for myISAM or Memory tables, but intended use is a foreign key
 			$table->foreign('block_id')->references('id')->on('blocks');
 		});
 

@@ -5,8 +5,6 @@ use Illuminate\Database\Eloquent\Model;
 class Transaction extends Model
 {
 	protected $table = 'block_transactions';
-	public $incrementing = false;
-	public $primaryKey = null;
 	public $timestamps = false;
 	protected $dates = ['created_at'];
 	protected $dateFormat = 'Y-m-d H:i:s.v';
@@ -15,12 +13,12 @@ class Transaction extends Model
 	/* scopes */
 	public function scopeWallet($q)
 	{
-		return $q->whereView('wallet')->orderBy('created_at', 'desc')->orderBy('ordering');
+		return $q->whereView('wallet')->orderBy('created_at', 'desc')->orderBy('id');
 	}
 
 	public function scopeTransaction($q)
 	{
-		return $q->whereView('transaction')->orderBy('ordering');
+		return $q->whereView('transaction')->orderBy('id');
 	}
 
 	public function scopeEarnings($q)
