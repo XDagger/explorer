@@ -9,6 +9,8 @@ return new class extends Migration
 	public function up()
 	{
 		Schema::create('blocks', function (Blueprint $table) {
+			$table->engine = 'Memory';
+
 			$table->string('id', 64)->primary();
 			$table->string('state', 20)->nullable();
 			$table->bigInteger('height')->unsigned()->nullable();
@@ -25,6 +27,8 @@ return new class extends Migration
 		});
 
 		Schema::create('block_transactions', function (Blueprint $table) {
+			$table->engine = 'Memory';
+
 			$table->string('block_id', 64);
 			$table->bigInteger('ordering')->unsigned()->index();
 			$table->enum('view', ['wallet', 'transaction']);
@@ -38,6 +42,8 @@ return new class extends Migration
 		});
 
 		Schema::create('balances', function (Blueprint $table) {
+			$table->engine = 'Memory';
+
 			$table->string('id', 64)->primary();
 			$table->string('state', 20)->nullable();
 			$table->decimal('balance', 56, 9)->nullable();
