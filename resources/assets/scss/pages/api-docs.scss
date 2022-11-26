@@ -35,8 +35,12 @@
 		@apply .text-sm .text-grey-darkest .leading-loose .mb-6;
 
 		code {
-			@apply .bg-blue-lightest .rounded .text-black .p-1;
+			@apply .bg-blue-lightest .rounded .text-black .p-1 .break-words;
 		}
+	}
+
+	ul {
+		@apply .overflow-x-auto;
 	}
 
 	pre {
