@@ -3,6 +3,7 @@
 use App\Xdag\Node;
 use App\Xdag\Exceptions\XdagException;
 use Illuminate\Database\QueryException;
+use Symfony\Component\Process\Process;
 
 class Cache
 {
@@ -25,6 +26,112 @@ class Cache
 			return self::waitForBlock($id);
 		}
 
+		$getBlockBinaryName = trim((string) config('explorer.getblock_binary_name'));
+
+		// obtain block data using external binary
+		if ($getBlockBinaryName !== '') {
+			try {
+				$rpcUrlParts = parse_url(Node::rpcUrl());
+				if (!$rpcUrlParts)
+					throw new \RuntimeException('Unable to parse XDAG RPC URL.');
+
+				$fileId = str_replace(['/', '+'], ['_', '-'], $id);
+				$jsonPath = storage_path("blockoutput/$fileId.json");
+				$csvPath = storage_path("blockoutput/$fileId.csv");
+
+				$process = new Process([
+					base_path("bin/$getBlockBinaryName"),
+					$rpcUrlParts['host'],
+					$rpcUrlParts['port'] ?? 80,
+					$id,
+					$jsonPath,
+					$csvPath,
+				], null, PHP_OS_FAMILY == 'Windows' ? getenv() : null);
+
+				$process->setTimeout(intval(self::TTL * 0.75));
+				$process->mustRun();
+
+				// parse block JSON
+				$baseBlockData = json_decode(file_get_contents($jsonPath), true, 16, JSON_THROW_ON_ERROR);
+
+				if (!isset($baseBlockData['result'])) {
+					$block->state = 'not found';
+					$block->expires_at = now()->addSeconds(self::TTL);
+					$block->save();
+
+					return $block;
+				}
+
+				$baseBlockData = $baseBlockData['result'];
+
+				$block->fill([
+					'height' => $baseBlockData['height'],
+					'balance' => $baseBlockData['balance'],
+					'created_at' => timestampToCarbon($baseBlockData['blockTime']),
+					'state' => $baseBlockData['type'] === 'Snapshot' ? $baseBlockData['type'] : $baseBlockData['state'],
+					'hash' => $baseBlockData['hash'],
+					'address' => $baseBlockData['address'],
+					'remark' => $baseBlockData['remark'] === '' ? null : $baseBlockData['remark'],
+					'difficulty' => $baseBlockData['diff'] !== null ? substr($baseBlockData['diff'], 2) : null,
+					'type' => $baseBlockData['type'],
+					'timestamp' => dechex($baseBlockData['timeStamp']),
+					'flags' => $baseBlockData['flags'],
+				]);
+
+				if ($baseBlockData['refs'] ?? []) {
+					foreach ($baseBlockData['refs'] as $ref) {
+						\DB::insert('INSERT INTO block_transactions (block_id, view, direction, address, amount) VALUES (?, ?, ?, ?, ?)', [
+							$id,
+							'transaction',
+							$direction = ['input', 'output', 'fee'][$ref['direction']],
+							$ref['address'],
+							($direction === 'input' ? '' : '-') . $ref['amount'],
+						]);
+					}
+				}
+
+				unset($baseBlockData);
+
+				// import transactions from CSV, file name can't be given as part of prepared statement
+				\DB::insert("
+					LOAD DATA INFILE " . \DB::connection()->getPdo()->quote($csvPath) . "
+					INTO TABLE block_transactions
+					CHARACTER SET utf8mb4
+					FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ESCAPED BY ''
+					LINES TERMINATED BY '\\n'
+					IGNORE 0 LINES
+					(@direction, address, @amount, @time, @remark)
+					SET
+						block_id = ?, view = 'wallet',
+						direction = IF(@direction = 0, 'input', IF(@direction = 1, 'output', IF(@direction = 2, 'earning', 'snapshot'))),
+						amount = CONCAT(IF(@direction = 1, '-', ''), @amount),
+						created_at = FROM_UNIXTIME(@time / 1000),
+						remark = IF(@remark = '', NULL, @remark)
+				", [$id]);
+			} catch (\Throwable $ex) {
+				// error while processing block data
+				$block->transactions()->delete();
+				$block->delete();
+
+				if (isset($jsonPath))
+					@unlink($jsonPath);
+
+				if (isset($csvPath))
+					@unlink($csvPath);
+
+				throw $ex;
+			}
+
+			@unlink($jsonPath);
+			@unlink($csvPath);
+
+			// save late to persist block details as last operation (marks cache fill is complete)
+			$block->save();
+
+			return $block;
+		}
+
+		// direct node communication
 		try {
 			$stream = Node::streamRpc(strlen($id) < 32 ? 'xdag_getBlockByNumber' : 'xdag_getBlockByHash', [$id]);
 

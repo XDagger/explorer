@@ -21,6 +21,16 @@ class Node
 		return @fopen(self::rpcUrl(), 'r', false, self::streamContext($method, $parameters, rand(1, 10000000), 60));
 	}
 
+	public static function rpcUrl(): string
+	{
+		$url = (string) config('xdag.rpc_url');
+
+		if ($url === '')
+			throw new \RuntimeException('XDAG node RPC URL is not set.');
+
+		return $url;
+	}
+
 	protected static function streamContext(string $method, array $parameters, int $callId, int $timeout)
 	{
 		return stream_context_create([
@@ -42,15 +52,5 @@ class Node
 				]),
 			],
 		]);
-	}
-
-	protected static function rpcUrl(): string
-	{
-		$url = (string) config('xdag.rpc_url');
-
-		if ($url === '')
-			throw new \RuntimeException('XDAG node RPC URL is not set.');
-
-		return $url;
 	}
 }
