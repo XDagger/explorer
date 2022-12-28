@@ -29,7 +29,7 @@ Block found example input: {"jsonrpc":"2.0","id":3334,"result":{"height":65,"bal
 void die(const char *message, int returnCode)
 {
 	perror("Last error");
-	fprintf(stderr, message);
+	fprintf(stderr, "%s\n", message);
 	exit(returnCode);
 }
 
@@ -79,8 +79,8 @@ int main(int argc,char *argv[])
 		die("Could not create socket.", 4);
 
 	struct timeval readTimeout;
-	tv.tv_sec = 60;
-	tv.tv_usec = 0;
+	readTimeout.tv_sec = 60;
+	readTimeout.tv_usec = 0;
 #endif
 
 	if (setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (const char *) &readTimeout, sizeof(readTimeout)) < 0)
@@ -109,7 +109,7 @@ int main(int argc,char *argv[])
 	if (sprintf(payload, "{\"jsonrpc\":\"2.0\",\"method\":\"%s\",\"params\":[\"%s\"],\"id\": %d}", strlen(blockId) < 32 ? "xdag_getBlockByNumber" : "xdag_getBlockByHash", blockId, rand()) < 0)
 		die("Preparing payload failed.", 7);
 
-	if (sprintf(request, "POST / HTTP/1.1\r\nHost: %s\r\nContent-Type: application/json\r\nConnection: close\r\nAccept: application/json\r\nContent-Length: %d\r\n\r\n%s", hostName, strlen(payload), payload) < 0)
+	if (sprintf(request, "POST / HTTP/1.1\r\nHost: %s\r\nContent-Type: application/json\r\nConnection: close\r\nAccept: application/json\r\nContent-Length: %lu\r\n\r\n%s", hostName, strlen(payload), payload) < 0)
 		die("Preparing request failed.", 8);
 
 	if (connect(sock, (struct sockaddr *) &hostAddr, sizeof(hostAddr)) < 0)
