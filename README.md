@@ -109,6 +109,7 @@ server {
 # Updating to latest version
 As `explorer` user, change into `/var/www/explorer` folder
 - `git pull`
+- `composer install`
 - `php artisan migrate`
 - `npm ci`
 - `npm run production`
