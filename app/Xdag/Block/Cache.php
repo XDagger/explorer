@@ -55,6 +55,9 @@ class Cache
 				$baseBlockData = json_decode(file_get_contents($jsonPath), true, 16, JSON_THROW_ON_ERROR);
 
 				if (!isset($baseBlockData['result'])) {
+					@unlink($jsonPath);
+					@unlink($csvPath);
+
 					$block->state = 'not found';
 					$block->expires_at = now()->addSeconds(self::TTL);
 					$block->save();
