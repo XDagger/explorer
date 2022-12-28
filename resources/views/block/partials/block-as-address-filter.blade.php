@@ -148,7 +148,7 @@
 							</checkbox>
 
 							<checkbox inline-template :checked="{{ in_array('earning', $filters['addresses_directions']['value'] ?? []) ? 'true' : 'false' }}">
-								<div class="sm:mb-4 w-full sm:w-1/2 md:w-1/4">
+								<div class="mb-4 w-full sm:w-1/2 md:w-1/4">
 									<input type="checkbox" class="checkbox-input hidden" name="addresses_directions[]" value="earning">
 
 									<div class="cursor-pointer w-full flex items-center" @click="toggle()" :class="{ 'text-blue': isChecked }">
@@ -162,7 +162,7 @@
 							</checkbox>
 
 							<checkbox inline-template :checked="{{ in_array('snapshot', $filters['addresses_directions']['value'] ?? []) ? 'true' : 'false' }}">
-								<div class="sm:mb-4 w-full sm:w-1/2 md:w-1/4">
+								<div class="mb-4 w-full sm:w-1/2 md:w-1/4">
 									<input type="checkbox" class="checkbox-input hidden" name="addresses_directions[]" value="snapshot">
 
 									<div class="cursor-pointer w-full flex items-center" @click="toggle()" :class="{ 'text-blue': isChecked }">
