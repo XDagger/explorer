@@ -99,7 +99,7 @@ int main(int argc,char *argv[])
 	hostAddr.sin_family = AF_INET;
 	hostAddr.sin_port = htons(portNumber);
 
-	char payload[1024];
+	char payload[512];
 	char request[1024];
 	char response[1024];
 	ssize_t received;
