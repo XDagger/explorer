@@ -31,7 +31,7 @@ class TransactionsListing extends Listing
 		return  [
 			'transactions_address' => [
 				'name' => 'Address',
-				'validation' => 'nullable|regex:/^[a-zA-Z0-9\/+]{32}$/u',
+				'validation' => 'nullable|regex:/^[a-zA-Z0-9\/+]{32,33}$/u',
 				'apply' => fn($builder, string $value) => $builder->whereAddress($value),
 			],
 

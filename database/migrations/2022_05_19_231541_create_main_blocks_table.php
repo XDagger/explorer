@@ -9,7 +9,7 @@ return new class extends Migration
 	public function up()
 	{
 		Schema::create('main_blocks', function (Blueprint $table) {
-			$table->string('address', 32)->primary();
+			$table->string('address', 33)->primary();
 			$table->bigInteger('height')->unsigned();
 			$table->decimal('balance', 56, 9);
 			$table->string('remark')->nullable();

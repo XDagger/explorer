@@ -12,9 +12,9 @@ class Cache
 	public static function getBlock(string $id): Block
 	{
 		if (strlen($id) < 32 && !ctype_digit($id))
-			$id = str_pad($id, 32, '/');
+			$id = str_pad($id, 32, '/'); // transaction blocks and main blocks (account address uses base58)
 
-		if (!preg_match('/^([a-zA-Z0-9\/+]{32}|[a-f0-9]{64}|[0-9]{1,10})$/u', $id))
+		if (!preg_match('/^([a-zA-Z0-9\/+]{32,33}|[a-f0-9]{64}|[0-9]{1,10})$/u', $id))
 			throw new \InvalidArgumentException('Incorrect address, block hash or main block height.');
 
 		try {
@@ -236,9 +236,9 @@ class Cache
 	public static function getBalance(string $id): Balance
 	{
 		if (strlen($id) < 32 && !ctype_digit($id))
-			$id = str_pad($id, 32, '/');
+			$id = str_pad($id, 32, '/'); // transaction blocks and main blocks (account address uses base58)
 
-		if (!preg_match('/^([a-zA-Z0-9\/+]{32}|[a-f0-9]{64}|[0-9]{1,10})$/u', $id))
+		if (!preg_match('/^([a-zA-Z0-9\/+]{32,33}|[a-f0-9]{64}|[0-9]{1,10})$/u', $id))
 			throw new \InvalidArgumentException('Incorrect address, block hash or main block height.');
 
 		// if we already have a block stored with this id, return it's balance

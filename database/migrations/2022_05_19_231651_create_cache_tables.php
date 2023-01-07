@@ -17,7 +17,7 @@ return new class extends Migration
 			$table->decimal('balance', 56, 9)->nullable();
 			$table->string('type', 20)->nullable();
 			$table->string('hash', 64)->nullable();
-			$table->string('address', 32)->nullable();
+			$table->string('address', 33)->nullable();
 			$table->string('difficulty')->nullable();
 			$table->string('timestamp')->nullable();
 			$table->string('flags')->nullable();
@@ -33,7 +33,7 @@ return new class extends Migration
 			$table->string('block_id', 64);
 			$table->enum('view', ['wallet', 'transaction']);
 			$table->enum('direction', ['input', 'output', 'earning', 'fee', 'snapshot']);
-			$table->string('address', 32);
+			$table->string('address', 33);
 			$table->decimal('amount', 56, 9);
 			$table->string('remark')->nullable();
 			$table->timestamp('created_at', 3)->nullable()->index();
