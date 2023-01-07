@@ -23,7 +23,11 @@
 
 			<div class="mb-4">
 				<strong class="info-label">Hash</strong>
-				<a href="{{ route('block', ['id' => $block->hash]) }}" rel="nofollow" class="leading-normal opacity-75 block break-words">{{ $block->hash }}</a>
+				@if ($block->hash !== null)
+					<a href="{{ route('block', ['id' => $block->hash]) }}" rel="nofollow" class="leading-normal opacity-75 block break-words">{{ $block->hash }}</a>
+				@else
+					-
+				@endif
 			</div>
 
 			<div class="mb-4">
