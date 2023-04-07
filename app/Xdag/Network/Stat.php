@@ -6,7 +6,6 @@ class Stat extends Model
 {
 	protected $table = 'stats';
 	public $timestamps = false;
-	protected $dates = ['created_at'];
 	protected $guarded = [];
-	protected $casts = ['connections' => 'array'];
+	protected $casts = ['created_at' => 'datetime', 'connections' => 'array'];
 }

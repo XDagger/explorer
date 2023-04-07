@@ -8,7 +8,7 @@ class MainBlock extends Model
 	protected $primaryKey = 'address';
 	public $incrementing = false;
 	public $timestamps = false;
-	protected $dates = ['created_at'];
+	protected $casts = ['created_at' => 'datetime'];
 	protected $dateFormat = 'Y-m-d H:i:s.v';
 	protected $guarded = [];
 }

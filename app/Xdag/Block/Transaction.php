@@ -6,7 +6,7 @@ class Transaction extends Model
 {
 	protected $table = 'block_transactions';
 	public $timestamps = false;
-	protected $dates = ['created_at'];
+	protected $casts = ['created_at' => 'datetime'];
 	protected $dateFormat = 'Y-m-d H:i:s.v';
 	protected $guarded = [];
 

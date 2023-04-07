@@ -8,7 +8,7 @@ class Block extends Model
 	public $incrementing = false;
 	protected $keyType = 'string';
 	public $timestamps = false;
-	protected $dates = ['created_at', 'expires_at'];
+	protected $casts = ['created_at' => 'datetime', 'expires_at' => 'datetime'];
 	protected $dateFormat = 'Y-m-d H:i:s.v';
 	protected $guarded = [];
 

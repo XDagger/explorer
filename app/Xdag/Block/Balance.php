@@ -8,7 +8,7 @@ class Balance extends Model
 	public $incrementing = false;
 	protected $keyType = 'string';
 	public $timestamps = false;
-	protected $dates = ['expires_at'];
+	protected $casts = ['expires_at' => 'datetime'];
 	protected $dateFormat = 'Y-m-d H:i:s.v';
 	protected $guarded = [];
 
