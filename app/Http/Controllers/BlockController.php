@@ -5,8 +5,10 @@ use App\Xdag\Block\Listing\{WalletListing, TransactionsListing};
 
 class BlockController extends Controller
 {
-	public function index(string $id)
+	public function index()
 	{
+		$id = substr(request()->getRequestUri(), 7);
+
 		try {
 			$block = Cache::getBlock($id);
 		} catch (\InvalidArgumentException $ex) {

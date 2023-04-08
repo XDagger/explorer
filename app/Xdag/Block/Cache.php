@@ -11,10 +11,8 @@ class Cache
 
 	public static function getBlock(string $id): Block
 	{
-		if (strlen($id) < 32 && !ctype_digit($id))
-			$id = str_pad($id, 32, '/'); // transaction blocks and main blocks (account address uses base58)
-
-		if (!preg_match('/^([a-zA-Z0-9\/+]{32,33}|[a-f0-9]{64}|[0-9]{1,10})$/u', $id))
+		// XDAG-ADDRESS related code
+		if (!preg_match('/^([1-9A-HJ-NP-Za-km-z]{26,33}|[a-zA-Z0-9\/+]{32}|[a-f0-9]{64}|[0-9]{1,10})$/u', $id))
 			throw new \InvalidArgumentException('Incorrect address, block hash or main block height.');
 
 		try {
@@ -136,7 +134,8 @@ class Cache
 
 		// direct node communication
 		try {
-			$stream = Node::streamRpc(strlen($id) < 32 ? 'xdag_getBlockByNumber' : 'xdag_getBlockByHash', [$id]);
+			// XDAG-ADDRESS related code
+			$stream = Node::streamRpc(strlen($id) < 26 ? 'xdag_getBlockByNumber' : 'xdag_getBlockByHash', [$id]);
 
 			// read until we get all base block data
 			$buffer = stream_get_line($stream, 512, ',"refs":');
@@ -235,10 +234,8 @@ class Cache
 
 	public static function getBalance(string $id): Balance
 	{
-		if (strlen($id) < 32 && !ctype_digit($id))
-			$id = str_pad($id, 32, '/'); // transaction blocks and main blocks (account address uses base58)
-
-		if (!preg_match('/^([a-zA-Z0-9\/+]{32,33}|[a-f0-9]{64}|[0-9]{1,10})$/u', $id))
+		// XDAG-ADDRESS related code
+		if (!preg_match('/^([1-9A-HJ-NP-Za-km-z]{26,33}|[a-zA-Z0-9\/+]{32}|[a-f0-9]{64}|[0-9]{1,10})$/u', $id))
 			throw new \InvalidArgumentException('Incorrect address, block hash or main block height.');
 
 		// if we already have a block stored with this id, return it's balance
@@ -254,7 +251,8 @@ class Cache
 				'expires_at' => now()->addSeconds(self::TTL),
 			]);
 
-			$json = Node::callRpc(strlen($id) < 32 ? 'xdag_getBalanceByNumber' : 'xdag_getBalance', [$id]);
+			// XDAG-ADDRESS related code
+			$json = Node::callRpc(strlen($id) < 26 ? 'xdag_getBalanceByNumber' : 'xdag_getBalance', [$id]);
 		} catch (QueryException $ex) {
 			return self::waitForBalance($id);
 		} catch (XdagException $ex) {

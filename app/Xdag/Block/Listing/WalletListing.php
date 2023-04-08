@@ -14,7 +14,7 @@ class WalletListing extends Listing
 		return  [
 			'addresses_address' => [
 				'name' => 'Address',
-				'validation' => 'nullable|regex:/^[a-zA-Z0-9\/+]{32,33}$/u',
+				'validation' => 'nullable|regex:/^[a-zA-Z0-9\/+]{32}$/u', // XDAG-ADDRESS related code
 				'apply' => fn($builder, string $value) => $builder->whereAddress($value),
 			],
 

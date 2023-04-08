@@ -106,7 +106,8 @@ int main(int argc,char *argv[])
 
 	memset(response, 0, sizeof(response));
 
-	if (sprintf(payload, "{\"jsonrpc\":\"2.0\",\"method\":\"%s\",\"params\":[\"%s\"],\"id\": %d}", strlen(blockId) < 32 ? "xdag_getBlockByNumber" : "xdag_getBlockByHash", blockId, rand()) < 0)
+	// XDAG-ADDRESS related code
+	if (sprintf(payload, "{\"jsonrpc\":\"2.0\",\"method\":\"%s\",\"params\":[\"%s\"],\"id\": %d}", strlen(blockId) < 26 ? "xdag_getBlockByNumber" : "xdag_getBlockByHash", blockId, rand()) < 0)
 		die("Preparing payload failed.", 7);
 
 	if (sprintf(request, "POST / HTTP/1.1\r\nHost: %s\r\nContent-Type: application/json\r\nConnection: close\r\nAccept: application/json\r\nContent-Length: %lu\r\n\r\n%s", hostName, strlen(payload), payload) < 0)

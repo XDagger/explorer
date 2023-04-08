@@ -7,8 +7,10 @@ use Illuminate\Support\Arr;
 
 class BlockController extends Controller
 {
-	public function index(string $id)
+	public function index()
 	{
+		$id = substr(request()->getRequestUri(), 7);
+
 		try {
 			$block = Cache::getBlock($id);
 		} catch (\InvalidArgumentException $ex) {
@@ -159,8 +161,10 @@ class BlockController extends Controller
 		}, 200, ['Content-Type' => 'application/json']);
 	}
 
-	public function balance(string $id)
+	public function balance()
 	{
+		$id = substr(request()->getRequestUri(), 7);
+
 		try {
 			$balance = Cache::getBalance($id);
 		} catch (\InvalidArgumentException $ex) {

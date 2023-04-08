@@ -31,7 +31,7 @@ class TransactionsListing extends Listing
 		return  [
 			'transactions_address' => [
 				'name' => 'Address',
-				'validation' => 'nullable|regex:/^[a-zA-Z0-9\/+]{32,33}$/u',
+				'validation' => 'nullable|regex:/^[1-9A-HJ-NP-Za-km-z]{26,33}$/u', // XDAG-ADDRESS related code
 				'apply' => fn($builder, string $value) => $builder->whereAddress($value),
 			],
 
