@@ -277,13 +277,13 @@ Data keys `file_pos` and `file` are not present in newest versions of XDAG and s
 	"height":"2157788", // height is only present for main blocks
 	"time":"2022-05-26 20:56:31.999",
 	"timestamp":"18a3fa5ffff",
-	"flags":"9f", // null for snapshot blocks
+	"flags":"9f", // null for snapshot or wallet blocks
 	"state":"Main",
 	"file_pos":"",
 	"file":"",
-	"hash":"50ebdf53514bf145ea7d86fd5a60bca24bea384c73b95b6a673a8dcfab9910f1",
-	"remark":"...", // null for snapshot blocks
-	"difficulty":"cdf6de302338a33dd3ed8cc3dd7", // null for snapshot blocks
+	"hash":"50ebdf53514bf145ea7d86fd5a60bca24bea384c73b95b6a673a8dcfab9910f1", // null for wallet blocks
+	"remark":"...", // null for snapshot or wallet blocks
+	"difficulty":"cdf6de302338a33dd3ed8cc3dd7", // null for snapshot or wallet blocks
 	"balance_address":"8RCZq8+NOmdqW7lzTDjqS6K8YFr9hn3q",
 	"balance":"0.000000013",
 	"block_as_transaction":[
