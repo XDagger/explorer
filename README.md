@@ -16,7 +16,7 @@ This software provides a detailed view of the xdag network presented in a nice U
 3. install PHP8.2
 - `sudo apt install lsb-release ca-certificates apt-transport-https software-properties-common`
 - `sudo add-apt-repository ppa:ondrej/php`
-- `sudo apt install php8.2-fpm php8.2-cli php8.2-bcmath php8.2-curl php8.2-gd php8.2-mbstring php8.2-mysql php8.2-opcache php8.2-readline`
+- `sudo apt install php8.2-fpm php8.2-cli php8.2-bcmath php8.2-curl php8.2-gd php8.2-mbstring php8.2-mysql php8.2-opcache php8.2-readline php8.2-dom`
 - create PHP-FPM pool: `nano /etc/php/8.2/fpm/pool.d/explorer.conf`
 ```
 [explorer]
