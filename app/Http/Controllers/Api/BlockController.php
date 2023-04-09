@@ -9,7 +9,7 @@ class BlockController extends Controller
 {
 	public function index()
 	{
-		$id = substr(request()->getRequestUri(), 7);
+		$id = substr(ltrim(request()->getRequestUri(), '/api'), 6 /* block/ */);
 
 		try {
 			$block = Cache::getBlock($id);
@@ -163,7 +163,7 @@ class BlockController extends Controller
 
 	public function balance()
 	{
-		$id = substr(request()->getRequestUri(), 7);
+		$id = substr(ltrim(request()->getRequestUri(), '/api'), 8 /* balance/ */);
 
 		try {
 			$balance = Cache::getBalance($id);
