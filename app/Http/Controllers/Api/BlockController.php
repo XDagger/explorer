@@ -132,7 +132,7 @@ class BlockController extends Controller
 				$writer->write('filtered_outputs_sum', number_format($transactionsListing->outputsSum(), 9, '.', ''));
 			}
 
-			$writer->write('kind', $block->type === 'Wallet' ? 'Wallet' : "{$block->type} block");
+			$writer->write('kind', "{$block->type} block");
 
 			$linksOutputCallback = function (Listing $listing, $builder, int $page, int $perPage) use ($writer) {
 				$total = $builder->count();
