@@ -7,7 +7,7 @@ class BlockController extends Controller
 {
 	public function index()
 	{
-		$id = substr(ltrim(request()->path(), '/'), 6 /* block/ */);
+		$id = substr(ltrim(parse_url('http://x' . request()->getRequestUri(), PHP_URL_PATH), '/'), 6 /* block/ */);
 
 		try {
 			$block = Cache::getBlock($id);
