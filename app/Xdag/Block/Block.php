@@ -60,6 +60,7 @@ class Block extends Model
 		if ($type === 'earnings' || $type === 'spendings') {
 			$builder->selectRaw('ABS(SUM(amount)) amount, DATE_FORMAT(created_at, "%Y-%m-%d") date');
 			$builder->$type();
+			$builder->whereRaw('DATE_FORMAT(created_at, "%Y-%m-%d") >= DATE_FORMAT(NOW() - INTERVAL 7 DAY, "%Y-%m-%d")');
 		} else {
 			$builder->selectRaw('SUM(amount) amount, DATE_FORMAT(created_at, "%Y-%m-%d") date');
 		}
@@ -86,6 +87,9 @@ class Block extends Model
 
 		if ($type === 'balance') {
 			foreach ($values as $index => &$value) {
+				if (bccomp($value, '0.000000000', 9) < 0)
+					$value = '0.000000000';
+
 				if (!$index)
 					continue;
 
