@@ -23,7 +23,7 @@
 				<span>Balance checker</span>
 			</a>
 
-			<form :class="{ 'hidden lg:flex-1 lg:flex': !shown, 'flex w-full': shown }" class="hidden lg:flex-1 lg:flex justify-end" onsubmit="var v = document.getElementById('searchInput').value; if (v == '') return false; document.location.href = '/block/' + v; return false">
+			<form :class="{ 'hidden lg:flex-1 lg:flex': !shown, 'flex w-full': shown }" class="hidden lg:flex-1 lg:flex justify-end" onsubmit="var v = document.getElementById('searchInput').value.trim(); if (v == '') return false; document.location.href = '/block/' + v; return false">
 				<div class="flex w-full lg:w-auto xl:w-3/4">
 					<input type="text" class="w-full text-md text-grey-darkest bg-white px-4 py-3 rounded-lg rounded-r-none outline-none" placeholder="Search address / block hash / height" id="searchInput">
 					<button :class="{ 'small': shown }" type="submit" class="button primary text-md font-bold py-3 px-4 rounded-lg rounded-l-none">
