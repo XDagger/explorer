@@ -20,16 +20,15 @@
 		</a>
 
 		<div class="box border-red mt-8 text-center">
-			<h2 class="text-xl font-medium leading-loose">Block explorer is currently synchronizing...</h2>
-			<p class="leading-loose">Synchronization process should be finished shortly. Please wait a bit and refresh the page.</p>
-			<p class="mb-8 text-grey text-sm">Current time: {{ now()->toDateTimeString() }} UTC</p>
+			<h2 class="text-xl font-medium leading-loose">Something went wrong</h2>
+			<p class="leading-loose mb-8">We are unable to process your request, please try again later.</p>
 
-			<a class="button primary inline-flex items-center" href="javascript:location.reload()" rel="nofollow">
+			<a class="button primary inline-flex items-center" href="{{ route('home') }}" rel="nofollow">
 				<span class="h-4 w-4 mr-2">
-					@svg('refresh-cw')
+					@svg('arrow-right')
 				</span>
 
-				<span>Refresh page</span>
+				<span>Go to home page</span>
 			</a>
 		</div>
 	</div>

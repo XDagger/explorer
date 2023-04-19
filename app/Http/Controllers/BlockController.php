@@ -12,13 +12,11 @@ class BlockController extends Controller
 		try {
 			$block = Cache::getBlock($id);
 		} catch (\InvalidArgumentException $ex) {
-			return redirect()->route('home')->withError($ex->getMessage());
-		} catch (\Throwable $ex) {
-			return redirect()->route('home')->withError('Unable to retrieve block data, please try again later. Message: ' . $ex->getMessage());
+			return redirect()->route('home', '400');
 		}
 
 		if (!$block->existsOnBlockchain())
-			return redirect()->route('home')->withError('Block was not found. Please make sure you entered correct address, block hash or main block height.');
+			return redirect()->route('home', '404');
 
 		return view('block.index', [
 			'block' => $block,

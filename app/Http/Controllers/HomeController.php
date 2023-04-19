@@ -19,6 +19,7 @@ class HomeController extends Controller
 			'hashrateChange' => valueChange((float) Stat::orderBy('id', 'desc')->offset(60)->limit(60)->get()->avg('network_hashrate'), (float) Stat::orderBy('id', 'desc')->limit(60)->get()->avg('network_hashrate')),
 			'mainBlocks' => MainBlock::orderBy('height', 'desc')->limit(20)->get(),
 			'numberOfNewBlocksLastMinute' => $numberOfNewBlocksLastMinute,
+			'currentErrorMessage' => request()->has('400') ? 'Incorrect address, block hash or main block height.' : (request()->has('404') ? 'Block was not found. Please make sure you entered correct address, block hash or main block height.' : null),
 		]);
 	}
 
