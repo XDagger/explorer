@@ -37,7 +37,7 @@ export default {
 
 			this.loading = true
 
-			axios.get('/api/balance/' + this.input)
+			axios.get('/api/balance/' + this.input.trim())
 				.then((response) => {
 					this.balance = response.data.balance
 					this.loading = false
