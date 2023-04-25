@@ -25,6 +25,9 @@ function color($text)
 {
 	$hash = crc32($text);
 
+	if ($hash % 74 == 0)
+		$hash = ($hash + 200) % 360;
+
 	$hue = 31 + $hash % 247;
 	$lightness = 80 + ($hash % 3 * 5);
 
