@@ -21,7 +21,6 @@
 						<transition name="fade">
 							<div v-show="modal" @click.self="toggleModal" class="fixed z-50 pin overflow-auto bg-smoke-dark flex" style="display:none">
 								<div class="fixed shadow-inner max-w-md relative pin-b pin-x align-top m-auto justify-end md:justify-center p-8 bg-white md:rounded w-full h-auto md:shadow flex flex-col">
-
 									<div>
 										<h2 class="text-black text-xl font-bold">Network hashrate</h2>
 										<div class="text-grey-dark text-base font-normal mb-8">Last 3 days</div>
@@ -148,8 +147,48 @@
 		</div>
 
 		<div class="box">
-			<h2 class="box-title">Latest blocks</h2>
-			<div class="box-sub-title">Last 20 main blocks</div>
+			<div class="flex flex-wrap items-start justify-between mb-8">
+				<div class="w-full md:w-1/2">
+					<h2 class="box-title">Latest blocks</h2>
+					<div class="box-sub-title mb-0">Last 20 main blocks</div>
+				</div>
+
+				<modal inline-template>
+					<div class="w-full md:w-auto mt-4 md:mt-0">
+						<div class="w-full flex items-center md:justify-end text-blue-dark font-medium cursor-pointer tracking-wide text-center" @click="toggleModal">
+							<div class="h-4 mr-2">
+								@svg('info', 'stroke-current')
+							</div>
+
+							<span>Info</span>
+						</div>
+
+						<transition name="fade">
+							<div v-show="modal" @click.self="toggleModal" class="fixed z-50 pin overflow-auto bg-smoke-dark flex" style="display:none">
+								<div class="fixed shadow-inner max-w-md relative pin-b pin-x align-top m-auto justify-end md:justify-center p-8 bg-white md:rounded w-full h-auto md:shadow flex flex-col">
+									<div>
+										<h2 class="text-black text-xl font-bold">Color key</h2>
+										<div class="text-grey-dark text-base font-normal mb-4">Last 20 main blocks</div>
+
+										<div class="flex items-center flex-wrap -mx-2">
+											@foreach ($mainBlocks->pluck('remark')->unique()->sort() as $mainBlockRemark)
+												<div class="mt-4 px-2 flex items-center w-full sm:w-1/2">
+													<div class="bg-grey-lighter w-3 h-3 shadow rounded-full mr-2" style="background-color: {{ $mainBlockRemark !== null ? color($mainBlockRemark) : 'auto' }}"></div>
+													<span>{{ $mainBlockRemark ?? 'No pool tag' }}</span>
+												</div>
+											@endforeach
+										</div>
+									</div>
+
+									<span @click="toggleModal" class="absolute pin-t pin-r pt-4 px-4 text-grey hover:text-grey-darkest cursor-pointer">
+										@svg('x', 'w-6 h-6 fill-current')
+									</span>
+								</div>
+							</div>
+						</transition>
+					</div>
+				</modal>
+			</div>
 
 			<div class="flex flex-wrap w-full">
 				@foreach ($mainBlocks->chunk(10) as $chunk)
