@@ -201,7 +201,7 @@
 							<div class="mb-4 {{ $loop->last ? 'sm:mb-0' : '' }} sm:flex items-center">
 								<div class="mb-2 sm:mb-0 w-full sm:w-1/3 block text-center rounded-full bg-grey-lighter uppercase px-2 py-1 text-xs font-medium mr-3 text-grey-dark" v-tippy title="Height {{ $mainBlock->height }}{!! $mainBlock->remark !== null ? '&lt;br&gt;Found by ' . e(e(linksToDomains($mainBlock->remark))) . '" style="background-color: ' . color($mainBlock->remark) : '' !!}">
 									@if (($remarkLink = firstLink($mainBlock->remark)) !== null)
-										<a href="{{ $remarkLink }}" target="_blank" style="color: inherit">{{ $mainBlock->created_at->format('Y-m-d H:i:s') }} UTC</a>
+										<a href="{{ $remarkLink }}" target="_blank" class="font-normal" style="color: inherit">{{ $mainBlock->created_at->format('Y-m-d H:i:s') }} UTC</a>
 									@else
 										{{ $mainBlock->created_at->format('Y-m-d H:i:s') }} UTC
 									@endif
