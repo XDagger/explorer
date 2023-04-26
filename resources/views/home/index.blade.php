@@ -175,7 +175,7 @@
 												<div class="mt-4 px-2 flex items-center w-full sm:w-1/2">
 													<div class="bg-grey-lighter w-3 h-3 shadow rounded-full mr-2" style="background-color: {{ $mainBlockRemark !== null ? color($mainBlockRemark) : 'auto' }}"></div>
 													@if (($remarkLink = firstLink($mainBlockRemark)) !== null)
-														<a href="{{ $remarkLink }}" target="_blank" style="color: inherit">{{ linksToDomains($mainBlockRemark) }}</a>
+														<a href="{{ $remarkLink }}" target="_blank" class="font-normal" style="color: inherit">{{ linksToDomains($mainBlockRemark) }}</a>
 													@else
 														{{ $mainBlockRemark ?? 'No pool tag' }}
 													@endif
