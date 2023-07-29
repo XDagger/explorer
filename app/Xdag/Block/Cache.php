@@ -135,7 +135,7 @@ class Cache
 		// direct node communication
 		try {
 			// XDAG-ADDRESS related code
-			$stream = Node::streamRpc(strlen($id) < 26 ? 'xdag_getBlockByNumber' : 'xdag_getBlockByHash', [$id]);
+			$stream = Node::streamRpc(strlen($id) < 26 ? 'xdag_getBlockByNumber' : 'xdag_getBlockByHash', [$id, 0]);
 
 			// read until we get all base block data
 			$buffer = stream_get_line($stream, 512, ',"refs":');
@@ -167,7 +167,7 @@ class Cache
 
 			unset($baseBlockData);
 
-			//  there are maximally 12 "refs" in a block, read all into memory and decode
+			// there are maximally 12 "refs" in a block, read all into memory and decode
 			$refs = json_decode(stream_get_line($stream, 2560, ',"transactions":'), true, JSON_THROW_ON_ERROR);
 
 			if (is_array($refs)) {
