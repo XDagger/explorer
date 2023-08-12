@@ -135,7 +135,7 @@ class Cache
 		// direct node communication
 		try {
 			// XDAG-ADDRESS related code
-			$stream = Node::streamRpc(strlen($id) < 26 ? 'xdag_getBlockByNumber' : 'xdag_getBlockByHash', [$id, 0]);
+			$stream = Node::streamRpc(strlen($id) < 26 ? 'xdag_getBlockByNumber' : 'xdag_getBlockByHash', [$id, 1, 1000000000]);
 
 			// read until we get all base block data
 			$buffer = stream_get_line($stream, 512, ',"refs":');
