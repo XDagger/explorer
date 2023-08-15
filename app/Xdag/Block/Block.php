@@ -87,13 +87,11 @@ class Block extends Model
 
 		if ($type === 'balance') {
 			foreach ($values as $index => &$value) {
+				if ($index)
+					$value = bcadd($value, $values[$index - 1], 9);
+
 				if (bccomp($value, '0.000000000', 9) < 0)
 					$value = '0.000000000';
-
-				if (!$index)
-					continue;
-
-				$value = bcadd($value, $values[$index - 1], 9);
 			}
 		}
 
