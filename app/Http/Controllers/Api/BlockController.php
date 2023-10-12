@@ -41,6 +41,7 @@ class BlockController extends Controller
 			$writer->write('difficulty', $block->difficulty);
 			$writer->write('balance_address', $block->address);
 			$writer->write('balance', $block->balance);
+			$writer->write('ui_notifications', $block->addressNotifications()->shown()->orderBy('created_at')->get()->toBase()->merge($block->hashNotifications()->shown()->orderBy('created_at')->get()->toBase())->map(fn($n) => $n->only('type', 'message'))->toArray());
 
 			$directionsAmount = [];
 			$transactionOutputCallback = function (Listing $listing, $builder, int $page, int $perPage) use ($writer, &$directionsAmount) {

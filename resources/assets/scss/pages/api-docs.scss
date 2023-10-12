@@ -45,6 +45,7 @@
 
 	pre {
 		@apply .bg-grey-lightest .p-4 .mb-6 .overflow-x-auto;
+		clear: right;
 	}
 
 	code {

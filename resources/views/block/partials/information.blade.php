@@ -1,6 +1,6 @@
 <div class="flex flex-wrap">
 	<div class="w-full md:w-2/3 md:pr-4">
-		<div class="box">
+		<div class="box mb-8">
 			<div class="flex flex-wrap items-start justify-between mb-8">
 				<div class="w-full md:w-1/2">
 					<h2 class="box-title mb-0">Block Information</h2>
@@ -77,7 +77,7 @@
 	</div>
 
 	@if ($block->isTransactionBlock())
-		<div class="w-full md:w-1/3 md:pl-4">
+		<div class="w-full mb-8 md:mb-0 md:w-1/3 md:pl-4">
 			<div class="box">
 				<h3 class="box-title">Summary</h3>
 
@@ -110,7 +110,7 @@
 			</div>
 		</div>
 	@else
-		<div class="w-full md:w-1/3 md:pl-4">
+		<div class="w-full mb-8 md:mb-0 md:w-1/3 md:pl-4">
 			<div class="box">
 				<h3 class="box-title">Balances</h3>
 

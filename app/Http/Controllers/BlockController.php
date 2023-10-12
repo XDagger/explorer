@@ -18,6 +18,8 @@ class BlockController extends Controller
 		if (!$block->existsOnBlockchain())
 			return redirect()->route('home', '404');
 
+		$uiNotifications = $block->addressNotifications()->shown()->orderBy('created_at')->get()->toBase()->merge($block->hashNotifications()->shown()->orderBy('created_at')->get()->toBase())->toArray();
+
 		return view('block.index', [
 			'block' => $block,
 			'balanceGraph' => $balanceGraph = $block->walletGraph('balance'),
@@ -28,6 +30,7 @@ class BlockController extends Controller
 			'spendingsChange' => valueChange($spendingsGraph['values'][count($spendingsGraph['values']) - 2] ?? 0, $spendingsGraph['values'][count($spendingsGraph['values']) - 1] ?? 0),
 			'walletListing' => app(WalletListing::class, ['block' => $block]),
 			'transactionsListing' => app(TransactionsListing::class, ['block' => $block]),
+			'uiNotifications' => $uiNotifications,
 		]);
 	}
 

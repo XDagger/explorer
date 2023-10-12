@@ -12,6 +12,13 @@ class HomeController extends Controller
 		else
 			$numberOfNewBlocksLastMinute = 0;
 
+		$uiNotifications = [];
+
+		if (request()->has('400'))
+			$uiNotifications = [['type' => 'error', 'message' => 'Incorrect address, block hash or main block height.']];
+		else if (request()->has('404'))
+			$uiNotifications = [['type' => 'error', 'message' => 'Block was not found. Please make sure you entered correct address, block hash or main block height.']];
+
 		return view('home.index', [
 			'stat' => $stat ?? new Stat,
 			'hashrateChartData' => $this->hashrateChartData(),
@@ -19,7 +26,7 @@ class HomeController extends Controller
 			'hashrateChange' => valueChange((float) Stat::orderBy('id', 'desc')->offset(60)->limit(60)->get()->avg('network_hashrate'), (float) Stat::orderBy('id', 'desc')->limit(60)->get()->avg('network_hashrate')),
 			'mainBlocks' => MainBlock::orderBy('height', 'desc')->limit(20)->get(),
 			'numberOfNewBlocksLastMinute' => $numberOfNewBlocksLastMinute,
-			'currentErrorMessage' => request()->has('400') ? 'Incorrect address, block hash or main block height.' : (request()->has('404') ? 'Block was not found. Please make sure you entered correct address, block hash or main block height.' : null),
+			'uiNotifications' => $uiNotifications,
 		]);
 	}
 

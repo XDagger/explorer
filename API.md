@@ -286,6 +286,7 @@ Data keys `file_pos` and `file` are not present in newest versions of XDAG and s
 	"difficulty":"cdf6de302338a33dd3ed8cc3dd7", // null for snapshot or wallet blocks
 	"balance_address":"8RCZq8+NOmdqW7lzTDjqS6K8YFr9hn3q",
 	"balance":"0.000000013",
+	"ui_notifications":[{"type":"info","message":"notification associated with block displayed in UI"},{"type":"success","message":"foo"},{"type":"warning","message":"bar"},{"type":"error","message":"baz"}],
 	"block_as_transaction":[
 		{
 			"direction":"output",
@@ -394,6 +395,7 @@ Data keys `file_pos` and `file` are not present in newest versions of XDAG and s
 	"difficulty":"6a5a22b4abf81b1ec9679b64dce",
 	"balance_address":"BCZOureHCD2Ks7ZXx3Ud//rXrVgw66EL",
 	"balance":"0.000000000",
+	"ui_notifications":[{"type":"info","message":"notification associated with block displayed in UI"},{"type":"success","message":"foo"},{"type":"warning","message":"bar"},{"type":"error","message":"baz"}],
 	"block_as_transaction":[
 		{
 			"direction":"input",

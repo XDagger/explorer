@@ -18,6 +18,16 @@ class Block extends Model
 		return $this->hasMany(Transaction::class);
 	}
 
+	public function addressNotifications()
+	{
+		return $this->hasMany(Notification::class, 'id', 'address');
+	}
+
+	public function hashNotifications()
+	{
+		return $this->hasMany(Notification::class, 'id', 'hash');
+	}
+
 	/* methods */
 	public function cacheReady(): bool
 	{

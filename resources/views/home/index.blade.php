@@ -2,7 +2,7 @@
 
 @section('body')
 	<div class="container p-8">
-		<div class="box">
+		<div class="box mb-8">
 			<div class="flex flex-wrap items-start justify-between mb-8">
 				<div class="w-full md:w-1/2">
 					<h2 class="box-title mb-0">Network information</h2>

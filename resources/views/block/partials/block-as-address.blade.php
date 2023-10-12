@@ -2,7 +2,7 @@
 @php($filters = $walletListing->usedFilters())
 @php($errors = $walletListing->errors())
 
-<div class="box" id="block-as-address">
+<div class="box mb-8" id="block-as-address">
 	<div class="flex flex-wrap items-start justify-between mb-8">
 		<div class="w-full md:w-1/2">
 			<h4 class="box-title">Block as address</h4>
