@@ -34,7 +34,7 @@
 				<tr>
 					<th class="border-b border-grey-lighter p-3 text-center text-black font-bold w-40">Direction</th>
 					<th class="border-b border-grey-lighter p-3 text-left text-black font-bold">Transaction</th>
-					<th class="border-b border-grey-lighter p-3 text-center">Amount</th>
+					<th class="border-b border-grey-lighter p-3 text-right">Amount</th>
 					<th class="border-b border-grey-lighter p-3 text-right">Date and Time (UTC)</th>
 				</tr>
 			</thead>
@@ -70,7 +70,7 @@
 							@endif
 						</td>
 
-						<td class="p-3 {{ $loop->index % 2 ? 'bg-grey-lightest' : 'bg-white' }} text-center">{{ number_format(ltrim($entry->amount, '-'), 9) }}</td>
+						<td class="p-3 {{ $loop->index % 2 ? 'bg-grey-lightest' : 'bg-white' }} text-right">{{ number_format(ltrim($entry->amount, '-'), 9) }}</td>
 
 						<td class="p-3 {{ $loop->index % 2 ? 'bg-grey-lightest' : 'bg-white' }} text-right">{{ $entry->created_at->format('Y-m-d H:i:s.v') }}</td>
 					</tr>
