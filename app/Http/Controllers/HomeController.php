@@ -15,9 +15,9 @@ class HomeController extends Controller
 		$uiNotifications = [];
 
 		if (request()->has('400'))
-			$uiNotifications = [['type' => 'error', 'message' => 'Incorrect address, block hash or main block height.']];
+			$uiNotifications = [['type' => 'error', 'message' => 'Incorrect address, block hash or main block height.', 'timeout' => 10]];
 		else if (request()->has('404'))
-			$uiNotifications = [['type' => 'error', 'message' => 'Block was not found. Please make sure you entered correct address, block hash or main block height.']];
+			$uiNotifications = [['type' => 'error', 'message' => 'Block was not found. Please make sure you entered correct address, block hash or main block height.', 'timeout' => 10]];
 
 		return view('home.index', [
 			'stat' => $stat ?? new Stat,

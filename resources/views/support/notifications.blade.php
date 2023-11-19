@@ -1,6 +1,6 @@
 @if (isset($uiNotifications) && count($uiNotifications))
 	@foreach ($uiNotifications as $uiNotification)
-		@include('support.notification', ['type' => $uiNotification['type'], 'text' => $uiNotification['message'], 'delay' => $uiNotification['timeout'] * 1000])
+		@include('support.notification', ['type' => $uiNotification['type'], 'text' => $uiNotification['message'], 'delay' => ($uiNotification['timeout'] ?? 10) * 1000])
 	@endforeach
 @endif
 
