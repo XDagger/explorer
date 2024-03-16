@@ -14,7 +14,7 @@ All API requests except `/api/status` check current node status. If the node is 
 
 ## GET /api/status <a href="/api/status" target="_blank">Try it</a>
 
-Retrieves current node status and information. Data keys `extra_blocks`, `orphan_blocks`, `wait_sync_blocks` and `in_out_dropped` are not present in newest versions of XDAG and should not be used. Timezone is UTC.
+Retrieves current node status and information. Data keys `stats.extra_blocks`, `stats.orphan_blocks`, `stats.wait_sync_blocks`, `net_conn.seconds`, `net_conn.in_out_bytes`, `net_conn.in_out_packets` and `net_conn.in_out_dropped` are not present in newest versions of XDAG and should not be used. Timezone is UTC.
 
 ### Successful response `HTTP 200`
 ```json
@@ -57,14 +57,14 @@ Retrieves current node status and information. Data keys `extra_blocks`, `orphan
 	"net_conn":[
 		{
 			"host":"136.243.71.148:13655",
-			"seconds":11494670,
+			"seconds":0,
 			"in_out_bytes":[
-				312360886272,
-				151830522368
+				0,
+				0
 			],
 			"in_out_packets":[
-				610079856,
-				296543989
+				0,
+				0
 			],
 			"in_out_dropped":[
 				0,
@@ -73,14 +73,14 @@ Retrieves current node status and information. Data keys `extra_blocks`, `orphan
 		},
 		{
 			"host":"136.243.55.153:16775",
-			"seconds":11159277,
+			"seconds":0,
 			"in_out_bytes":[
-				344487480320,
-				253850217472
+				0,
+				0
 			],
 			"in_out_packets":[
-				672827110,
-				495801206
+				0,
+				0
 			],
 			"in_out_dropped":[
 				0,
@@ -89,14 +89,14 @@ Retrieves current node status and information. Data keys `extra_blocks`, `orphan
 		},
 		{
 			"host":"136.243.71.148:56230",
-			"seconds":11492487,
+			"seconds":0,
 			"in_out_bytes":[
-				308398347264,
-				154851093504
+				0,
+				0
 			],
 			"in_out_packets":[
-				602340522,
-				302443542
+				0,
+				0
 			],
 			"in_out_dropped":[
 				0,
@@ -105,14 +105,14 @@ Retrieves current node status and information. Data keys `extra_blocks`, `orphan
 		},
 		{
 			"host":"136.243.55.153:48428",
-			"seconds":11156843,
+			"seconds":0,
 			"in_out_bytes":[
-				346179954688,
-				254174500864
+				0,
+				0
 			],
 			"in_out_packets":[
-				676132724,
-				496434572
+				0,
+				0
 			],
 			"in_out_dropped":[
 				0,
