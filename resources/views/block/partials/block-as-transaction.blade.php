@@ -84,7 +84,7 @@
 				@if ($showTotals && (bccomp($fees, '0.000000000', 9) > 0 || bccomp($inputs, '0.000000000', 9) > 0 || bccomp($outputs, '0.000000000', 9) > 0))
 					<tr>
 						<td class="p-3 bg-white text-left">
-							<span class="rounded bg-purple uppercase px-3 py-1 text-xs font-bold mr-3 text-white block w-auto sm:w-2/3 text-center mx-auto">On page</span>
+							<span class="rounded bg-purple uppercase px-3 py-1 text-xs font-bold mr-3 text-white block w-auto sm:w-2/3 text-center mx-auto whitespace-pre">On page</span>
 						</td>
 						<td colspan="2" class="p-3 bg-white text-left">
 							@if (bccomp($inputs, '0.000000000', 9) > 0)
