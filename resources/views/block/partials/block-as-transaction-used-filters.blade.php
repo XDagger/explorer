@@ -33,7 +33,7 @@
 			<span class="rounded bg-red uppercase px-3 py-1 text-xs mr-3 text-white text-center mx-auto" title="Total outputs in filtered data" v-tippy>-{{ number_format($filteredOutputs, 9) }}</span>
 		@endif
 		@if (bccomp($filteredFees, '0.000000000') > 0)
-			<span class="rounded bg-grey-darker uppercase px-3 py-1 text-xs mr-3 text-white text-center mx-auto" title="Total fees in filtered data" v-tippy>-{{ number_format($filteredFees, 9) }}</span>
+			<span class="rounded bg-grey-darker uppercase px-3 py-1 text-xs mr-3 text-white text-center mx-auto" title="Total fees in filtered data" v-tippy>{{ number_format($filteredFees, 9) }}</span>
 		@endif
 	@endif
 

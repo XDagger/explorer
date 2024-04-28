@@ -48,7 +48,7 @@
 						<div class="flex flex-wrap">
 							<checkbox inline-template :checked="{{ in_array('fee', $filters['transactions_directions']['value'] ?? []) ? 'true' : 'false' }}">
 								<div class="mb-4 md:mb-0 w-full md:w-1/4">
-									<input type="checkbox" class="checkbox-input hidden" name="transaction_directions[]" value="fee">
+									<input type="checkbox" class="checkbox-input hidden" name="transactions_directions[]" value="fee">
 
 									<div class="cursor-pointer w-full flex items-center" @click="toggle()" :class="{ 'text-blue': isChecked }">
 										<div class="form-checkbox flex items-center justify-center mr-2" :class="{ 'text-blue': isChecked, 'text-transparent': !isChecked }">
@@ -62,7 +62,7 @@
 
 							<checkbox inline-template :checked="{{ in_array('input', $filters['transactions_directions']['value'] ?? []) ? 'true' : 'false' }}">
 								<div class="mb-4 md:mb-0 w-full md:w-1/4">
-									<input type="checkbox" class="checkbox-input hidden" name="transaction_directions[]" value="input">
+									<input type="checkbox" class="checkbox-input hidden" name="transactions_directions[]" value="input">
 
 									<div class="cursor-pointer w-full flex items-center" @click="toggle()" :class="{ 'text-blue': isChecked }">
 										<div class="form-checkbox flex items-center justify-center mr-2" :class="{ 'text-blue': isChecked, 'text-transparent': !isChecked }">
@@ -76,7 +76,7 @@
 
 							<checkbox inline-template :checked="{{ in_array('output', $filters['transactions_directions']['value'] ?? []) ? 'true' : 'false' }}">
 								<div class="w-full md:w-1/4">
-									<input type="checkbox" class="checkbox-input hidden" name="transaction_directions[]" value="output">
+									<input type="checkbox" class="checkbox-input hidden" name="transactions_directions[]" value="output">
 
 									<div class="cursor-pointer w-full flex items-center" @click="toggle()" :class="{ 'text-blue': isChecked }">
 										<div class="form-checkbox flex items-center justify-center mr-2" :class="{ 'text-blue': isChecked, 'text-transparent': !isChecked }">

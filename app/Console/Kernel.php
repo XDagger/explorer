@@ -5,10 +5,6 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
-use App\Modules\NodeStatistic\Commands\CheckNodesReachability;
-use App\Modules\Network\Commands\LogNetwork;
-use App\Modules\LastBlock\Commands\FetchNewLastBlocks;
-
 class Kernel extends ConsoleKernel
 {
 	protected $commands = [];
