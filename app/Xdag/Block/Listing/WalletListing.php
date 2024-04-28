@@ -33,13 +33,13 @@ class WalletListing extends Listing
 			'addresses_amount_from' => [
 				'name' => 'Amount from',
 				'validation' => 'nullable|numeric|min:0' . ($this->request->input('addresses_amount_to') !== null ? '|lte:addresses_amount_to' : ''),
-				'apply' => fn($builder, string $value) => $builder->where('amount', '>=', $value),
+				'apply' => fn($builder, string $value) => $builder->where(DB::raw('ABS(amount)'), '>=', $value),
 			],
 
 			'addresses_amount_to' => [
 				'name' => 'Amount to',
-				'validation' => 'nullable|numeric' . ($this->request->input('addresses_amount_from') !== null ? '|gte:addresses_amount_from' : ''),
-				'apply' => fn($builder, string $value) => $builder->where('amount', '<=', $value),
+				'validation' => 'nullable|numeric|min:0' . ($this->request->input('addresses_amount_from') !== null ? '|gte:addresses_amount_from' : ''),
+				'apply' => fn($builder, string $value) => $builder->where(DB::raw('ABS(amount)'), '<=', $value),
 			],
 
 			'addresses_directions' => [

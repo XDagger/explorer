@@ -13,12 +13,12 @@ class TransactionsListing extends Listing
 
 	public function outputsSum(): string
 	{
-		return $this->buildQuery()->whereDirection('output')->sum(DB::raw('ABS("amount")'));
+		return $this->buildQuery()->whereDirection('output')->sum(DB::raw('ABS(amount)'));
 	}
 
 	public function feesSum(): string
 	{
-		return $this->buildQuery()->whereDirection('fee')->sum(DB::raw('ABS("amount")'));
+		return $this->buildQuery()->whereDirection('fee')->sum(DB::raw('ABS(amount)'));
 	}
 
 	protected function builder()
@@ -38,13 +38,13 @@ class TransactionsListing extends Listing
 			'transactions_amount_from' => [
 				'name' => 'Amount from',
 				'validation' => 'nullable|numeric|min:0' . ($this->request->input('transactions_amount_to') !== null ? '|lte:transactions_amount_to' : ''),
-				'apply' => fn($builder, string $value) => $builder->where('amount', '>=', $value),
+				'apply' => fn($builder, string $value) => $builder->where(DB::raw('ABS(amount)'), '>=', $value),
 			],
 
 			'transactions_amount_to' => [
 				'name' => 'Amount to',
-				'validation' => 'nullable|numeric' . ($this->request->input('transactions_amount_from') !== null ? '|lte:transactions_amount_from' : ''),
-				'apply' => fn($builder, string $value) => $builder->where('amount', '<=', $value),
+				'validation' => 'nullable|numeric|min:0' . ($this->request->input('transactions_amount_from') !== null ? '|gte:transactions_amount_from' : ''),
+				'apply' => fn($builder, string $value) => $builder->where(DB::raw('ABS(amount)'), '<=', $value),
 			],
 
 			'transactions_directions' => [

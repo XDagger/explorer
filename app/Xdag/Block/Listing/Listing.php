@@ -67,7 +67,7 @@ abstract class Listing
 
 	public function spendingsSum(): string
 	{
-		return $this->buildQuery()->spendings()->sum(DB::raw('ABS("amount")'));
+		return $this->buildQuery()->spendings()->sum(DB::raw('ABS(amount)'));
 	}
 
 	protected function buildQuery()
