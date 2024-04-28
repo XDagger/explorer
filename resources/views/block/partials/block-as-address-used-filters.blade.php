@@ -23,12 +23,12 @@
 	@php($filteredEarnings = $walletListing->earningsSum())
 	@php($filteredSpendings = $walletListing->spendingsSum())
 
-	@if (bccomp($filteredEarnings, '0.000000000') > 0 || bccomp($filteredSpendings, '0.000000000') > 0)
+	@if (bccomp($filteredEarnings, '0.000000000', 9) > 0 || bccomp($filteredSpendings, '0.000000000', 9) > 0)
 		<strong class="text-lg block mb-4">Filtered totals</strong>
-		@if (bccomp($filteredEarnings, '0.000000000') > 0)
+		@if (bccomp($filteredEarnings, '0.000000000', 9) > 0)
 			<span class="rounded bg-green uppercase px-3 py-1 text-xs mr-3 text-white text-center mx-auto" title="Total earnings in filtered data" v-tippy>+{{ number_format($filteredEarnings, 9) }}</span>
 		@endif
-		@if (bccomp($filteredSpendings, '0.000000000') > 0)
+		@if (bccomp($filteredSpendings, '0.000000000', 9) > 0)
 			<span class="rounded bg-red uppercase px-3 py-1 text-xs mr-3 text-white text-center mx-auto" title="Total spendings in filtered data" v-tippy>-{{ number_format($filteredSpendings, 9) }}</span>
 		@endif
 	@endif

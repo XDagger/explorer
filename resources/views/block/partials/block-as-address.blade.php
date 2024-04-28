@@ -88,16 +88,16 @@
 					</tr>
 					@php($showTotals = false)
 				@endforelse
-				@if ($showTotals && (bccomp($earnings, '0.000000000') > 0 || bccomp($spendings, '0.000000000') > 0))
+				@if ($showTotals && (bccomp($earnings, '0.000000000', 9) > 0 || bccomp($spendings, '0.000000000', 9) > 0))
 					<tr>
 						<td class="p-3 bg-white text-left">
 							<span class="rounded bg-purple uppercase px-3 py-1 text-xs font-bold mr-3 text-white block w-auto sm:w-2/3 text-center mx-auto">On page</span>
 						</td>
 						<td colspan="3" class="p-3 bg-white text-left">
-							@if (bccomp($earnings, '0.000000000') > 0)
+							@if (bccomp($earnings, '0.000000000', 9) > 0)
 								<span class="rounded bg-green uppercase px-3 py-1 text-xs mr-3 text-white text-center mx-auto" title="Total earnings on this page" v-tippy>+{{ number_format($earnings, 9) }}</span>
 							@endif
-							@if (bccomp($spendings, '0.000000000') > 0)
+							@if (bccomp($spendings, '0.000000000', 9) > 0)
 								<span class="rounded bg-red uppercase px-3 py-1 text-xs mr-3 text-white text-center mx-auto" title="Total spendings on this page" v-tippy>-{{ number_format($spendings, 9) }}</span>
 							@endif
 						</td>

@@ -24,15 +24,15 @@
 	@php($filteredOutputs = $transactionsListing->outputsSum())
 	@php($filteredFees = $transactionsListing->feesSum())
 
-	@if (bccomp($filteredInputs, '0.000000000') > 0 || bccomp($filteredOutputs, '0.000000000') > 0 || bccomp($filteredFees, '0.000000000') > 0)
+	@if (bccomp($filteredInputs, '0.000000000', 9) > 0 || bccomp($filteredOutputs, '0.000000000', 9) > 0 || bccomp($filteredFees, '0.000000000', 9) > 0)
 		<strong class="text-lg block mb-4">Filtered totals</strong>
-		@if (bccomp($filteredInputs, '0.000000000') > 0)
+		@if (bccomp($filteredInputs, '0.000000000', 9) > 0)
 			<span class="rounded bg-green uppercase px-3 py-1 text-xs mr-3 text-white text-center mx-auto" title="Total inputs in filtered data" v-tippy>+{{ number_format($filteredInputs, 9) }}</span>
 		@endif
-		@if (bccomp($filteredOutputs, '0.000000000') > 0)
+		@if (bccomp($filteredOutputs, '0.000000000', 9) > 0)
 			<span class="rounded bg-red uppercase px-3 py-1 text-xs mr-3 text-white text-center mx-auto" title="Total outputs in filtered data" v-tippy>-{{ number_format($filteredOutputs, 9) }}</span>
 		@endif
-		@if (bccomp($filteredFees, '0.000000000') > 0)
+		@if (bccomp($filteredFees, '0.000000000', 9) > 0)
 			<span class="rounded bg-grey-darker uppercase px-3 py-1 text-xs mr-3 text-white text-center mx-auto" title="Total fees in filtered data" v-tippy>{{ number_format($filteredFees, 9) }}</span>
 		@endif
 	@endif
