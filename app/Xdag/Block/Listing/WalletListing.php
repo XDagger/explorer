@@ -1,5 +1,7 @@
 <?php namespace App\Xdag\Block\Listing;
 
+use Illuminate\Support\Facades\DB;
+
 class WalletListing extends Listing
 {
 	protected $pagination = ['addresses_page', 'addresses_per_page'];
