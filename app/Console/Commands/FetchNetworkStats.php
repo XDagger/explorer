@@ -13,8 +13,6 @@ class FetchNetworkStats extends Command
 
 	public function handle()
 	{
-		$mainBlocks = null;
-
 		try {
 			$status = Node::callRpc('xdag_getStatus')['result'];
 			$mainBlocks = Node::callRpc('xdag_getBlocksByNumber', [config('explorer.main_blocks_count', 20)]);
@@ -44,6 +42,14 @@ class FetchNetworkStats extends Command
 
 				'created_at' => now(),
 			];
+
+			if (config('explorer.hashrate_estimation.enabled', false)) {
+				$estimatedNetworkHashrate = $this->estimateNetworkHashrate(config('explorer.hashrate_estimation.pool_api_url'), config('explorer.hashrate_estimation.main_block_remarks'), $mainBlocks);
+
+				if ($estimatedNetworkHashrate !== null) {
+					$statData['network_hashrate'] = $estimatedNetworkHashrate;
+				}
+			}
 		} catch (XdagException) {
 			// if latest stat exists, reuse most of the values
 			if ($stat = Stat::orderBy('id')->first()) {
@@ -62,7 +68,7 @@ class FetchNetworkStats extends Command
 
 		Stat::where('created_at', '<', now()->subDays(3))->delete();
 
-		if ($mainBlocks) {
+		if (isset($mainBlocks)) {
 			foreach ($mainBlocks as $mainBlock) {
 				MainBlock::updateOrCreate(['address' => $mainBlock['address']], [
 					'height' => $mainBlock['height'],
@@ -77,5 +83,45 @@ class FetchNetworkStats extends Command
 
 		$this->info('Completed successfully.');
 		return 0;
+	}
+
+	protected function estimateNetworkHashrate(string $poolApiUrl, array $mainBlockRemarks, array $mainBlocks): ?int
+	{
+		if (!$mainBlockRemarks || !$mainBlocks)
+			return null;
+
+		$poolBlocksCount = 0;
+
+		foreach ($mainBlocks as $mainBlock) {
+			if (in_array((string) $mainBlock['remark'], $mainBlockRemarks))
+				$poolBlocksCount++;
+		}
+
+		if ($poolBlocksCount === 0)
+			return null;
+
+		$apiResponse = trim((string) @file_get_contents($poolApiUrl, false, stream_context_create([
+			'http' => [
+				'protocol_version' => 1.1,
+				'method' => 'GET',
+				'header' => [
+					'Accept: application/json',
+					'Connection: close',
+				],
+				'timeout' => 5,
+				'ignore_errors' => true,
+				'follow_location' => false,
+			],
+		])));
+
+		if ($apiResponse === '')
+			return null;
+
+		$apiResponse = @json_decode($apiResponse, true);
+
+		if (!is_array($apiResponse) || !isset($apiResponse['hashrate']) || !is_int($apiResponse['hashrate']))
+			return null;
+
+		return intval($apiResponse['hashrate'] / ($poolBlocksCount / count($mainBlocks)));
 	}
 }
