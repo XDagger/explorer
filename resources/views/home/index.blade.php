@@ -135,7 +135,7 @@
 								@svg('arrow-right')
 							</span>
 
-							<span>Difficulty</span>
+							<span>Chain difficulty</span>
 						</div>
 
 						<span class="info-value block break-words">

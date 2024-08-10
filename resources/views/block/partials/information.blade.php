@@ -51,7 +51,7 @@
 
 			<div class="flex flex-wrap justify-between items-start">
 				<div class="mb-4 md:mb-0 w-full md:w-1/2">
-					<strong class="info-label">Difficulty</strong>
+					<strong class="info-label">Block difficulty</strong>
 					<span class="info-value block break-words">{{ $block->difficulty ?? '-' }}</span>
 				</div>
 
