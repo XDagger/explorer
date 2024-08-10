@@ -202,7 +202,7 @@ Coingecko specific API, retrieves total (maximum) supply of XDAG as `text/plain`
 
 ## GET /api/last-blocks <a href="/api/last-blocks" target="_blank">Try it</a>
 
-Retrieves latest 20 main blocks. Timezone is UTC.
+Retrieves latest `limit` (count) main blocks. Timezone is UTC.
 
 ### Successful response `HTTP 200`
 ```json
