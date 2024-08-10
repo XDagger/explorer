@@ -5,7 +5,6 @@ use App\Xdag\Network\Stat;
 use App\Xdag\Block\MainBlock;
 use App\Xdag\Exceptions\XdagException;
 use Illuminate\Console\Command;
-use Illuminate\Database\QueryException;
 
 class FetchNetworkStats extends Command
 {
@@ -18,10 +17,9 @@ class FetchNetworkStats extends Command
 
 		try {
 			$status = Node::callRpc('xdag_getStatus')['result'];
-			$mainBlocks = Node::callRpc('xdag_getBlocksByNumber', [20]);
+			$mainBlocks = Node::callRpc('xdag_getBlocksByNumber', [config('explorer.main_blocks_count', 20)]);
 			$mainBlocks = $mainBlocks['result'];
-
-			Stat::create([
+			$statData = [
 				'synchronized' => Node::callRpc('xdag_syncing')['result']['isSyncDone'],
 				'version' => Node::callRpc('xdag_protocolVersion')['result'],
 				'network_type' => Node::callRpc('xdag_netType')['result'],
@@ -45,19 +43,21 @@ class FetchNetworkStats extends Command
 				'connections' => Node::callRpc('xdag_netConnectionList')['result'] ?? [],
 
 				'created_at' => now(),
-			]);
-		} catch (XdagException $ex) {
+			];
+		} catch (XdagException) {
 			// if latest stat exists, reuse most of the values
 			if ($stat = Stat::orderBy('id')->first()) {
-				$data = [
+				$statData = [
 					'synchronized' => false,
 					'created_at' => now(),
 				] + $stat->toArray();
 
 				unset($data['id']);
-
-				Stat::create($data);
 			}
+		}
+
+		if (isset($statData)) {
+			Stat::create($statData);
 		}
 
 		Stat::where('created_at', '<', now()->subDays(3))->delete();
