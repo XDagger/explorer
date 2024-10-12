@@ -133,11 +133,11 @@ int main(int argc,char *argv[])
 
 	int returnCode = 0;
 	int i, i1 = 0, state = 0, csvState = 0, escapeSet = 0;
-	char c, stopC, o;
+	unsigned char c, stopC, o;
 
-	char *httpVerb = "HTTP/1.1 ";
-	char *endOfHeaders = "\r\n\r\n";
-	char *jsonStopSeq = ",\"transactions\":[";
+	unsigned char *httpVerb = "HTTP/1.1 ";
+	unsigned char *endOfHeaders = "\r\n\r\n";
+	unsigned char *jsonStopSeq = ",\"transactions\":[";
 
 	while ((received = recv(sock, response, sizeof(response) - 1, 0)) > 0) {
 		//fwrite(response, received, 1, stdout);
