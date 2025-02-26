@@ -66,7 +66,7 @@ function hashrate($value, $precision = 2)
 
 function timestampToCarbon(int $timestamp): Carbon\Carbon
 {
-	return Carbon\Carbon::createFromFormat('U.u', intval(floor($timestamp / 1000)) . '.' . str_pad(($timestamp % 1000) * 1000, 6, '0', STR_PAD_LEFT));
+	return Carbon\Carbon::createFromFormat('U.u', intval(floor($timestamp / 1000)) . '.' . str_pad(($timestamp % 1000) * 1000, 6, '0', STR_PAD_LEFT), config('app.timezone'));
 }
 
 function escapeLike(string $expression): string
