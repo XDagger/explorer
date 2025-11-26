@@ -5,7 +5,7 @@
 	"keywords": ["xdag", "explorer"],
 	"license": "MIT",
 	"require": {
-		"php": "^8.4",
+		"php": "^8.5",
 		"bcncommerce/json-stream": "^0.4.2",
 		"erusev/parsedown": "^1.7",
 		"laravel/framework": "^12.0",
@@ -43,7 +43,7 @@
 		"preferred-install": "dist",
 		"sort-packages": true,
 		"platform": {
-			"php": "8.4.4"
+			"php": "8.5.0"
 		}
 	},
 	"minimum-stability": "stable",

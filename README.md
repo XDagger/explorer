@@ -13,16 +13,16 @@ This software provides a detailed view of the xdag network presented in a nice U
 # Installation on Ubuntu 24.04
 1. install, configure and run [XdagJ](https://github.com/XDagger/xdagj)
 2. `adduser explorer` - explorer runs as regular user, sudo premissions should not be given. Continue as root or as regular user with sudo permissions.
-3. install PHP8.4
+3. install PHP8.5
 - `sudo apt install lsb-release ca-certificates apt-transport-https software-properties-common`
 - `sudo add-apt-repository ppa:ondrej/php`
-- `sudo apt install php8.4-fpm php8.4-cli php8.4-bcmath php8.4-curl php8.4-gd php8.4-mbstring php8.4-mysql php8.4-opcache php8.4-readline`
-- create PHP-FPM pool: `nano /etc/php/8.4/fpm/pool.d/explorer.conf`
+- `sudo apt install php8.5-fpm php8.5-cli php8.5-bcmath php8.5-curl php8.5-gd php8.5-mbstring php8.5-mysql php8.5-readline`
+- create PHP-FPM pool: `nano /etc/php/8.5/fpm/pool.d/explorer.conf`
 ```
 [explorer]
 user = $pool
 group = $pool
-listen = /run/php/php8.4-fpm-$pool.sock
+listen = /run/php/php8.5-fpm-$pool.sock
 
 listen.owner = www-data
 listen.group = www-data
@@ -33,8 +33,8 @@ pm.start_servers = 3
 pm.min_spare_servers = 1
 pm.max_spare_servers = 4
 ```
-- `sudo systemctl enable php8.4-fpm`
-- `sudo systemctl restart php8.4-fpm`
+- `sudo systemctl enable php8.5-fpm`
+- `sudo systemctl restart php8.5-fpm`
 4. install MySQL 8.0+
 - `sudo apt install mysql-server mysql-client`
 - `sudo mysql`
@@ -66,7 +66,7 @@ pm.max_spare_servers = 4
 - execute `composer install`, `npm ci`, `npm run production`, `cp .env.example .env`, `php artisan key:generate`
 - edit `.env` and supply MySQL connection parameters and XdagJ RPC URL
 - execute `php artisan migrate`
-- add crontab entry: `* * * * * /usr/bin/php8.4 /var/www/explorer/artisan schedule:run >> /dev/null 2>&1`
+- add crontab entry: `* * * * * /usr/bin/php8.5 /var/www/explorer/artisan schedule:run >> /dev/null 2>&1`
 10. install and configure nginx
 - `sudo apt install nginx`
 - replace default server: `truncate -s 0 /etc/nginx/sites-available/default`, `nano /etc/nginx/sites-available/default`
@@ -89,7 +89,7 @@ server {
 		fastcgi_read_timeout 320;
 		fastcgi_param DOCUMENT_ROOT $realpath_root;
 		fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
-		fastcgi_pass unix:/run/php/php8.4-fpm-explorer.sock;
+		fastcgi_pass unix:/run/php/php8.5-fpm-explorer.sock;
 	}
 
 	location = /favicon.ico {
