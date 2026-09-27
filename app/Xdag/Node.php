@@ -1,4 +1,8 @@
-<?php namespace App\Xdag;
+<?php
+
+declare(strict_types=1);
+
+namespace App\Xdag;
 
 use App\Xdag\Exceptions\XdagException;
 
@@ -10,8 +14,9 @@ class Node
 
         $json = @json_decode((string) $response, true);
 
-        if (!is_array($json) || ($json['jsonrpc'] ?? '') !== '2.0' || ($json['id'] ?? '') !== $callId)
+        if (! is_array($json) || ($json['jsonrpc'] ?? '') !== '2.0' || ($json['id'] ?? '') !== $callId) {
             throw new XdagException("RPC method '$method' returned unexpected response: '$response'");
+        }
 
         return $json;
     }
@@ -25,8 +30,9 @@ class Node
     {
         $url = (string) config('xdag.rpc_url');
 
-        if ($url === '')
+        if ($url === '') {
             throw new \RuntimeException('XDAG node RPC URL is not set.');
+        }
 
         return $url;
     }

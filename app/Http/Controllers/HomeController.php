@@ -1,29 +1,35 @@
-<?php namespace App\Http\Controllers;
+<?php
 
-use App\Xdag\Network\Stat;
+declare(strict_types=1);
+
+namespace App\Http\Controllers;
+
 use App\Xdag\Block\MainBlock;
+use App\Xdag\Network\Stat;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        if (($stat = Stat::orderBy('id', 'desc')->limit(1)->first()) && ($previousStat = Stat::where('id', '<', $stat->id)->orderBy('id', 'desc')->limit(1)->first()))
+        if (($stat = Stat::orderBy('id', 'desc')->limit(1)->first()) && ($previousStat = Stat::where('id', '<', $stat->id)->orderBy('id', 'desc')->limit(1)->first())) {
             $numberOfNewBlocksLastMinute = max(0, $stat->blocks - $previousStat->blocks);
-        else
+        } else {
             $numberOfNewBlocksLastMinute = 0;
+        }
 
         $uiNotifications = [];
 
-        if (request()->has('400'))
+        if (request()->has('400')) {
             $uiNotifications = [['type' => 'error', 'message' => 'Incorrect address, block hash or main block height.', 'timeout' => 10]];
-        else if (request()->has('404'))
+        } elseif (request()->has('404')) {
             $uiNotifications = [['type' => 'error', 'message' => 'Block was not found. Please make sure you entered correct address, block hash or main block height.', 'timeout' => 10]];
+        }
 
         return view('home.index', [
             'stat' => $stat ?? new Stat,
             'hashrateChartData' => $this->hashrateChartData(),
             'newBlocksChartData' => $this->newBlocksChartData(),
-            'hashrateChange' => valueChange((float) Stat::orderBy('id', 'desc')->offset(60)->limit(60)->get()->avg('network_hashrate'), (float) Stat::orderBy('id', 'desc')->limit(60)->get()->avg('network_hashrate')),
+            'hashrateChange' => valueChange(number_format((float) Stat::orderBy('id', 'desc')->offset(60)->limit(60)->get()->avg('network_hashrate'), 9, '.', ''), number_format((float) Stat::orderBy('id', 'desc')->limit(60)->get()->avg('network_hashrate'), 9, '.', '')),
             'mainBlocks' => MainBlock::orderBy('height', 'desc')->limit(20)->get(),
             'numberOfNewBlocksLastMinute' => $numberOfNewBlocksLastMinute,
             'uiNotifications' => $uiNotifications,
@@ -56,8 +62,9 @@ class HomeController extends Controller
             'values' => [],
         ];
 
-        if ($stats->count() < 2)
+        if ($stats->count() < 2) {
             return $data;
+        }
 
         $lastNumberOfBlocks = $stats->shift()->blocks;
 

@@ -1,13 +1,18 @@
-<?php namespace App\Http\Controllers;
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Controllers;
 
 use App\Xdag\Block\Cache;
-use App\Xdag\Block\Listing\{WalletListing, TransactionsListing};
+use App\Xdag\Block\Listing\TransactionsListing;
+use App\Xdag\Block\Listing\WalletListing;
 
 class BlockController extends Controller
 {
     public function index()
     {
-        $id = substr(ltrim(parse_url('http://x' . request()->getRequestUri(), PHP_URL_PATH), '/'), 6 /* block/ */);
+        $id = substr(ltrim(parse_url('http://x'.request()->getRequestUri(), PHP_URL_PATH), '/'), 6 /* block/ */);
 
         try {
             $block = Cache::getBlock($id);
@@ -15,8 +20,9 @@ class BlockController extends Controller
             return redirect()->route('home', '400');
         }
 
-        if (!$block->existsOnBlockchain())
+        if (! $block->existsOnBlockchain()) {
             return redirect()->route('home', '404');
+        }
 
         $uiNotifications = $block->addressNotifications()->shown()->orderBy('created_at')->get()->toBase()->merge($block->hashNotifications()->shown()->orderBy('created_at')->get()->toBase())->toArray();
 
@@ -25,9 +31,9 @@ class BlockController extends Controller
             'balanceGraph' => $balanceGraph = $block->walletGraph('balance'),
             'earningsGraph' => $earningsGraph = $block->walletGraph('earnings'),
             'spendingsGraph' => $spendingsGraph = $block->walletGraph('spendings'),
-            'balanceChange' => valueChange($balanceGraph['values'][count($balanceGraph['values']) - 2] ?? 0, $balanceGraph['values'][count($balanceGraph['values']) - 1] ?? 0),
-            'earningsChange' => valueChange($earningsGraph['values'][count($earningsGraph['values']) - 2] ?? 0, $earningsGraph['values'][count($earningsGraph['values']) - 1] ?? 0),
-            'spendingsChange' => valueChange($spendingsGraph['values'][count($spendingsGraph['values']) - 2] ?? 0, $spendingsGraph['values'][count($spendingsGraph['values']) - 1] ?? 0),
+            'balanceChange' => valueChange($balanceGraph['values'][count($balanceGraph['values']) - 2] ?? '0.000000000', $balanceGraph['values'][count($balanceGraph['values']) - 1] ?? '0.000000000'),
+            'earningsChange' => valueChange($earningsGraph['values'][count($earningsGraph['values']) - 2] ?? '0.000000000', $earningsGraph['values'][count($earningsGraph['values']) - 1] ?? '0.000000000'),
+            'spendingsChange' => valueChange($spendingsGraph['values'][count($spendingsGraph['values']) - 2] ?? '0.000000000', $spendingsGraph['values'][count($spendingsGraph['values']) - 1] ?? '0.000000000'),
             'walletListing' => app(WalletListing::class, ['block' => $block]),
             'transactionsListing' => app(TransactionsListing::class, ['block' => $block]),
             'uiNotifications' => $uiNotifications,

@@ -1,15 +1,26 @@
-<?php namespace App\Xdag\Block;
+<?php
 
+declare(strict_types=1);
+
+namespace App\Xdag\Block;
+
+use App\Xdag\Exceptions\XdagException;
 use Illuminate\Database\Eloquent\Model;
 
 class Balance extends Model
 {
     protected $table = 'balances';
+
     public $incrementing = false;
+
     protected $keyType = 'string';
+
     public $timestamps = false;
+
     protected $casts = ['expires_at' => 'datetime'];
+
     protected $dateFormat = 'Y-m-d H:i:s.v';
+
     protected $guarded = [];
 
     /* methods */
@@ -25,7 +36,8 @@ class Balance extends Model
 
     protected function ensureCacheReady(): void
     {
-        if (!$this->cacheReady())
-            throw new \App\Xdag\XdagException('Balance cache is not filled.');
+        if (! $this->cacheReady()) {
+            throw new XdagException('Balance cache is not filled.');
+        }
     }
 }

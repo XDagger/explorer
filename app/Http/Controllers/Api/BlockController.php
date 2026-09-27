@@ -1,7 +1,13 @@
-<?php namespace App\Http\Controllers\Api;
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Controllers\Api;
 
 use App\Xdag\Block\Cache;
-use App\Xdag\Block\Listing\{Listing, WalletListing, TransactionsListing};
+use App\Xdag\Block\Listing\Listing;
+use App\Xdag\Block\Listing\TransactionsListing;
+use App\Xdag\Block\Listing\WalletListing;
 use Bcn\Component\Json\Writer as JsonWriter;
 use Illuminate\Support\Arr;
 
@@ -9,7 +15,7 @@ class BlockController extends Controller
 {
     public function index()
     {
-        $id = substr(ltrim(parse_url('http://x' . request()->getRequestUri(), PHP_URL_PATH), '/api'), 6 /* block/ */);
+        $id = substr(ltrim(parse_url('http://x'.request()->getRequestUri(), PHP_URL_PATH), '/api'), 6 /* block/ */);
 
         try {
             $block = Cache::getBlock($id);
@@ -19,16 +25,18 @@ class BlockController extends Controller
             return response()->json(['error' => 'internal_error', 'message' => $ex->getMessage()], 500);
         }
 
-        if (!$block->existsOnBlockchain())
+        if (! $block->existsOnBlockchain()) {
             return response()->json(['error' => 'invalid_input', 'message' => 'Incorrect address, block hash or main block height.'], 422);
+        }
 
         return response()->stream(function () use ($block) {
             $fileHandle = fopen('php://output', 'w');
             $writer = new JsonWriter($fileHandle);
             $writer->enter(JsonWriter::TYPE_OBJECT);
 
-            if ($block->height > 0)
+            if ($block->height > 0) {
                 $writer->write('height', $block->height);
+            }
 
             $writer->write('time', $block->created_at->format('Y-m-d H:i:s.v'));
             $writer->write('timestamp', $block->timestamp);
@@ -41,7 +49,7 @@ class BlockController extends Controller
             $writer->write('difficulty', $block->difficulty);
             $writer->write('balance_address', $block->address);
             $writer->write('balance', $block->balance);
-            $writer->write('ui_notifications', $block->addressNotifications()->shown()->orderBy('created_at')->get()->toBase()->merge($block->hashNotifications()->shown()->orderBy('created_at')->get()->toBase())->map(fn($n) => $n->only('type', 'message'))->toArray());
+            $writer->write('ui_notifications', $block->addressNotifications()->shown()->orderBy('created_at')->get()->toBase()->merge($block->hashNotifications()->shown()->orderBy('created_at')->get()->toBase())->map(fn ($n) => $n->only('type', 'message'))->toArray());
 
             $directionsAmount = [];
             $transactionOutputCallback = function (Listing $listing, $builder, int $page, int $perPage) use ($writer, &$directionsAmount) {
@@ -51,14 +59,16 @@ class BlockController extends Controller
                 while (true) {
                     $transactions = $builder->limit(1000)->skip($skip)->get();
 
-                    if (!$transactions->count())
+                    if (! $transactions->count()) {
                         break;
+                    }
 
                     foreach ($transactions as $transaction) {
-                        if (!isset($directionsAmount[$transaction->direction]))
+                        if (! isset($directionsAmount[$transaction->direction])) {
                             $directionsAmount[$transaction->direction] = ltrim($transaction->amount, '-');
-                        else
+                        } else {
                             $directionsAmount[$transaction->direction] = bcadd($directionsAmount[$transaction->direction], ltrim($transaction->amount, '-'), 9);
+                        }
 
                         $data = [
                             'direction' => $transaction->direction,
@@ -68,13 +78,15 @@ class BlockController extends Controller
                             'remark' => $transaction->remark,
                         ];
 
-                        if ($listing instanceof TransactionsListing)
+                        if ($listing instanceof TransactionsListing) {
                             unset($data['time'], $data['remark']);
+                        }
 
                         $writer->write(null, $data);
 
-                        if (++$skip >= $max)
+                        if (++$skip >= $max) {
                             break 2;
+                        }
                     }
                 }
             };
@@ -92,7 +104,7 @@ class BlockController extends Controller
             $walletListing->getWithCallback($transactionOutputCallback);
             $writer->leave();
 
-            if (!$block->isTransactionBlock()) {
+            if (! $block->isTransactionBlock()) {
                 // wallet, main or snapshot block
                 $balanceGraph = $block->walletGraph('balance');
                 $earningsGraph = $block->walletGraph('earnings');
@@ -108,29 +120,29 @@ class BlockController extends Controller
 
                 unset($balanceGraph, $earningsGraph, $spendingsGraph);
 
-                $writer->write('total_earnings', number_format($block->transactions()->wallet()->earnings()->sum('amount'), 9, '.', ''));
-                $writer->write('total_spendings', number_format($block->transactions()->wallet()->spendings()->sum(\DB::raw('ABS(amount)')), 9, '.', ''));
+                $writer->write('total_earnings', $this->amount($block->transactions()->wallet()->earnings()->sum('amount')));
+                $writer->write('total_spendings', $this->amount($block->transactions()->wallet()->spendings()->sum(\DB::raw('ABS(amount)'))));
 
                 $writer->write('page_earnings_sum', bcadd($directionsAmount['input'] ?? '0.000000000', $directionsAmount['earning'] ?? '0.000000000', 9));
                 $writer->write('page_spendings_sum', $directionsAmount['output'] ?? '0.000000000');
 
                 unset($directionsAmount);
 
-                $writer->write('filtered_earnings_sum', number_format($walletListing->earningsSum(), 9, '.', ''));
-                $writer->write('filtered_spendings_sum', number_format($walletListing->spendingsSum(), 9, '.', ''));
+                $writer->write('filtered_earnings_sum', $this->amount($walletListing->earningsSum()));
+                $writer->write('filtered_spendings_sum', $this->amount($walletListing->spendingsSum()));
             } else {
                 // transaction block
-                $writer->write('total_fee', number_format($block->transactions()->transaction()->whereDirection('fee')->sum(\DB::raw('ABS(amount)')), 9, '.', ''));
-                $writer->write('total_inputs', number_format($block->transactions()->transaction()->whereDirection('input')->sum('amount'), 9, '.', ''));
-                $writer->write('total_outputs', number_format($block->transactions()->transaction()->whereDirection('output')->sum(\DB::raw('ABS(amount)')), 9, '.', ''));
+                $writer->write('total_fee', $this->amount($block->transactions()->transaction()->whereDirection('fee')->sum(\DB::raw('ABS(amount)'))));
+                $writer->write('total_inputs', $this->amount($block->transactions()->transaction()->whereDirection('input')->sum('amount')));
+                $writer->write('total_outputs', $this->amount($block->transactions()->transaction()->whereDirection('output')->sum(\DB::raw('ABS(amount)'))));
 
-                $writer->write('page_fee_sum', number_format($directionsAmountTransactions['fee'] ?? '0.000000000', 9, '.', ''));
-                $writer->write('page_inputs_sum', number_format($directionsAmountTransactions['input'] ?? '0.000000000', 9, '.', ''));
-                $writer->write('page_outputs_sum', number_format($directionsAmountTransactions['output'] ?? '0.000000000', 9, '.', ''));
+                $writer->write('page_fee_sum', $this->amount($directionsAmountTransactions['fee'] ?? '0.000000000'));
+                $writer->write('page_inputs_sum', $this->amount($directionsAmountTransactions['input'] ?? '0.000000000'));
+                $writer->write('page_outputs_sum', $this->amount($directionsAmountTransactions['output'] ?? '0.000000000'));
 
-                $writer->write('filtered_fee_sum', number_format($transactionsListing->feesSum(), 9, '.', ''));
-                $writer->write('filtered_inputs_sum', number_format($transactionsListing->inputsSum(), 9, '.', ''));
-                $writer->write('filtered_outputs_sum', number_format($transactionsListing->outputsSum(), 9, '.', ''));
+                $writer->write('filtered_fee_sum', $this->amount($transactionsListing->feesSum()));
+                $writer->write('filtered_inputs_sum', $this->amount($transactionsListing->inputsSum()));
+                $writer->write('filtered_outputs_sum', $this->amount($transactionsListing->outputsSum()));
             }
 
             $writer->write('kind', "{$block->type} block");
@@ -146,10 +158,10 @@ class BlockController extends Controller
                     'total' => $total,
                     'per_page' => $perPage,
                     'links' => [
-                        'prev' => $page > 1 ? asset(request()->getPathInfo() . '?' . http_build_query(array_merge($usedFilters, array_combine($pagination, [$page - 1, $perPage])))) : null,
-                        'next' => $page * $perPage < $total ? request()->getPathInfo() . '?' . http_build_query(array_merge($usedFilters, array_combine($pagination, [$page + 1, $perPage]))) : null,
-                        'first' => request()->getPathInfo() . '?' . http_build_query(array_merge($usedFilters, array_combine($pagination, [1, $perPage]))),
-                        'last' => asset(request()->getPathInfo() . '?' . http_build_query(array_merge($usedFilters, array_combine($pagination, [$lastPage, $perPage])))),
+                        'prev' => $page > 1 ? asset(request()->getPathInfo().'?'.http_build_query(array_merge($usedFilters, array_combine($pagination, [$page - 1, $perPage])))) : null,
+                        'next' => $page * $perPage < $total ? request()->getPathInfo().'?'.http_build_query(array_merge($usedFilters, array_combine($pagination, [$page + 1, $perPage]))) : null,
+                        'first' => request()->getPathInfo().'?'.http_build_query(array_merge($usedFilters, array_combine($pagination, [1, $perPage]))),
+                        'last' => asset(request()->getPathInfo().'?'.http_build_query(array_merge($usedFilters, array_combine($pagination, [$lastPage, $perPage])))),
                     ],
                 ]);
             };
@@ -164,7 +176,7 @@ class BlockController extends Controller
 
     public function balance()
     {
-        $id = substr(ltrim(parse_url('http://x' . request()->getRequestUri(), PHP_URL_PATH), '/api'), 8 /* balance/ */);
+        $id = substr(ltrim(parse_url('http://x'.request()->getRequestUri(), PHP_URL_PATH), '/api'), 8 /* balance/ */);
 
         try {
             $balance = Cache::getBalance($id);
@@ -174,9 +186,15 @@ class BlockController extends Controller
             return response()->json(['error' => 'internal_error', 'message' => $ex->getMessage()], 500);
         }
 
-        if (!$balance->blockExists())
+        if (! $balance->blockExists()) {
             return response()->json(['error' => 'invalid_input', 'message' => 'Incorrect address, block hash or main block height.'], 422);
+        }
 
         return response()->json(['balance' => $balance->balance]);
+    }
+
+    protected function amount(int|string $amount): string
+    {
+        return bcadd((string) $amount, '0', 9);
     }
 }

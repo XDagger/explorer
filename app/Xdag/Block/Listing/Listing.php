@@ -1,16 +1,28 @@
-<?php namespace App\Xdag\Block\Listing;
+<?php
+
+declare(strict_types=1);
+
+namespace App\Xdag\Block\Listing;
 
 use App\Xdag\Block\Block;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\{DB, Validator};
 use Illuminate\Pagination\AbstractPaginator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 abstract class Listing
 {
-    protected $block, $request;
+    protected $block;
+
+    protected $request;
+
     protected $pagination = ['page', 'per_page'];
+
     protected $defaultPageSize = 20;
-    protected $usedFilters = [], $errors = [];
+
+    protected $usedFilters = [];
+
+    protected $errors = [];
 
     public function __construct(Block $block, Request $request, int $defaultPageSize = 20)
     {
@@ -62,20 +74,21 @@ abstract class Listing
 
     public function earningsSum(): string
     {
-        return $this->buildQuery()->earnings()->sum('amount');
+        return (string) $this->buildQuery()->earnings()->sum('amount');
     }
 
     public function spendingsSum(): string
     {
-        return $this->buildQuery()->spendings()->sum(DB::raw('ABS(amount)'));
+        return (string) $this->buildQuery()->spendings()->sum(DB::raw('ABS(amount)'));
     }
 
     protected function buildQuery()
     {
         $builder = $this->builder();
 
-        foreach ($this->usedFilters as $filter)
+        foreach ($this->usedFilters as $filter) {
             call_user_func($filter['apply'], $builder, $filter['value']);
+        }
 
         return $builder;
     }
@@ -87,11 +100,13 @@ abstract class Listing
 
             if ($validator->fails()) {
                 $this->errors[$key] = $validator->errors()->all()[0];
+
                 continue;
             }
 
-            if ($this->request->input($key) === null)
+            if ($this->request->input($key) === null) {
                 continue;
+            }
 
             $this->usedFilters[$key] = $filter;
             $this->usedFilters[$key]['value'] = $this->request->input($key);
@@ -99,5 +114,6 @@ abstract class Listing
     }
 
     abstract protected function builder();
+
     abstract protected function filters(): array;
 }

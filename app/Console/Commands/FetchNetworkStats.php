@@ -1,14 +1,19 @@
-<?php namespace App\Console\Commands;
+<?php
 
-use App\Xdag\Node;
-use App\Xdag\Network\Stat;
+declare(strict_types=1);
+
+namespace App\Console\Commands;
+
 use App\Xdag\Block\MainBlock;
 use App\Xdag\Exceptions\XdagException;
+use App\Xdag\Network\Stat;
+use App\Xdag\Node;
 use Illuminate\Console\Command;
 
 class FetchNetworkStats extends Command
 {
     protected $signature = 'network:fetch-stats';
+
     protected $description = 'Fetches latest network stats and removes stats older than 3 days.';
 
     public function handle()
@@ -78,27 +83,31 @@ class FetchNetworkStats extends Command
                 ]);
             }
 
-            MainBlock::whereNotIn('address', collect($mainBlocks)->map(fn($mainBlock) => $mainBlock['address']))->delete();
+            MainBlock::whereNotIn('address', collect($mainBlocks)->map(fn ($mainBlock) => $mainBlock['address']))->delete();
         }
 
         $this->info('Completed successfully.');
+
         return 0;
     }
 
     protected function estimateNetworkHashrate(string $poolApiUrl, array $mainBlockRemarks, array $mainBlocks): ?int
     {
-        if (!$mainBlockRemarks || !$mainBlocks)
+        if (! $mainBlockRemarks || ! $mainBlocks) {
             return null;
+        }
 
         $poolBlocksCount = 0;
 
         foreach ($mainBlocks as $mainBlock) {
-            if (in_array((string) $mainBlock['remark'], $mainBlockRemarks))
+            if (in_array((string) $mainBlock['remark'], $mainBlockRemarks)) {
                 $poolBlocksCount++;
+            }
         }
 
-        if ($poolBlocksCount === 0)
+        if ($poolBlocksCount === 0) {
             return null;
+        }
 
         $apiResponse = trim((string) @file_get_contents($poolApiUrl, false, stream_context_create([
             'http' => [
@@ -114,13 +123,15 @@ class FetchNetworkStats extends Command
             ],
         ])));
 
-        if ($apiResponse === '')
+        if ($apiResponse === '') {
             return null;
+        }
 
         $apiResponse = @json_decode($apiResponse, true);
 
-        if (!is_array($apiResponse) || !isset($apiResponse['hashrate']) || !is_int($apiResponse['hashrate']))
+        if (! is_array($apiResponse) || ! isset($apiResponse['hashrate']) || ! is_int($apiResponse['hashrate'])) {
             return null;
+        }
 
         return intval($apiResponse['hashrate'] / ($poolBlocksCount / count($mainBlocks)));
     }

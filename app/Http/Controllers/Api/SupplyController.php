@@ -1,10 +1,14 @@
-<?php namespace App\Http\Controllers\Api;
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Controllers\Api;
 
 use App\Xdag\Network\Stat;
 
 class SupplyController extends Controller
 {
-    const TOTAL_SUPPLY = 1446294144.000000000;
+    const TOTAL_SUPPLY = '1446294144.000000000';
 
     public function index()
     {
@@ -15,17 +19,17 @@ class SupplyController extends Controller
 
     public function raw()
     {
-        return response((int) $this->getSupply(), 200)->header('Content-Type', 'text/plain');
+        return response((string) (int) $this->getSupply(), 200)->header('Content-Type', 'text/plain');
     }
 
     public function coinGeckoWithSeparators()
     {
-        return response(number_format($this->getSupply(), 9, '.', ','), 200)->header('Content-Type', 'text/plain');
+        return response($this->format($this->getSupply(), '.', ','), 200)->header('Content-Type', 'text/plain');
     }
 
     public function coinGeckoWithoutSeparators()
     {
-        return response(number_format($this->getSupply(), 9, '', ''), 200)->header('Content-Type', 'text/plain');
+        return response($this->format($this->getSupply(), '', ''), 200)->header('Content-Type', 'text/plain');
     }
 
     public function indexTotal()
@@ -37,21 +41,28 @@ class SupplyController extends Controller
 
     public function rawTotal()
     {
-        return response((int) self::TOTAL_SUPPLY, 200)->header('Content-Type', 'text/plain');
+        return response((string) (int) self::TOTAL_SUPPLY, 200)->header('Content-Type', 'text/plain');
     }
 
     public function coinGeckoWithSeparatorsTotal()
     {
-        return response(number_format(self::TOTAL_SUPPLY, 9, '.', ','), 200)->header('Content-Type', 'text/plain');
+        return response($this->format(self::TOTAL_SUPPLY, '.', ','), 200)->header('Content-Type', 'text/plain');
     }
 
     public function coinGeckoWithoutSeparatorsTotal()
     {
-        return response(number_format(self::TOTAL_SUPPLY, 9, '', ''), 200)->header('Content-Type', 'text/plain');
+        return response($this->format(self::TOTAL_SUPPLY, '', ''), 200)->header('Content-Type', 'text/plain');
     }
 
-    protected function getSupply()
+    protected function getSupply(): string
     {
-        return Stat::orderBy('id', 'desc')->limit(1)->first()->supply ?? 0;
+        return (string) (Stat::orderBy('id', 'desc')->limit(1)->first()->supply ?? '0');
+    }
+
+    protected function format(string $amount, string $decimalSeparator, string $thousandsSeparator): string
+    {
+        [$integer, $fraction] = explode('.', bcadd($amount, '0', 9));
+
+        return number_format((int) $integer, 0, '', $thousandsSeparator).$decimalSeparator.$fraction;
     }
 }

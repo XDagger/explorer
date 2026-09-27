@@ -1,7 +1,11 @@
-<?php namespace App\Xdag\Block;
+<?php
 
-use App\Xdag\Node;
+declare(strict_types=1);
+
+namespace App\Xdag\Block;
+
 use App\Xdag\Exceptions\XdagException;
+use App\Xdag\Node;
 use Illuminate\Database\QueryException;
 use Symfony\Component\Process\Process;
 
@@ -12,15 +16,16 @@ class Cache
     public static function getBlock(string $id): Block
     {
         // XDAG-ADDRESS related code
-        if (!preg_match('/^([1-9A-HJ-NP-Za-km-z]{26,33}|[a-zA-Z0-9\/+]{32}|[a-f0-9]{64}|[0-9]{1,10})$/u', $id))
+        if (! preg_match('/^([1-9A-HJ-NP-Za-km-z]{26,33}|[a-zA-Z0-9\/+]{32}|[a-f0-9]{64}|[0-9]{1,10})$/u', $id)) {
             throw new \InvalidArgumentException('Incorrect address, block hash or main block height.');
+        }
 
         try {
             $block = Block::create([
                 'id' => $id,
                 'expires_at' => now()->addSeconds(self::TTL),
             ]);
-        } catch (\Illuminate\Database\QueryException $ex) {
+        } catch (QueryException $ex) {
             return self::waitForBlock($id);
         }
 
@@ -30,8 +35,9 @@ class Cache
         if ($getBlockBinaryName !== '') {
             try {
                 $rpcUrlParts = parse_url(Node::rpcUrl());
-                if (!$rpcUrlParts)
+                if (! $rpcUrlParts) {
                     throw new \RuntimeException('Unable to parse XDAG RPC URL.');
+                }
 
                 $fileId = str_replace(['/', '+'], ['_', '-'], $id);
                 $jsonPath = storage_path("blockoutput/$fileId.json");
@@ -52,7 +58,7 @@ class Cache
                 // parse block JSON
                 $baseBlockData = json_decode(file_get_contents($jsonPath), true, 16, JSON_THROW_ON_ERROR);
 
-                if (!isset($baseBlockData['result'])) {
+                if (! isset($baseBlockData['result'])) {
                     @unlink($jsonPath);
                     @unlink($csvPath);
 
@@ -86,7 +92,7 @@ class Cache
                             'transaction',
                             $direction = ['input', 'output', 'fee'][$ref['direction']],
                             $ref['address'],
-                            ($direction === 'input' ? '' : '-') . $ref['amount'],
+                            ($direction === 'input' ? '' : '-').$ref['amount'],
                         ]);
                     }
                 }
@@ -94,8 +100,8 @@ class Cache
                 unset($baseBlockData);
 
                 // import transactions from CSV, file name can't be given as part of prepared statement
-                \DB::insert("
-                    LOAD DATA INFILE " . \DB::connection()->getPdo()->quote($csvPath) . "
+                \DB::insert('
+                    LOAD DATA INFILE '.\DB::connection()->getPdo()->quote($csvPath)."
                     INTO TABLE block_transactions
                     CHARACTER SET utf8mb4
                     FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '\"' ESCAPED BY ''
@@ -114,11 +120,13 @@ class Cache
                 $block->transactions()->delete();
                 $block->delete();
 
-                if (isset($jsonPath))
+                if (isset($jsonPath)) {
                     @unlink($jsonPath);
+                }
 
-                if (isset($csvPath))
+                if (isset($csvPath)) {
                     @unlink($csvPath);
+                }
 
                 throw $ex;
             }
@@ -168,7 +176,7 @@ class Cache
             unset($baseBlockData);
 
             // there are maximally 12 "refs" in a block, read all into memory and decode
-            $refs = json_decode(stream_get_line($stream, 2560, ',"transactions":'), true, JSON_THROW_ON_ERROR);
+            $refs = json_decode((string) stream_get_line($stream, 2560, ',"transactions":'), true, JSON_THROW_ON_ERROR);
 
             if (is_array($refs)) {
                 foreach ($refs as $ref) {
@@ -177,7 +185,7 @@ class Cache
                         'transaction',
                         $direction = ['input', 'output', 'fee'][$ref['direction']],
                         $ref['address'],
-                        ($direction === 'input' ? '' : '-') . $ref['amount'],
+                        ($direction === 'input' ? '' : '-').$ref['amount'],
                     ]);
                 }
             }
@@ -187,8 +195,9 @@ class Cache
             // read every transaction one by one
             // we have to split by direction json part as remark can contain \, " and } characters so we can't easily read until "}
             while (($buffer = stream_get_line($stream, 512, '{"direction":')) !== false) {
-                if (strlen($buffer) < 96) // address and hashlow are 96 bytes, plus any json markup, so 96 is a safe minimal buffer length value
+                if (strlen($buffer) < 96) { // address and hashlow are 96 bytes, plus any json markup, so 96 is a safe minimal buffer length value
                     continue;
+                }
 
                 // strip leftover json markup
                 $buffer = rtrim($buffer, ",]}\n\r");
@@ -201,7 +210,7 @@ class Cache
                     'wallet',
                     $direction = ['input', 'output', 'earning', 'snapshot'][$transaction['direction']],
                     $transaction['address'],
-                    ($direction === 'output' ? '-' : '') . $transaction['amount'],
+                    ($direction === 'output' ? '-' : '').$transaction['amount'],
                     $transaction['remark'] === '' ? null : $transaction['remark'],
                     $transaction['time'],
                 ]);
@@ -225,25 +234,28 @@ class Cache
         do {
             $block = Block::findOrFail($id);
 
-            if ($block->cacheReady())
+            if ($block->cacheReady()) {
                 return $block;
-            else
+            } else {
                 sleep(3);
+            }
         } while (true);
     }
 
     public static function getBalance(string $id): Balance
     {
         // XDAG-ADDRESS related code
-        if (!preg_match('/^([1-9A-HJ-NP-Za-km-z]{26,33}|[a-zA-Z0-9\/+]{32}|[a-f0-9]{64}|[0-9]{1,10})$/u', $id))
+        if (! preg_match('/^([1-9A-HJ-NP-Za-km-z]{26,33}|[a-zA-Z0-9\/+]{32}|[a-f0-9]{64}|[0-9]{1,10})$/u', $id)) {
             throw new \InvalidArgumentException('Incorrect address, block hash or main block height.');
+        }
 
         // if we already have a block stored with this id, return it's balance
-        if ($block = Block::whereId($id)->whereNotNull('balance')->first())
+        if ($block = Block::whereId($id)->whereNotNull('balance')->first()) {
             return new Balance([
                 'state' => 'found',
-                'balance' => $block->balance
+                'balance' => $block->balance,
             ]);
+        }
 
         try {
             $balance = Balance::create([
@@ -262,10 +274,11 @@ class Cache
             throw $ex;
         }
 
-        if (!isset($json['result'])) {
+        if (! isset($json['result'])) {
             // block does not exist
             $balance->state = 'not found';
             $balance->save();
+
             return $balance;
         }
 
@@ -281,10 +294,11 @@ class Cache
         do {
             $balance = Balance::findOrFail($id);
 
-            if ($balance->cacheReady())
+            if ($balance->cacheReady()) {
                 return $balance;
-            else
+            } else {
                 sleep(3);
+            }
         } while (true);
     }
 }

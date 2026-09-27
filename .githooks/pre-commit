@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+#
+# Runs Laravel Pint over the PHP files staged for this commit and restages
+# whatever it reformats.
+#
+# Enabled per clone with:
+#     git config core.hooksPath .githooks
+
+set -eo pipefail
+
+cd "$(git rev-parse --show-toplevel)"
+
+PINT="vendor/bin/pint"
+
+# Staged PHP files: added, copied, modified or renamed. Deletions are excluded,
+# and a rename reports its new path.
+mapfile -d '' -t staged < <(git diff --cached --name-only --diff-filter=ACMR -z -- '*.php')
+
+if [ ${#staged[@]} -eq 0 ]; then
+    exit 0
+fi
+
+if [ ! -f "$PINT" ]; then
+    echo "pre-commit: $PINT is missing, skipping Pint. Run composer install." >&2
+    exit 0
+fi
+
+# Files that also carry unstaged work. Pint still formats them on disk, but
+# restaging one would sweep its unstaged changes into this commit, so they are
+# left for the author to stage deliberately. Collected before Pint runs, since
+# Pint itself makes the files it fixes look unstaged-dirty.
+declare -A unstaged=()
+mapfile -d '' -t changed < <(git diff --name-only -z -- '*.php')
+for file in "${changed[@]}"; do
+    unstaged["$file"]=1
+done
+
+# Pint reports as compact JSON when it detects a coding agent in the
+# environment, and that check wins over --format, so the flag cannot undo it.
+# Clearing the variables it probes keeps the readable summary everywhere,
+# including commits made from inside an agent or an editor it drives.
+agent_vars=(
+    AI_AGENT AMP_CURRENT_THREAD_ID ANTIGRAVITY_AGENT AUGMENT_AGENT
+    CLAUDECODE CLAUDE_CODE CODEX_CI CODEX_SANDBOX CODEX_THREAD_ID
+    COPILOT_ALLOW_ALL COPILOT_CLI COPILOT_GITHUB_TOKEN COPILOT_MODEL
+    CURSOR_AGENT GEMINI_CLI KIRO_AGENT_PATH OPENCODE OPENCODE_CLIENT
+    PI_CODING_AGENT REPL_ID
+)
+
+clear_agent=()
+for var in "${agent_vars[@]}"; do
+    clear_agent+=(-u "$var")
+done
+
+env "${clear_agent[@]}" php "$PINT" "${staged[@]}"
+
+restage=()
+partial=()
+for file in "${staged[@]}"; do
+    if [ ! -f "$file" ]; then
+        continue
+    fi
+
+    if [ -n "${unstaged[$file]}" ]; then
+        partial+=("$file")
+    else
+        restage+=("$file")
+    fi
+done
+
+if [ ${#restage[@]} -gt 0 ]; then
+    git add -- "${restage[@]}"
+fi
+
+if [ ${#partial[@]} -gt 0 ]; then
+    echo >&2
+    echo "pre-commit: the following files had unstaged changes, so Pint's fixes were" >&2
+    echo "written to disk but NOT added to this commit. Stage them yourself if wanted:" >&2
+    printf '  %s\n' "${partial[@]}" >&2
+fi

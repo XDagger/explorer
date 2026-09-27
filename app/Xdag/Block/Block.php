@@ -1,15 +1,26 @@
-<?php namespace App\Xdag\Block;
+<?php
 
+declare(strict_types=1);
+
+namespace App\Xdag\Block;
+
+use App\Xdag\Exceptions\XdagException;
 use Illuminate\Database\Eloquent\Model;
 
 class Block extends Model
 {
     protected $table = 'blocks';
+
     public $incrementing = false;
+
     protected $keyType = 'string';
+
     public $timestamps = false;
+
     protected $casts = ['created_at' => 'datetime', 'expires_at' => 'datetime'];
+
     protected $dateFormat = 'Y-m-d H:i:s.v';
+
     protected $guarded = [];
 
     /* relations */
@@ -64,8 +75,7 @@ class Block extends Model
         $builder = $this->transactions()->wallet()
             ->groupByRaw('DATE_FORMAT(created_at, "%Y-%m-%d")')
             ->reorder()
-            ->orderByRaw('DATE_FORMAT(created_at, "%Y-%m-%d")')
-        ;
+            ->orderByRaw('DATE_FORMAT(created_at, "%Y-%m-%d")');
 
         if ($type === 'earnings' || $type === 'spendings') {
             $builder->selectRaw('ABS(SUM(amount)) amount, DATE_FORMAT(created_at, "%Y-%m-%d") date');
@@ -84,8 +94,9 @@ class Block extends Model
         $date = (clone $now)->subDays(6);
 
         do {
-            if (!isset($graph[$date->format('Y-m-d')]))
+            if (! isset($graph[$date->format('Y-m-d')])) {
                 $graph[$date->format('Y-m-d')] = '0.000000000';
+            }
 
             $date->addDays(1);
         } while ($date <= $now);
@@ -97,11 +108,13 @@ class Block extends Model
 
         if ($type === 'balance') {
             foreach ($values as $index => &$value) {
-                if ($index)
+                if ($index) {
                     $value = bcadd($value, $values[$index - 1], 9);
+                }
 
-                if (bccomp($value, '0.000000000', 9) < 0)
+                if (bccomp($value, '0.000000000', 9) < 0) {
                     $value = '0.000000000';
+                }
             }
         }
 
@@ -113,7 +126,8 @@ class Block extends Model
 
     protected function ensureCacheReady(): void
     {
-        if (!$this->cacheReady())
-            throw new \App\Xdag\XdagException('Block cache is not filled.');
+        if (! $this->cacheReady()) {
+            throw new XdagException('Block cache is not filled.');
+        }
     }
 }

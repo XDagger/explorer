@@ -1,13 +1,21 @@
-<?php namespace App\Xdag\Block;
+<?php
+
+declare(strict_types=1);
+
+namespace App\Xdag\Block;
 
 use Illuminate\Database\Eloquent\Model;
 
 class Transaction extends Model
 {
     protected $table = 'block_transactions';
+
     public $timestamps = false;
+
     protected $casts = ['created_at' => 'datetime'];
+
     protected $dateFormat = 'Y-m-d H:i:s.v';
+
     protected $guarded = [];
 
     /* scopes */

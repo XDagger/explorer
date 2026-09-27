@@ -1,7 +1,11 @@
-<?php namespace App\Http\Controllers\Api;
+<?php
 
-use Illuminate\Routing\Controller as BaseController;
+declare(strict_types=1);
+
+namespace App\Http\Controllers\Api;
+
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Routing\Controller as BaseController;
 
 class Controller extends BaseController
 {

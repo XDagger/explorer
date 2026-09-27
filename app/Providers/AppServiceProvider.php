@@ -1,9 +1,14 @@
-<?php namespace App\Providers;
+<?php
+
+declare(strict_types=1);
+
+namespace App\Providers;
 
 use App\Xdag\Network\Stat;
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -31,23 +36,25 @@ class AppServiceProvider extends ServiceProvider
                 return trim(trim($item), "'\"");
             });
 
-            if (!$tokens->count())
+            if (! $tokens->count()) {
                 return $expression;
+            }
 
-            if (!is_readable($path = resource_path("assets/svg/{$tokens->first()}.svg")))
+            if (! is_readable($path = resource_path("assets/svg/{$tokens->first()}.svg"))) {
                 return $path;
+            }
 
-            $class = trim('w-4 h-4 ' . ($tokens->get(1) ?? ''));
+            $class = trim('w-4 h-4 '.($tokens->get(1) ?? ''));
 
-            return str_replace('<svg', '<svg class="' . $class . '"', file_get_contents($path));
+            return str_replace('<svg', '<svg class="'.$class.'"', file_get_contents($path));
         });
 
         try {
             $stat = Stat::orderBy('id', 'desc')->limit(1)->first();
-        } catch (\Illuminate\Database\QueryException $ex) {
+        } catch (QueryException $ex) {
             $stat = null;
         }
 
-        View::share('appName', (isset($stat) && $stat->network_type !== 'mainnet') ? 'XDAG ' . ucfirst($stat->network_type) . ' Explorer' : 'XDAG Block Explorer');
+        View::share('appName', (isset($stat) && $stat->network_type !== 'mainnet') ? 'XDAG '.ucfirst($stat->network_type).' Explorer' : 'XDAG Block Explorer');
     }
 }

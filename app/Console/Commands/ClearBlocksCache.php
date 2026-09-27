@@ -1,12 +1,18 @@
-<?php namespace App\Console\Commands;
+<?php
 
-use App\Xdag\Block\{Block, Balance};
+declare(strict_types=1);
+
+namespace App\Console\Commands;
+
+use App\Xdag\Block\Balance;
+use App\Xdag\Block\Block;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
 class ClearBlocksCache extends Command
 {
     protected $signature = 'blocks:clear-cache';
+
     protected $description = 'Clears expired blocks and balances cache.';
 
     public function handle()
@@ -27,6 +33,7 @@ class ClearBlocksCache extends Command
         });
 
         $this->info('Completed successfully.');
+
         return 0;
     }
 }

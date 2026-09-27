@@ -1,4 +1,8 @@
-<?php namespace App\Http\Controllers\Api;
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Controllers\Api;
 
 use App\Xdag\Network\Stat;
 
@@ -8,8 +12,9 @@ class StatusController extends Controller
     {
         $stat = Stat::orderBy('id', 'desc')->first();
 
-        if (!$stat)
+        if (! $stat) {
             return response()->json(['error' => 'synchronizing', 'message' => 'Block explorer is currently synchronizing.'], 503);
+        }
 
         $networkType = substr($stat->network_type, 0, -3);
 
