@@ -9,6 +9,8 @@ use App\Xdag\Exceptions\XdagException;
 use App\Xdag\Network\Stat;
 use App\Xdag\Node;
 use Illuminate\Console\Command;
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Support\Facades\Http;
 
 class FetchNetworkStats extends Command
 {
@@ -57,13 +59,13 @@ class FetchNetworkStats extends Command
             }
         } catch (XdagException) {
             // if latest stat exists, reuse most of the values
-            if ($stat = Stat::orderBy('id')->first()) {
+            if ($stat = Stat::orderByDesc('id')->first()) {
                 $statData = [
                     'synchronized' => false,
                     'created_at' => now(),
                 ] + $stat->toArray();
 
-                unset($data['id']);
+                unset($statData['id']);
             }
         }
 
@@ -109,25 +111,16 @@ class FetchNetworkStats extends Command
             return null;
         }
 
-        $apiResponse = trim((string) @file_get_contents($poolApiUrl, false, stream_context_create([
-            'http' => [
-                'protocol_version' => 1.1,
-                'method' => 'GET',
-                'header' => [
-                    'Accept: application/json',
-                    'Connection: close',
-                ],
-                'timeout' => 5,
-                'ignore_errors' => true,
-                'follow_location' => false,
-            ],
-        ])));
-
-        if ($apiResponse === '') {
+        try {
+            $apiResponse = Http::acceptJson()
+                ->withHeaders(['Connection' => 'close'])
+                ->withoutRedirecting()
+                ->timeout(5)
+                ->get($poolApiUrl)
+                ->json();
+        } catch (ConnectionException) {
             return null;
         }
-
-        $apiResponse = @json_decode($apiResponse, true);
 
         if (! is_array($apiResponse) || ! isset($apiResponse['hashrate']) || ! is_int($apiResponse['hashrate'])) {
             return null;

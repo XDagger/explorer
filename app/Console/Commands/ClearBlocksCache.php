@@ -17,7 +17,7 @@ class ClearBlocksCache extends Command
 
     public function handle()
     {
-        Block::where('expires_at', '<', now())->chunk(20, function ($blocks) {
+        Block::where('expires_at', '<', now())->chunkById(20, function ($blocks) {
             foreach ($blocks as $block) {
                 DB::transaction(function () use ($block) {
                     $block->transactions()->delete();
@@ -26,7 +26,7 @@ class ClearBlocksCache extends Command
             }
         });
 
-        Balance::where('expires_at', '<', now())->chunk(20, function ($balances) {
+        Balance::where('expires_at', '<', now())->chunkById(20, function ($balances) {
             foreach ($balances as $balance) {
                 $balance->delete();
             }

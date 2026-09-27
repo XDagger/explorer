@@ -52,10 +52,15 @@ function walletAddress(): string
 
 /**
  * @param  array<string, mixed>  $methods
+ * @param  array<string, mixed>  $otherUrls  fakes of other services, by URL pattern
  */
-function fakeNode(array $methods): void
+function fakeNode(array $methods, array $otherUrls = []): void
 {
-    Http::fake(function (Request $request) use ($methods) {
+    Http::fake($otherUrls + ['*' => function (Request $request) use ($methods) {
+        if (! isset($request->data()['jsonrpc'])) {
+            return null;
+        }
+
         $method = $request['method'];
 
         if (! array_key_exists($method, $methods)) {
@@ -68,7 +73,7 @@ function fakeNode(array $methods): void
             : ['jsonrpc' => '2.0', 'id' => $request['id'], 'result' => $answer];
 
         return Http::response(is_string($response) ? $response : json_encode($response, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
-    });
+    }]);
 }
 
 function rpcNullResult(): Closure

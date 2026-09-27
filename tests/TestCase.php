@@ -17,11 +17,10 @@ use RuntimeException;
 
 abstract class TestCase extends BaseTestCase
 {
-    private const NETWORK_LOCK = 'tests:network';
+    private const LOCK_TIMEOUT = 120;
 
-    private const NETWORK_LOCK_TIMEOUT = 120;
-
-    private bool $holdsNetworkLock = false;
+    /** @var array<int, string> */
+    private array $locks = [];
 
     private int $statsWatermark = 0;
 
@@ -45,25 +44,48 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * The stats and main blocks tables hold state of the whole network: the
-     * application reads their latest rows, and fetching the stats rewrites
-     * them. A test that touches either holds this lock until it has cleaned
-     * up, so these tests run one at a time across all parallel processes and
-     * each sees only the rows it created itself.
+     * Holds a lock shared by all parallel processes until the test has cleaned
+     * up, so tests of the same table wide state run one at a time.
      */
-    public function lockNetwork(): void
+    public function lock(string $name): void
     {
-        if ($this->holdsNetworkLock) {
+        if (in_array($name, $this->locks, true)) {
             return;
         }
 
-        if ((int) DB::scalar('select get_lock(?, ?)', [self::NETWORK_LOCK, self::NETWORK_LOCK_TIMEOUT]) !== 1) {
-            throw new RuntimeException('Timed out waiting for the network state lock.');
+        if ((int) DB::scalar('select get_lock(?, ?)', ["tests:$name", self::LOCK_TIMEOUT]) !== 1) {
+            throw new RuntimeException("Timed out waiting for the $name lock.");
         }
 
-        $this->holdsNetworkLock = true;
+        $this->locks[] = $name;
+    }
+
+    /**
+     * The stats and main blocks tables hold state of the whole network: the
+     * application reads their latest rows, and fetching the stats rewrites
+     * them. A test that touches either holds this lock, so it sees only the
+     * rows it created itself, and whatever it or the code under test added
+     * is removed afterwards.
+     */
+    public function lockNetwork(): void
+    {
+        if (in_array('network', $this->locks, true)) {
+            return;
+        }
+
+        $this->lock('network');
+
         $this->statsWatermark = (int) Stat::query()->max('id');
         $this->preexistingMainBlocks = MainBlock::query()->pluck('address')->all();
+    }
+
+    /**
+     * Clearing the blocks cache removes every expired block and balance, so a
+     * test that creates expired ones holds this lock to keep them its own.
+     */
+    public function lockExpiredCache(): void
+    {
+        $this->lock('expired-cache');
     }
 
     /**
@@ -153,14 +175,16 @@ abstract class TestCase extends BaseTestCase
             Notification::query()->whereKey($this->notificationIds)->delete();
         }
 
-        if ($this->holdsNetworkLock) {
+        if (in_array('network', $this->locks, true)) {
             Stat::query()->where('id', '>', $this->statsWatermark)->delete();
             MainBlock::query()->whereNotIn('address', $this->preexistingMainBlocks)->delete();
-
-            DB::scalar('select release_lock(?)', [self::NETWORK_LOCK]);
         }
 
-        $this->holdsNetworkLock = false;
+        foreach ($this->locks as $name) {
+            DB::scalar('select release_lock(?)', ["tests:$name"]);
+        }
+
+        $this->locks = [];
         $this->blockIds = [];
         $this->balanceIds = [];
         $this->notificationIds = [];
