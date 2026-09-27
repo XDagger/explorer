@@ -5,31 +5,19 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Xdag\Network\Stat;
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
-    public function register()
+    public function boot(): void
     {
-        //
-    }
-
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        require_once app_path('helpers.php');
+        RateLimiter::for('api', fn (Request $request) => Limit::perMinute(60)->by($request->ip()));
 
         Blade::directive('svg', function ($expression) {
             $tokens = collect(explode(',', $expression))->map(function ($item) {

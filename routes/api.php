@@ -2,23 +2,27 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Api\BlockController;
+use App\Http\Controllers\Api\MainBlocksController;
+use App\Http\Controllers\Api\StatusController;
+use App\Http\Controllers\Api\SupplyController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('status', 'App\Http\Controllers\Api\StatusController@index');
+Route::get('status', [StatusController::class, 'index']);
 
-Route::group(['middleware' => 'node.synchronized'], function () {
-    Route::get('supply', 'App\Http\Controllers\Api\SupplyController@index');
-    Route::get('supply/raw', 'App\Http\Controllers\Api\SupplyController@raw');
-    Route::get('supply/coingecko/with-separators', 'App\Http\Controllers\Api\SupplyController@coinGeckoWithSeparators');
-    Route::get('supply/coingecko/without-separators', 'App\Http\Controllers\Api\SupplyController@coinGeckoWithoutSeparators');
+Route::middleware('node.synchronized')->group(function () {
+    Route::get('supply', [SupplyController::class, 'index']);
+    Route::get('supply/raw', [SupplyController::class, 'raw']);
+    Route::get('supply/coingecko/with-separators', [SupplyController::class, 'coinGeckoWithSeparators']);
+    Route::get('supply/coingecko/without-separators', [SupplyController::class, 'coinGeckoWithoutSeparators']);
 
-    Route::get('total-supply', 'App\Http\Controllers\Api\SupplyController@indexTotal');
-    Route::get('total-supply/raw', 'App\Http\Controllers\Api\SupplyController@rawTotal');
-    Route::get('total-supply/coingecko/with-separators', 'App\Http\Controllers\Api\SupplyController@coinGeckoWithSeparatorsTotal');
-    Route::get('total-supply/coingecko/without-separators', 'App\Http\Controllers\Api\SupplyController@coinGeckoWithoutSeparatorsTotal');
+    Route::get('total-supply', [SupplyController::class, 'indexTotal']);
+    Route::get('total-supply/raw', [SupplyController::class, 'rawTotal']);
+    Route::get('total-supply/coingecko/with-separators', [SupplyController::class, 'coinGeckoWithSeparatorsTotal']);
+    Route::get('total-supply/coingecko/without-separators', [SupplyController::class, 'coinGeckoWithoutSeparatorsTotal']);
 
-    Route::get('last-blocks', 'App\Http\Controllers\Api\MainBlocksController@index');
+    Route::get('last-blocks', [MainBlocksController::class, 'index']);
 
-    Route::get('block/{id}', 'App\Http\Controllers\Api\BlockController@index')->name('block')->where('id', '.+');
-    Route::get('balance/{id}', 'App\Http\Controllers\Api\BlockController@balance')->where('id', '.+');
+    Route::get('block/{id}', [BlockController::class, 'index'])->name('api.block')->where('id', '.+');
+    Route::get('balance/{id}', [BlockController::class, 'balance'])->where('id', '.+');
 });
