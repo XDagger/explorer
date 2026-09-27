@@ -146,9 +146,16 @@ class Cache
             $stream = Node::streamRpc(strlen($id) < 26 ? 'xdag_getBlockByNumber' : 'xdag_getBlockByHash', [$id, 1, 1000000000]);
 
             // read until we get all base block data
-            $buffer = stream_get_line($stream, 512, ',"refs":');
+            $buffer = (string) stream_get_line($stream, 512, ',"refs":');
 
-            if (strpos($buffer, '"result":null') !== false) {
+            // a response without block data is complete JSON: the node either omits a null result, or sends it as null
+            $completeResponse = json_decode($buffer, true);
+
+            if (is_array($completeResponse) && isset($completeResponse['error'])) {
+                throw new XdagException('Node returned an error for block '.$id.': '.json_encode($completeResponse['error']));
+            }
+
+            if (is_array($completeResponse) && ($completeResponse['result'] ?? null) === null) {
                 $block->state = 'not found';
                 $block->expires_at = now()->addSeconds(self::TTL);
                 $block->save();
@@ -176,7 +183,7 @@ class Cache
             unset($baseBlockData);
 
             // there are maximally 12 "refs" in a block, read all into memory and decode
-            $refs = json_decode((string) stream_get_line($stream, 2560, ',"transactions":'), true, JSON_THROW_ON_ERROR);
+            $refs = json_decode((string) stream_get_line($stream, 2560, ',"transactions":'), true);
 
             if (is_array($refs)) {
                 foreach ($refs as $ref) {
@@ -267,7 +274,7 @@ class Cache
             $json = Node::callRpc(strlen($id) < 26 ? 'xdag_getBalanceByNumber' : 'xdag_getBalance', [$id]);
         } catch (QueryException $ex) {
             return self::waitForBalance($id);
-        } catch (XdagException $ex) {
+        } catch (\Throwable $ex) {
             // error while fetching balance
             $balance->delete();
 

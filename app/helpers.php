@@ -74,7 +74,7 @@ function hashrate(int|float|string|null $value, int $precision = 2): string|floa
 
 function timestampToCarbon(int $timestamp): Carbon\Carbon
 {
-    return Carbon\Carbon::createFromFormat('U.u', intval(floor($timestamp / 1000)).'.'.str_pad((string) (($timestamp % 1000) * 1000), 6, '0', STR_PAD_LEFT), config('app.timezone'));
+    return Carbon\Carbon::createFromFormat('U.u', intval(floor($timestamp / 1000)).'.'.str_pad((string) (($timestamp % 1000) * 1000), 6, '0', STR_PAD_LEFT))->setTimezone(config('app.timezone'));
 }
 
 function escapeLike(string $expression): string

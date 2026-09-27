@@ -59,7 +59,7 @@ class WalletListing extends Listing
 
             'addresses_remark' => [
                 'name' => 'Remark',
-                'validation' => 'nullable',
+                'validation' => 'nullable|string',
                 'apply' => fn ($builder, string $value) => $builder->where('remark', 'like', '%'.escapeLike($value).'%'),
             ],
         ];
