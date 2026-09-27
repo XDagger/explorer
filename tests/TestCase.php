@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use App\Http\Middleware\EnsureSynchronizedNode;
 use App\Xdag\Block\Balance;
 use App\Xdag\Block\Block;
 use App\Xdag\Block\MainBlock;
@@ -41,6 +42,18 @@ abstract class TestCase extends BaseTestCase
         parent::setUp();
 
         Http::preventStrayRequests();
+
+        $this->withoutMix();
+    }
+
+    /**
+     * Pages behind the synchronization check need the latest network stats to
+     * say the node is synchronized. Tests that are not about that check skip
+     * it instead, so they need not touch the network wide state.
+     */
+    public function withoutNodeSynchronization(): static
+    {
+        return $this->withoutMiddleware(EnsureSynchronizedNode::class);
     }
 
     /**

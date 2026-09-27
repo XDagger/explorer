@@ -18,4 +18,6 @@
     </div>
 </div>
 
+@if (defined('LARAVEL_START'))
 <!-- This page took {{ number_format((microtime(true) - LARAVEL_START), 3) }} seconds to render -->
+@endif

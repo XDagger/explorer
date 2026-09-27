@@ -11,7 +11,7 @@ class EnsureSynchronizedNode
     public function handle($request, \Closure $next)
     {
         if (! optional(Stat::orderBy('id', 'desc')->limit(1)->first())->synchronized) {
-            if (request()->wantsJson() || str_starts_with($request->path(), 'api')) {
+            if ($request->wantsJson() || $request->is('api', 'api/*')) {
                 return response()->json(['error' => 'synchronizing', 'message' => 'Block explorer is currently synchronizing.'], 503);
             }
 

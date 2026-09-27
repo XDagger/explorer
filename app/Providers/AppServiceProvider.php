@@ -37,12 +37,14 @@ class AppServiceProvider extends ServiceProvider
             return str_replace('<svg', '<svg class="'.$class.'"', file_get_contents($path));
         });
 
-        try {
-            $stat = Stat::orderBy('id', 'desc')->limit(1)->first();
-        } catch (QueryException $ex) {
-            $stat = null;
-        }
+        View::composer(['layouts.app', 'layouts.partials.header', 'errors.*', 'errors::*'], fn ($view) => $view->with('appName', once(function () {
+            try {
+                $stat = Stat::orderBy('id', 'desc')->limit(1)->first();
+            } catch (QueryException) {
+                $stat = null;
+            }
 
-        View::share('appName', (isset($stat) && $stat->network_type !== 'mainnet') ? 'XDAG '.ucfirst($stat->network_type).' Explorer' : 'XDAG Block Explorer');
+            return ($stat !== null && $stat->network_type !== 'mainnet') ? 'XDAG '.ucfirst($stat->network_type).' Explorer' : 'XDAG Block Explorer';
+        })));
     }
 }
