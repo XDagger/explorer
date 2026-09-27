@@ -5,10 +5,16 @@ declare(strict_types=1);
 namespace App\Xdag\Block;
 
 use App\Xdag\Exceptions\XdagException;
+use Database\Factories\BlockFactory;
+use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+#[UseFactory(BlockFactory::class)]
 class Block extends Model
 {
+    use HasFactory;
+
     protected $table = 'blocks';
 
     public $incrementing = false;

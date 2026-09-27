@@ -14,7 +14,12 @@
         "laravel/tinker": "^3.0"
     },
     "require-dev": {
-        "laravel/pint": "^1.32"
+        "fakerphp/faker": "^1.23",
+        "laravel/pint": "^1.32",
+        "mockery/mockery": "^1.6",
+        "nunomaduro/collision": "^8.6",
+        "pestphp/pest": "^5.1",
+        "pestphp/pest-plugin-laravel": "^5.0"
     },
     "autoload": {
         "files": [
@@ -26,7 +31,20 @@
             "Database\\Seeders\\": "database/seeders/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
     "scripts": {
+        "test": [
+            "@php -r \"if (!file_exists('.env.testing')) { fwrite(STDERR, PHP_EOL . '  .env.testing is missing, aborting to avoid running against the development database.' . PHP_EOL . '  Copy .env.testing.example to .env.testing, run php artisan key:generate --env=testing and fill in the test database credentials.' . PHP_EOL . PHP_EOL); exit(1); }\" @no_additional_args",
+            "@php artisan config:clear --ansi @no_additional_args",
+            "@php artisan migrate:fresh --seed --force --env=testing --ansi @no_additional_args",
+            "@php artisan optimize:clear --env=testing --ansi @no_additional_args",
+            "@php artisan test --parallel",
+            "@php artisan optimize:clear --env=testing --ansi @no_additional_args"
+        ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
@@ -55,6 +73,9 @@
         "sort-packages": true,
         "platform": {
             "php": "8.5.0"
+        },
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
         }
     },
     "minimum-stability": "stable",

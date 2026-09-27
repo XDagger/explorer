@@ -4,10 +4,16 @@ declare(strict_types=1);
 
 namespace App\Xdag\Block;
 
+use Database\Factories\MainBlockFactory;
+use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+#[UseFactory(MainBlockFactory::class)]
 class MainBlock extends Model
 {
+    use HasFactory;
+
     protected $table = 'main_blocks';
 
     protected $primaryKey = 'address';

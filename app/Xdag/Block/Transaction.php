@@ -4,10 +4,16 @@ declare(strict_types=1);
 
 namespace App\Xdag\Block;
 
+use Database\Factories\TransactionFactory;
+use Illuminate\Database\Eloquent\Attributes\UseFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+#[UseFactory(TransactionFactory::class)]
 class Transaction extends Model
 {
+    use HasFactory;
+
     protected $table = 'block_transactions';
 
     public $timestamps = false;
