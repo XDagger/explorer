@@ -5,5 +5,5 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 
 class Controller extends BaseController
 {
-	use ValidatesRequests;
+    use ValidatesRequests;
 }

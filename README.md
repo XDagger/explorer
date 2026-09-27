@@ -72,35 +72,35 @@ pm.max_spare_servers = 4
 - replace default server: `truncate -s 0 /etc/nginx/sites-available/default`, `nano /etc/nginx/sites-available/default`
 ```
 server {
-	listen 80 default_server;
-	listen [::]:80 default_server;
-	server_name _;
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    server_name _;
 
-	merge_slashes off;
-	root /var/www/explorer/public;
-	index index.php;
+    merge_slashes off;
+    root /var/www/explorer/public;
+    index index.php;
 
-	location / {
-		try_files $uri $uri/ /index.php?$query_string;
-	}
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
 
-	location = /index.php {
-		include fastcgi_params;
-		fastcgi_read_timeout 320;
-		fastcgi_param DOCUMENT_ROOT $realpath_root;
-		fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
-		fastcgi_pass unix:/run/php/php8.5-fpm-explorer.sock;
-	}
+    location = /index.php {
+        include fastcgi_params;
+        fastcgi_read_timeout 320;
+        fastcgi_param DOCUMENT_ROOT $realpath_root;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        fastcgi_pass unix:/run/php/php8.5-fpm-explorer.sock;
+    }
 
-	location = /favicon.ico {
-		access_log off;
-		log_not_found off;
-	}
+    location = /favicon.ico {
+        access_log off;
+        log_not_found off;
+    }
 
-	location = /robots.txt {
-		access_log off;
-		log_not_found off;
-	}
+    location = /robots.txt {
+        access_log off;
+        log_not_found off;
+    }
 }
 ```
 - `sudo systemctl enable nginx`

@@ -7,18 +7,18 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
 {
-	protected $commands = [];
+    protected $commands = [];
 
-	protected function schedule(Schedule $schedule)
-	{
-		$schedule->command('network:fetch-stats')->everyMinute()->withoutOverlapping();
-		$schedule->command('blocks:clear-cache')->everyMinute()->withoutOverlapping();
-	}
+    protected function schedule(Schedule $schedule)
+    {
+        $schedule->command('network:fetch-stats')->everyMinute()->withoutOverlapping();
+        $schedule->command('blocks:clear-cache')->everyMinute()->withoutOverlapping();
+    }
 
-	protected function commands()
-	{
-		$this->load(__DIR__.'/Commands');
+    protected function commands()
+    {
+        $this->load(__DIR__.'/Commands');
 
-		require base_path('routes/console.php');
-	}
+        require base_path('routes/console.php');
+    }
 }

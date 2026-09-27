@@ -1,54 +1,54 @@
 .api-docs {
-	h1 {
-		@apply .text-black .text-xl .font-bold .mb-6;
-	}
+    h1 {
+        @apply .text-black .text-xl .font-bold .mb-6;
+    }
 
-	h2 {
-		@apply .text-grey-darkest .text-lg .font-bold .bg-blue-lightest .border-l-4 .border-blue .p-4 .mb-6;
+    h2 {
+        @apply .text-grey-darkest .text-lg .font-bold .bg-blue-lightest .border-l-4 .border-blue .p-4 .mb-6;
 
-		a {
-			@apply .float-right .text-sm .text-grey-darkest;
+        a {
+            @apply .float-right .text-sm .text-grey-darkest;
 
-			&:hover {
-				@apply .underline;
-			}
-		}
+            &:hover {
+                @apply .underline;
+            }
+        }
 
-		&::after {
-			clear: right;
-		}
-	}
+        &::after {
+            clear: right;
+        }
+    }
 
-	h3 {
-		@apply .text-grey-darkest .text-base .font-bold;
+    h3 {
+        @apply .text-grey-darkest .text-base .font-bold;
 
-		code {
-			@apply .float-right .text-sm .text-grey-darkest .bg-transparent;
-		}
+        code {
+            @apply .float-right .text-sm .text-grey-darkest .bg-transparent;
+        }
 
-		&::after {
-			clear: right;
-		}
-	}
+        &::after {
+            clear: right;
+        }
+    }
 
-	p, ul {
-		@apply .text-sm .text-grey-darkest .leading-loose .mb-6;
+    p, ul {
+        @apply .text-sm .text-grey-darkest .leading-loose .mb-6;
 
-		code {
-			@apply .bg-blue-lightest .rounded .text-black .p-1 .break-words;
-		}
-	}
+        code {
+            @apply .bg-blue-lightest .rounded .text-black .p-1 .break-words;
+        }
+    }
 
-	ul {
-		@apply .overflow-x-auto;
-	}
+    ul {
+        @apply .overflow-x-auto;
+    }
 
-	pre {
-		@apply .bg-grey-lightest .p-4 .mb-6 .overflow-x-auto;
-		clear: right;
-	}
+    pre {
+        @apply .bg-grey-lightest .p-4 .mb-6 .overflow-x-auto;
+        clear: right;
+    }
 
-	code {
-		@apply .bg-grey-lightest .text-black .text-sm;
-	}
+    code {
+        @apply .bg-grey-lightest .text-black .text-sm;
+    }
 }

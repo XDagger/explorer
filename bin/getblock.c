@@ -14,302 +14,302 @@ Block found example input: {"jsonrpc":"2.0","id":3334,"result":{"height":65,"bal
 #include <errno.h>
 
 #ifdef _WIN32
-	#include <winsock2.h>
-	#include <ws2tcpip.h>
-	#include <windows.h>
-	#pragma comment(lib, "ws2_32.lib")
+    #include <winsock2.h>
+    #include <ws2tcpip.h>
+    #include <windows.h>
+    #pragma comment(lib, "ws2_32.lib")
 #else
-	#include <sys/socket.h>
-	#include <netdb.h>
-	#include <netinet/in.h>
+    #include <sys/socket.h>
+    #include <netdb.h>
+    #include <netinet/in.h>
 #endif
 
 #define pbail(msg, code) puts(msg); returnCode = code; goto bail;
 
 void die(const char *message, int returnCode)
 {
-	perror("Last error");
-	fprintf(stderr, "%s\n", message);
-	exit(returnCode);
+    perror("Last error");
+    fprintf(stderr, "%s\n", message);
+    exit(returnCode);
 }
 
 int main(int argc,char *argv[])
 {
-	if (argc != 6)
-		die("Arguments: Host/IP portNumber blockId outputPathJson outputPathCsv", 1);
+    if (argc != 6)
+        die("Arguments: Host/IP portNumber blockId outputPathJson outputPathCsv", 1);
 
-	char *hostName, *blockId, *outputPathJson, *outputPathCsv;
-	int portNumber;
-	hostName = argv[1];
-	portNumber = atoi(argv[2]);
-	blockId = argv[3];
-	outputPathJson = argv[4];
-	outputPathCsv = argv[5];
+    char *hostName, *blockId, *outputPathJson, *outputPathCsv;
+    int portNumber;
+    hostName = argv[1];
+    portNumber = atoi(argv[2]);
+    blockId = argv[3];
+    outputPathJson = argv[4];
+    outputPathCsv = argv[5];
 
-	if (portNumber < 1 || portNumber > 65535)
-		die("Invalid port number.", 2);
+    if (portNumber < 1 || portNumber > 65535)
+        die("Invalid port number.", 2);
 
-	if (strlen(blockId) > 64)
-		die("Invalid block id.", 2);
+    if (strlen(blockId) > 64)
+        die("Invalid block id.", 2);
 
-	srand(time(NULL));
-
-#ifdef _WIN32
-	WSADATA wsa;
-
-	if (WSAStartup(MAKEWORD(2, 2), &wsa) < 0)
-		die("Unable to initialise windows sockets.", 3);
-
-	SOCKET sock;
-#else
-	int sock;
-#endif
-
-	sock = socket(AF_INET, SOCK_STREAM, 0);
+    srand(time(NULL));
 
 #ifdef _WIN32
-	if (sock == INVALID_SOCKET) {
-		fprintf(stderr, "WS last error: %d\n", WSAGetLastError());
-		die("Could not create socket.", 4);
-	}
+    WSADATA wsa;
 
-	DWORD readTimeout = 60 * 1000;
+    if (WSAStartup(MAKEWORD(2, 2), &wsa) < 0)
+        die("Unable to initialise windows sockets.", 3);
+
+    SOCKET sock;
 #else
-	if (sock < 0)
-		die("Could not create socket.", 4);
-
-	struct timeval readTimeout;
-	readTimeout.tv_sec = 60;
-	readTimeout.tv_usec = 0;
+    int sock;
 #endif
 
-	if (setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (const char *) &readTimeout, sizeof(readTimeout)) < 0)
-		die("Unable to set socket read timeout.", 5);
+    sock = socket(AF_INET, SOCK_STREAM, 0);
 
-	struct hostent *host;
-	struct sockaddr_in hostAddr;
-	memset(&hostAddr, 0, sizeof(hostAddr));
+#ifdef _WIN32
+    if (sock == INVALID_SOCKET) {
+        fprintf(stderr, "WS last error: %d\n", WSAGetLastError());
+        die("Could not create socket.", 4);
+    }
 
-	host = gethostbyname(hostName);
+    DWORD readTimeout = 60 * 1000;
+#else
+    if (sock < 0)
+        die("Could not create socket.", 4);
 
-	if (!host)
-		die("Could not resolve host name.", 6);
+    struct timeval readTimeout;
+    readTimeout.tv_sec = 60;
+    readTimeout.tv_usec = 0;
+#endif
 
-	memcpy(&hostAddr.sin_addr.s_addr, host->h_addr, host->h_length);
-	hostAddr.sin_family = AF_INET;
-	hostAddr.sin_port = htons(portNumber);
+    if (setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (const char *) &readTimeout, sizeof(readTimeout)) < 0)
+        die("Unable to set socket read timeout.", 5);
 
-	char payload[512];
-	char request[1024];
-	char response[1024];
-	ssize_t received;
+    struct hostent *host;
+    struct sockaddr_in hostAddr;
+    memset(&hostAddr, 0, sizeof(hostAddr));
 
-	memset(response, 0, sizeof(response));
+    host = gethostbyname(hostName);
 
-	// XDAG-ADDRESS related code
-	if (sprintf(payload, "{\"jsonrpc\":\"2.0\",\"method\":\"%s\",\"params\":[\"%s\",\"1\",\"1000000000\"],\"id\": %d}", strlen(blockId) < 26 ? "xdag_getBlockByNumber" : "xdag_getBlockByHash", blockId, rand()) < 0)
-		die("Preparing payload failed.", 7);
+    if (!host)
+        die("Could not resolve host name.", 6);
 
-	if (sprintf(request, "POST / HTTP/1.1\r\nHost: %s\r\nContent-Type: application/json\r\nConnection: close\r\nAccept: application/json\r\nContent-Length: %lu\r\n\r\n%s", hostName, strlen(payload), payload) < 0)
-		die("Preparing request failed.", 8);
+    memcpy(&hostAddr.sin_addr.s_addr, host->h_addr, host->h_length);
+    hostAddr.sin_family = AF_INET;
+    hostAddr.sin_port = htons(portNumber);
 
-	if (connect(sock, (struct sockaddr *) &hostAddr, sizeof(hostAddr)) < 0)
-		die("Connection to host failed.", 9);
+    char payload[512];
+    char request[1024];
+    char response[1024];
+    ssize_t received;
 
-	if (send(sock, request, strlen(request), 0) < 0)
-		die("Sending request failed.", 10);
+    memset(response, 0, sizeof(response));
 
-	FILE *outputFileJson;
-	outputFileJson = fopen(outputPathJson, "w+b");
+    // XDAG-ADDRESS related code
+    if (sprintf(payload, "{\"jsonrpc\":\"2.0\",\"method\":\"%s\",\"params\":[\"%s\",\"1\",\"1000000000\"],\"id\": %d}", strlen(blockId) < 26 ? "xdag_getBlockByNumber" : "xdag_getBlockByHash", blockId, rand()) < 0)
+        die("Preparing payload failed.", 7);
 
-	if (!outputFileJson)
-		die("Unable to open output JSON file.", 11);
+    if (sprintf(request, "POST / HTTP/1.1\r\nHost: %s\r\nContent-Type: application/json\r\nConnection: close\r\nAccept: application/json\r\nContent-Length: %lu\r\n\r\n%s", hostName, strlen(payload), payload) < 0)
+        die("Preparing request failed.", 8);
 
-	FILE *outputFileCsv;
-	outputFileCsv = fopen(outputPathCsv, "w+b");
+    if (connect(sock, (struct sockaddr *) &hostAddr, sizeof(hostAddr)) < 0)
+        die("Connection to host failed.", 9);
 
-	if (!outputFileCsv)
-		die("Unable to open output CSV file.", 11);
+    if (send(sock, request, strlen(request), 0) < 0)
+        die("Sending request failed.", 10);
 
-	int returnCode = 0;
-	int i, i1 = 0, state = 0, csvState = 0, escapeSet = 0;
-	unsigned char c, stopC, o;
+    FILE *outputFileJson;
+    outputFileJson = fopen(outputPathJson, "w+b");
 
-	unsigned char *httpVerb = "HTTP/1.1 ";
-	unsigned char *endOfHeaders = "\r\n\r\n";
-	unsigned char *jsonStopSeq = ",\"transactions\":[";
+    if (!outputFileJson)
+        die("Unable to open output JSON file.", 11);
 
-	while ((received = recv(sock, response, sizeof(response) - 1, 0)) > 0) {
-		//fwrite(response, received, 1, stdout);
+    FILE *outputFileCsv;
+    outputFileCsv = fopen(outputPathCsv, "w+b");
 
-		i = 0;
+    if (!outputFileCsv)
+        die("Unable to open output CSV file.", 11);
 
-		while (i < received) {
-			c = response[i];
+    int returnCode = 0;
+    int i, i1 = 0, state = 0, csvState = 0, escapeSet = 0;
+    unsigned char c, stopC, o;
 
-			switch (state) {
-				case 0:
-					// reading HTTP response verb
-					if (c != *(httpVerb + i1)) {
-						pbail("Unexpected HTTP response verb.", 50);
-					}
+    unsigned char *httpVerb = "HTTP/1.1 ";
+    unsigned char *endOfHeaders = "\r\n\r\n";
+    unsigned char *jsonStopSeq = ",\"transactions\":[";
 
-					if (i1 == 8) {
-						i1 = 0;
-						state++;
-					} else {
-						i1++;
-					}
-				break;
-				case 1:
-					// reading until \r\n\r\n
-					if (c != *(endOfHeaders + i1)) {
-						i1 = 0;
-						break;
-					}
+    while ((received = recv(sock, response, sizeof(response) - 1, 0)) > 0) {
+        //fwrite(response, received, 1, stdout);
 
-					if (i1 == 3) {
-						i1 = 0;
-						state++;
-					} else {
-						i1++;
-					}
-				break;
-				case 2:
-					// dump JSON until jsonStopSeq
-					if (fputc(c, outputFileJson) != c) {
-						pbail("Unable to write JSON character.", 60);
-					}
+        i = 0;
 
-					if (c != *(jsonStopSeq + i1)) {
-						i1 = 0;
-						break;
-					}
+        while (i < received) {
+            c = response[i];
 
-					if (i1 == 16) {
-						// close JSON output
-						if (fputc(']', outputFileJson) != ']') {
-							pbail("Unable to write JSON character.", 60);
-						}
+            switch (state) {
+                case 0:
+                    // reading HTTP response verb
+                    if (c != *(httpVerb + i1)) {
+                        pbail("Unexpected HTTP response verb.", 50);
+                    }
 
-						if (fputc('}', outputFileJson) != '}') {
-							pbail("Unable to write JSON character.", 60);
-						}
+                    if (i1 == 8) {
+                        i1 = 0;
+                        state++;
+                    } else {
+                        i1++;
+                    }
+                break;
+                case 1:
+                    // reading until \r\n\r\n
+                    if (c != *(endOfHeaders + i1)) {
+                        i1 = 0;
+                        break;
+                    }
 
-						if (fputc('}', outputFileJson) != '}') {
-							pbail("Unable to write JSON character.", 60);
-						}
+                    if (i1 == 3) {
+                        i1 = 0;
+                        state++;
+                    } else {
+                        i1++;
+                    }
+                break;
+                case 2:
+                    // dump JSON until jsonStopSeq
+                    if (fputc(c, outputFileJson) != c) {
+                        pbail("Unable to write JSON character.", 60);
+                    }
 
-						i1 = 0;
-						state++;
-					} else {
-						i1++;
-					}
-				break;
-				case 3:
-					// dump JSON as CSV
-					o = 0;
+                    if (c != *(jsonStopSeq + i1)) {
+                        i1 = 0;
+                        break;
+                    }
 
-					switch (csvState) {
-						case 0:
-							// make sure we don't hit "]" before first quote (end of data)
-							if (c == ']')
-								state++;
-						case 1:
-							// read until quote
-							if (c == '"')
-								csvState++;
-						break;
-						case 2:
-							// read until colon
-							if (c == ':') {
-								csvState++;
-								escapeSet = 0;
+                    if (i1 == 16) {
+                        // close JSON output
+                        if (fputc(']', outputFileJson) != ']') {
+                            pbail("Unable to write JSON character.", 60);
+                        }
 
-								if (i1 == -1) {
-									// insert newline
-									if (fputc(10, outputFileCsv) != 10) {
-										pbail("Unable to write CSV character.", 70);
-									}
+                        if (fputc('}', outputFileJson) != '}') {
+                            pbail("Unable to write JSON character.", 60);
+                        }
 
-									i1 = 0;
-								} else if (stopC == '"' && fputc(',', outputFileCsv) != ',') { // otherwise insert comma if previous stopC is '"'
-									pbail("Unable to write CSV character.", 70);
-								}
+                        if (fputc('}', outputFileJson) != '}') {
+                            pbail("Unable to write JSON character.", 60);
+                        }
 
-								stopC = 0;
-							}
-						break;
-						case 3:
-							// dump value until next key is encountered
-							// remark will only contain StringUtils.isAsciiPrintable() characters - https://www.educative.io/answers/what-is-stringutilsisasciiprintable-in-java
-							// XdagJ currently only escapes double quotes and backslashes in remak value
-							if (!stopC) {
-								stopC = (c == '"' ? '"' : ',');
-								o = c;
-								break;
-							}
+                        i1 = 0;
+                        state++;
+                    } else {
+                        i1++;
+                    }
+                break;
+                case 3:
+                    // dump JSON as CSV
+                    o = 0;
 
-							if (!escapeSet && c == '\\') {
-								escapeSet = 1;
-								// don't output escape backslash
-								break;
-							}
+                    switch (csvState) {
+                        case 0:
+                            // make sure we don't hit "]" before first quote (end of data)
+                            if (c == ']')
+                                state++;
+                        case 1:
+                            // read until quote
+                            if (c == '"')
+                                csvState++;
+                        break;
+                        case 2:
+                            // read until colon
+                            if (c == ':') {
+                                csvState++;
+                                escapeSet = 0;
 
-							if (escapeSet) {
-								escapeSet = 0;
+                                if (i1 == -1) {
+                                    // insert newline
+                                    if (fputc(10, outputFileCsv) != 10) {
+                                        pbail("Unable to write CSV character.", 70);
+                                    }
 
-								if (c == '"' && fputc(c, outputFileCsv) != c) { // insert extra double quote to properly escape double quote in context of CSV
-									pbail("Unable to write CSV character.", 70);
-								}
+                                    i1 = 0;
+                                } else if (stopC == '"' && fputc(',', outputFileCsv) != ',') { // otherwise insert comma if previous stopC is '"'
+                                    pbail("Unable to write CSV character.", 70);
+                                }
 
-								o = c; // output escaped character
-								break;
-							}
+                                stopC = 0;
+                            }
+                        break;
+                        case 3:
+                            // dump value until next key is encountered
+                            // remark will only contain StringUtils.isAsciiPrintable() characters - https://www.educative.io/answers/what-is-stringutilsisasciiprintable-in-java
+                            // XdagJ currently only escapes double quotes and backslashes in remak value
+                            if (!stopC) {
+                                stopC = (c == '"' ? '"' : ',');
+                                o = c;
+                                break;
+                            }
 
-							if (c == stopC) {
-								if (i1 != 1)
-									o = c;
+                            if (!escapeSet && c == '\\') {
+                                escapeSet = 1;
+                                // don't output escape backslash
+                                break;
+                            }
 
-								csvState = 0;
-								i1 = i1 == 5 ? -1 : i1 + 1;
-								break;
-							}
+                            if (escapeSet) {
+                                escapeSet = 0;
 
-							o = c;
-						break;
-						default:
-							pbail("Invalid CSV parser state.", csvState);
-					}
+                                if (c == '"' && fputc(c, outputFileCsv) != c) { // insert extra double quote to properly escape double quote in context of CSV
+                                    pbail("Unable to write CSV character.", 70);
+                                }
 
-					if (o && i1 != 1 && fputc(o, outputFileCsv) != o) {
-						pbail("Unable to write CSV character.", 70);
-					}
-				break;
-				case 4:
-					// ignore rest of file (end of data)
-				break;
-				default:
-					pbail("Invalid internal state.", state);
-			}
+                                o = c; // output escaped character
+                                break;
+                            }
 
-			i++;
-		}
-	}
+                            if (c == stopC) {
+                                if (i1 != 1)
+                                    o = c;
 
-	if (received < 0)
-		die("Reading response failed.", 13);
+                                csvState = 0;
+                                i1 = i1 == 5 ? -1 : i1 + 1;
+                                break;
+                            }
+
+                            o = c;
+                        break;
+                        default:
+                            pbail("Invalid CSV parser state.", csvState);
+                    }
+
+                    if (o && i1 != 1 && fputc(o, outputFileCsv) != o) {
+                        pbail("Unable to write CSV character.", 70);
+                    }
+                break;
+                case 4:
+                    // ignore rest of file (end of data)
+                break;
+                default:
+                    pbail("Invalid internal state.", state);
+            }
+
+            i++;
+        }
+    }
+
+    if (received < 0)
+        die("Reading response failed.", 13);
 
 bail:
-	fclose(outputFileJson);
-	fclose(outputFileCsv);
+    fclose(outputFileJson);
+    fclose(outputFileCsv);
 
 #ifdef _WIN32
-	closesocket(sock);
-	WSACleanup();
+    closesocket(sock);
+    WSACleanup();
 #else
-	close(sock);
+    close(sock);
 #endif
 
-	return returnCode;
+    return returnCode;
 }
