@@ -166,9 +166,12 @@ abstract class TestCase extends BaseTestCase
      */
     public function createNotification(array $attributes = []): Notification
     {
-        $notification = Notification::factory()->create($attributes);
+        return $this->trackNotification(Notification::factory()->create($attributes));
+    }
 
-        $this->notificationIds[] = $notification->getKey();
+    public function trackNotification(Notification|string $notification): Notification|string
+    {
+        $this->notificationIds[] = $notification instanceof Notification ? $notification->getKey() : $notification;
 
         return $notification;
     }

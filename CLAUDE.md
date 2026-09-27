@@ -28,6 +28,11 @@ Things to know about the node:
 
 The optional hashrate estimation (`HASHRATE_ESTIMATION_*`) replaces the network hashrate reported by the node with one derived from a mining pool's hashrate and its share of the latest main blocks.
 
+Development data
+================
+
+`php artisan db:seed-dev` replaces all explorer data with made-up data around the current time (`Database\Seeders\DevelopmentSeeder`), so the explorer can be used without a node: three days of stats, the latest main blocks, and wallets with transfers between them, cached for 30 days. Every block a seeded page links to is seeded too. Keep it that way when changing the seeder, its tests check it. The command refuses to run in production.
+
 The API
 =======
 

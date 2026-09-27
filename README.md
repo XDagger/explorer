@@ -114,3 +114,21 @@ As `explorer` user, change into `/var/www/explorer` folder
 - `php artisan migrate`
 - `npm ci`
 - `npm run production`
+
+# Development
+The explorer needs PHP 8.5 with bcmath, MySQL 8.0+, Composer and Node.js. Clone the repository, then:
+
+- `composer install`, `npm ci`, `npm run dev`
+- `cp .env.example .env`, `php artisan key:generate`, fill in the database credentials and the XdagJ RPC URL
+- `php artisan migrate`
+- `git config core.hooksPath .githooks` - enables the pre-commit hook, which formats staged PHP files with [Laravel Pint](https://laravel.com/docs/pint) and adds the fixes to the commit
+- `php artisan serve`
+
+`php artisan db:seed-dev` replaces all explorer data in your database with made-up network stats, main blocks, wallets and transactions around the current time, so you can click through the whole explorer without running XdagJ. Do not run the scheduler meanwhile: without a node, fetching the stats marks the network as not synchronized. Run the command again whenever you want fresh data.
+
+Tests use a database of their own, which is wiped on every run - never point them at a database you care about.
+
+- `cp .env.testing.example .env.testing`, `php artisan key:generate --env=testing`, fill in the test database credentials
+- `composer test` - migrates the test database and runs the whole suite in parallel
+
+Code style is checked by `vendor/bin/pint --test`, `vendor/bin/pint` fixes it.
