@@ -59,6 +59,8 @@ Running in production
 
 The explorer needs PHP ^8.5 with bcmath, MySQL 8, and a cron entry running `php artisan schedule:run` every minute. Every scheduled command uses `withoutOverlapping()`. Queue workers are not needed, the queue connection is `sync`.
 
+Block addresses may contain `//` and may end with `/`, and the block routes read the id from the raw request path. Never add trailing slash redirects or slash merging, in `public/.htaccess` or in the web server configuration (nginx needs `merge_slashes off`, see `README.md`).
+
 Deployments are updated by hand (`git pull`, `composer install`, `php artisan migrate`, `npm ci`, `npm run production`), see `README.md`. Config defaults must keep working for an existing `.env` that lacks newer keys.
 
 Testing and writing tests

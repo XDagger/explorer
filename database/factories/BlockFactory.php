@@ -16,11 +16,25 @@ class BlockFactory extends Factory
     protected $model = Block::class;
 
     /**
+     * A hash whose address can be requested by the test client, which drops
+     * the trailing slash of a URL, so an address ending in one never reaches
+     * the application intact.
+     */
+    public static function requestableHash(): string
+    {
+        do {
+            $hash = XdagIdentifier::hash();
+        } while (str_ends_with(XdagIdentifier::addressOf($hash), '/'));
+
+        return $hash;
+    }
+
+    /**
      * @return array<string, mixed>
      */
     public function definition(): array
     {
-        $hash = XdagIdentifier::hash();
+        $hash = self::requestableHash();
         $address = XdagIdentifier::addressOf($hash);
         $createdAt = now()->subDays(fake()->numberBetween(1, 30))->startOfSecond()->addMilliseconds(fake()->numberBetween(0, 999));
 

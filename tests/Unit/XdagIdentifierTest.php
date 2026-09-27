@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Xdag\Block\Block;
+use Database\Factories\BlockFactory;
 use Database\Factories\XdagIdentifier;
 
 function base58Decode(string $encoded): string
@@ -38,6 +40,13 @@ it('derives the block address from the reversed hash like the node does', functi
 it('generates block addresses the explorer accepts', function () {
     foreach (range(1, 50) as $ignored) {
         expect(XdagIdentifier::address())->toMatch('/^[a-zA-Z0-9\/+]{32}$/');
+    }
+});
+
+it('generates block addresses for tests that the test client can request', function () {
+    foreach (range(1, 500) as $ignored) {
+        expect(XdagIdentifier::addressOf(BlockFactory::requestableHash()))->not->toEndWith('/')
+            ->and(Block::factory()->make()->address)->not->toEndWith('/');
     }
 });
 

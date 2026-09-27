@@ -87,7 +87,7 @@ it('lets every seeded page be browsed without a node', function () {
 
     $this->get('/')->assertOk()->assertDontSee('Synchronization process should be finished shortly');
 
-    foreach ($seeder->summary() as $path) {
+    foreach (array_filter($seeder->summary(), fn (string $path) => ! str_ends_with($path, '/')) as $path) {
         $this->get($path)->assertOk();
     }
 

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Database\Factories\BlockFactory;
 use Database\Factories\XdagIdentifier;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
@@ -24,12 +25,12 @@ pest()->extend(TestCase::class)->in('Feature', 'Unit');
 
 function blockHash(): string
 {
-    return XdagIdentifier::hash();
+    return BlockFactory::requestableHash();
 }
 
 function blockAddress(): string
 {
-    return XdagIdentifier::address();
+    return XdagIdentifier::addressOf(blockHash());
 }
 
 function walletAddress(): string
