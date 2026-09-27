@@ -112,7 +112,7 @@ class Cache
                         block_id = ?, view = 'wallet',
                         direction = IF(@direction = 0, 'input', IF(@direction = 1, 'output', IF(@direction = 2, 'earning', 'snapshot'))),
                         amount = CONCAT(IF(@direction = 1, '-', ''), @amount),
-                        created_at = FROM_UNIXTIME(@time / 1000),
+                        created_at = TIMESTAMPADD(MICROSECOND, @time * 1000, '1970-01-01'),
                         remark = IF(@remark = '', NULL, @remark)
                 ", [$id]);
             } catch (\Throwable $ex) {
@@ -205,7 +205,7 @@ class Cache
                 // decode and insert the transaction
                 $transaction = json_decode("{\"direction\":$buffer}", true, 16, JSON_THROW_ON_ERROR);
 
-                \DB::insert('INSERT INTO block_transactions (block_id, view, direction, address, amount, remark, created_at) VALUES (?, ?, ?, ?, ?, ?, FROM_UNIXTIME(? / 1000))', [
+                \DB::insert('INSERT INTO block_transactions (block_id, view, direction, address, amount, remark, created_at) VALUES (?, ?, ?, ?, ?, ?, TIMESTAMPADD(MICROSECOND, ? * 1000, \'1970-01-01\'))', [
                     $id,
                     'wallet',
                     $direction = ['input', 'output', 'earning', 'snapshot'][$transaction['direction']],

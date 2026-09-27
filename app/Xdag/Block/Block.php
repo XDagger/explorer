@@ -80,7 +80,7 @@ class Block extends Model
         if ($type === 'earnings' || $type === 'spendings') {
             $builder->selectRaw('ABS(SUM(amount)) amount, DATE_FORMAT(created_at, "%Y-%m-%d") date');
             $builder->$type();
-            $builder->whereRaw('DATE_FORMAT(created_at, "%Y-%m-%d") >= DATE_FORMAT(NOW() - INTERVAL 7 DAY, "%Y-%m-%d")');
+            $builder->where('created_at', '>=', now()->subDays(7)->startOfDay());
         } else {
             $builder->selectRaw('SUM(amount) amount, DATE_FORMAT(created_at, "%Y-%m-%d") date');
         }
