@@ -140,7 +140,7 @@ it('lists the inputs, outputs and fee of a transaction block', function () {
         ->and(collect($large->get()->items())->pluck('direction')->all())->toBe(['input', 'output'])
         ->and(collect($fees->get()->items())->pluck('direction')->all())->toBe(['fee'])
         ->and(transactionsListing($block, ['transactions_directions' => ['earning']])->errors())->toHaveKey('transactions_directions')
-        ->and(transactionsListing($block, ['transactions_address' => blockAddress()])->errors())->toHaveKey('transactions_address');
+        ->and(transactionsListing($block, ['transactions_address' => substr_replace(blockAddress(), '/', 0, 1)])->errors())->toHaveKey('transactions_address');
 });
 
 it('does not mix up the two views of a block', function () {

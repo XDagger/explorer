@@ -98,7 +98,6 @@ class BlockController extends Controller
             $writer->leave();
 
             $writer->enter('block_as_address', JsonWriter::TYPE_ARRAY);
-            $mode = 'wallet';
             $directionsAmountTransactions = json_decode(json_encode($directionsAmount), true);
             $directionsAmount = [];
             $walletListing = app(WalletListing::class, ['block' => $block, 'defaultPageSize' => 10000000000000]);
@@ -124,7 +123,7 @@ class BlockController extends Controller
                 $writer->write('total_earnings', $this->amount($block->transactions()->wallet()->earnings()->sum('amount')));
                 $writer->write('total_spendings', $this->amount($block->transactions()->wallet()->spendings()->sum(\DB::raw('ABS(amount)'))));
 
-                $writer->write('page_earnings_sum', bcadd($directionsAmount['input'] ?? '0.000000000', $directionsAmount['earning'] ?? '0.000000000', 9));
+                $writer->write('page_earnings_sum', bcadd(bcadd($directionsAmount['input'] ?? '0.000000000', $directionsAmount['earning'] ?? '0.000000000', 9), $directionsAmount['snapshot'] ?? '0.000000000', 9));
                 $writer->write('page_spendings_sum', $directionsAmount['output'] ?? '0.000000000');
 
                 unset($directionsAmount);
@@ -155,14 +154,14 @@ class BlockController extends Controller
 
                 $writer->write($pagination[0] === 'transactions_page' ? 'transactions_pagination' : 'addresses_pagination', [
                     'current_page' => $page,
-                    'last_page' => $lastPage = max(1, ceil($total / $perPage)),
+                    'last_page' => $lastPage = max(1, (int) ceil($total / $perPage)),
                     'total' => $total,
                     'per_page' => $perPage,
                     'links' => [
-                        'prev' => $page > 1 ? asset(request()->getPathInfo().'?'.http_build_query(array_merge($usedFilters, array_combine($pagination, [$page - 1, $perPage])))) : null,
-                        'next' => $page * $perPage < $total ? request()->getPathInfo().'?'.http_build_query(array_merge($usedFilters, array_combine($pagination, [$page + 1, $perPage]))) : null,
-                        'first' => request()->getPathInfo().'?'.http_build_query(array_merge($usedFilters, array_combine($pagination, [1, $perPage]))),
-                        'last' => asset(request()->getPathInfo().'?'.http_build_query(array_merge($usedFilters, array_combine($pagination, [$lastPage, $perPage])))),
+                        'prev' => $page > 1 ? url(request()->getPathInfo().'?'.http_build_query(array_merge($usedFilters, array_combine($pagination, [$page - 1, $perPage])))) : null,
+                        'next' => $page * $perPage < $total ? url(request()->getPathInfo().'?'.http_build_query(array_merge($usedFilters, array_combine($pagination, [$page + 1, $perPage])))) : null,
+                        'first' => url(request()->getPathInfo().'?'.http_build_query(array_merge($usedFilters, array_combine($pagination, [1, $perPage])))),
+                        'last' => url(request()->getPathInfo().'?'.http_build_query(array_merge($usedFilters, array_combine($pagination, [$lastPage, $perPage])))),
                     ],
                 ]);
             };
